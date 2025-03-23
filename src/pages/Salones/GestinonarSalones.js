@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import { FaPencilAlt, FaTrash, FaSearch } from 'react-icons/fa';
 import './GestionarSalones.css';
+import AgregarSalones from './AgregarSalones';
 
 const GestionarSalones = () => {
+  // Estado para almacenar los salones
   const [salones, setSalones] = useState([
     {
       id: 1,
@@ -39,6 +41,9 @@ const GestionarSalones = () => {
   // Estado para la búsqueda
   const [busqueda, setBusqueda] = useState('');
 
+  // Estado para controlar la visibilidad del modal
+  const [modalOpen, setModalOpen] = useState(false);
+
   // Función para manejar el cambio en el toggle de activo
   const handleToggleActivo = (id) => {
     setSalones(
@@ -60,6 +65,18 @@ const GestionarSalones = () => {
       salon.descripcion.toLowerCase().includes(busqueda.toLowerCase())
   );
 
+  // Función para guardar un nuevo salón
+  const handleSaveSalon = (nuevoSalon) => {
+    setSalones([
+      ...salones,
+      {
+        id: salones.length + 1,
+        ...nuevoSalon,
+        activo: true
+      }
+    ]);
+  };
+
   return (
     <div className="gestionar-salones-container">
       <div className="sidebar">
@@ -80,6 +97,12 @@ const GestionarSalones = () => {
             <i className="usuarios-icon"></i>
           </div>
           <span>Gestionar usuarios</span>
+        </div>
+        <div className="sidebar-option">
+          <div className="sidebar-icon">
+            <i className="insights-icon"></i>
+          </div>
+          <span>Insights</span>
         </div>
       </div>
 
@@ -111,7 +134,7 @@ const GestionarSalones = () => {
               onChange={(e) => setBusqueda(e.target.value)}
             />
           </div>
-          <button className="add-salon-button">
+          <button className="add-salon-button" onClick={() => setModalOpen(true)}>
             <i className="add-icon"></i>
             Agregar salon
           </button>
@@ -159,6 +182,13 @@ const GestionarSalones = () => {
           </table>
         </div>
       </div>
+
+      {/* Modal para agregar salón */}
+      <AgregarSalonModal
+        isOpen={modalOpen}
+        onClose={() => setModalOpen(false)}
+        onSave={handleSaveSalon}
+      />
     </div>
   );
 };
