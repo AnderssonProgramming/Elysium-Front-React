@@ -1,0 +1,196 @@
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+  }
+
+  .modal-container {
+    background-color: white;
+    border-radius: 16px;
+    width: 80%;
+    max-width: 1000px;
+    overflow: hidden;
+    box-shadow: 0 4px 25px rgba(0, 0, 0, 0.1);
+  }
+
+  .modal-header {
+    background-color: #2bbb99;
+    padding: 20px 30px;
+    color: white;
+  }
+
+  .modal-header h2 {
+    margin: 0;
+    font-weight: 500;
+    font-size: 24px;
+  }
+
+  .modal-content {
+    padding: 30px;
+  }
+
+  .modal-content h3 {
+    color: #2bbb99;
+    margin-top: 0;
+    margin-bottom: 25px;
+    font-size: 20px;
+    font-weight: 500;
+  }
+
+  .form-row {
+    display: flex;
+    margin-bottom: 20px;
+    gap: 20px;
+  }
+
+  .form-group {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .form-group label {
+    margin-bottom: 8px;
+    font-weight: 500;
+    font-size: 16px;
+  }
+
+  .form-group input,
+  .form-group textarea,
+  .dropdown-header {
+    padding: 10px 15px;
+    border: 1px solid #e0e0e0;
+    border-radius: 6px;
+    font-size: 14px;
+  }
+
+  .form-group textarea {
+    height: 150px;
+    resize: none;
+  }
+
+  .description-group {
+    width: 40%;
+  }
+
+  .location-capacity-group {
+    width: 60%;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .dropdown-container {
+    position: relative;
+  }
+
+  .dropdown-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    background-color: white;
+  }
+
+  .dropdown-arrow {
+    font-size: 12px;
+    color: #888;
+  }
+
+  .dropdown-menu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background-color: white;
+    border: 1px solid #e0e0e0;
+    border-radius: 0 0 6px 6px;
+    z-index: 10;
+    max-height: 200px;
+    overflow-y: auto;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  }
+
+  .dropdown-item {
+    padding: 10px 15px;
+    cursor: pointer;
+  }
+
+  .dropdown-item:hover {
+    background-color: #f5f5f5;
+  }
+
+  .capacidad-slider-container {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+  }
+
+  .capacidad-slider {
+    flex: 1;
+    -webkit-appearance: none;
+    appearance: none;
+    height: 4px;
+    background: #e0e0e0;
+    border-radius: 2px;
+    outline: none;
+  }
+
+  .capacidad-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: #2bbb99;
+    cursor: pointer;
+  }
+
+  .capacidad-slider::-moz-range-thumb {
+    width: 16px;
+    height: a6px;
+    border-radius: 50%;
+    background: #2bbb99;
+    cursor: pointer;
+    border: none;
+  }
+
+  .capacidad-value {
+    font-size: 14px;
+    min-width: 50px;
+    text-align: right;
+  }
+
+  .form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 15px;
+    margin-top: 20px;
+  }
+
+  .btn-cancel, .btn-create {
+    padding: 10px 30px;
+    border-radius: 30px;
+    font-size: 16px;
+    border: none;
+    cursor: pointer;
+    font-weight: 500;
+  }
+
+  .btn-cancel {
+    background-color: white;
+    color: #333;
+    border: 1px solid #e0e0e0;
+  }
+
+  .btn-create {
+    background-color: #2bbb99;
+    color: white;
+  }
