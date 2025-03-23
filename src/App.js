@@ -4,6 +4,7 @@ import { ReactComponent as House } from './assets/icons/house-user_11269953 1.sv
 import { ReactComponent as Room } from './assets/icons/workshop_14672030 1.svg';
 import { ReactComponent as User } from './assets/icons/User.svg';
 import Home from './pages/Home/Home.js';
+// import GestionarSalones from "./GestionarSalones/GestionarSalones.js";
 /*
 import Admin from './pages/Admin/Admin.js';
 import Salones from './pages/Salones/Salones.js';
@@ -78,7 +79,8 @@ function App() {
           <Header role={role} />
           <div className='container'>
             <Routes>
-              <Route path="/home" element={<Home />}></Route>
+              <Route path="/home" element={<Home />} />
+              //<Route path="/salones" element={<GestionarSalones />} />
               {/*
               <Route path="/admin" element={<Admin />}></Route>
               <Route path="/salones" element={<Salones />}></Route>
