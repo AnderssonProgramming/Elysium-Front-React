@@ -1,70 +1,78 @@
-# Getting Started with Create React App
+# INTEGRANTES
+- Andersson David Sánchez Méndez
+- Cristian Santiago Pedraza Rodríguez
+- Ricardo Andres Ayala Garzon
+- Santiago Botero García
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+# ELYSIUM
 
-## Available Scripts
+## PRE-RREQUISITOS
+- Servidor local para pruebas (opcional: Live Server o cualquier servidor web)
+- Node.js
+- MongoDB
+- AzureDevops
 
-In the project directory, you can run:
+## OBJETIVOS
+1. Planeación de un proyecto de software.
+2. Entender arquitectura cliente servidor.
+3. Inyección de dependencias - Inversión de control.
+4. Manejo de bases de datos no relacionales.
+6. Definición de API Rest Con SpringBoot.
+7. Realizar Análisis estático para garantizar calidad del código y detección de deuda técnica.
+8. Integrar pruebas unitarias en el desarrollo del producto.
 
-### `npm start`
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+## CASO DE NEGOCIO - SISTEMA DE RESERVAS DE LABORATORIOS PARA LA DECANATURA DE INGENIERÍA DE SISTEMAS.
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+El proyecto consiste en una aplicación para la gestión de reservas de laboratorios dentro Ingeniería de Sistemas de la Escuela Colombiana de Ingeniería Julio Garavito. Los usuarios podrán consultar la disponibilidad de laboratorios, realizar reservas y cancelar sus reservas desde una interfaz web. La aplicación se conectará a un API REST desarrollado en Spring Boot. El backend permitirá la inyección de dependencias para el manejo de datos, pudiendo optar entre una base de datos en MongoDB Cloud o un archivo de texto plano para almacenar las reservas.
 
-### `npm test`
+## REQUERIMIENTOS
+- El usuario debe poder consultar la disponibilidad de laboratorios.
+- El usuario debe poder reservar un laboratorio especificando fecha, hora y propósito.
+- El usuario debe poder cancelar sus reservas.
+- La aplicación debe validar que un laboratorio no se pueda reservar si ya está ocupado.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
 
-### `npm run build`
+# CREACIÓN DEL PROYECTO REACT
+Para crear un proyecto en React, sigue estos pasos:
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+## Instalar Node.js
+Primero, necesitas tener Node.js instalado en tu máquina. Si no lo tienes, descárgalo desde su sitio oficial Node.js.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+## Crear un nuevo proyecto con Create React App
+Una vez tengas Node.js instalado, abre una terminal y ejecuta los siguientes comandos para crear tu proyecto React:
+```sh
+npm install -g create-react-app
+npx create-react-app my-app
+```
+Esto creará una nueva aplicación React llamada "my-app". Puedes reemplazar "my-app" por el nombre de tu elección.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+![alt text](<images/Screenshot 2025-03-17 203721.png>)
 
-### `npm run eject`
+## LIBRERÍAS UTILIZADAS
+Durante el desarrollo del proyecto, se utilizaron las siguientes librerías:
+```sh
+npm install react-router-dom
+```
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+## MANTENIMIENTO Y CONSTRUCCIÓN
+### Reparar vulnerabilidades y limpiar caché
+Ejecutar los siguientes comandos según sea necesario:
+```sh
+npm audit fix
+npm cache clean --force
+```
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+### Generar una versión para producción
+Contruir el proyecto con el siguiente comando:
+```sh
+npm run build
+```
+### Autorizar el puerto predeterminado de Node.js
+Es importante asegurarse de que el puerto http://localhost:3000 está autorizado en la configuración de Cors de MongoDB, ya que este es el puerto por defecto que utiliza Node.js para ejecutar las aplicaciones React.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+### Iniciar la aplicación
+Para iniciar la aplicación en el entorno de desarrollo, se usa:
+```sh
+npm start
+```
