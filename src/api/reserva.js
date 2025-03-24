@@ -1,78 +1,85 @@
+import axios from "axios";
 import { BASE_URL } from "../config/config.js";
 
 const RESERVA_API = `${BASE_URL}/reserva`;
 
-export async function consultarReservas() {
-    const response = await fetch(`${RESERVA_API}/consultarReservas`);
-    if (!response.ok) throw new Error("Error al obtener las reservas");
-    return response.json();
+/**
+ * Obtiene una lista de reservas con filtros opcionales.
+ * @param {Object} filtros - Parámetros opcionales para filtrar reservas.
+ * @param {string} [filtros.idSalon] - ID del salón.
+ * @param {string} [filtros.fecha] - Fecha de la reserva (YYYY-MM-DD).
+ * @param {number} [filtros.hora] - Hora de la reserva.
+ * @param {string} [filtros.diaSemana] - Día de la semana (ej. LUNES).
+ * @param {string} [filtros.estado] - Estado de la reserva.
+ * @param {boolean} [filtros.duracionBloque] - Duración del bloque.
+ * @returns {Promise<Object[]>} Lista de reservas encontradas.
+ * @throws {Error} Si ocurre un error en la solicitud.
+ */
+export async function getReservas (filtros) {
+    try {
+        const response = await axios.get(RESERVA_API, { params: filtros });
+        return response.data;
+    } catch (error) {
+        throw new Error(error.response.data.message);
+    }
 }
 
-export async function consultarReservasPorSalon(idSalon) {
-    const response = await fetch(`${RESERVA_API}/consultarReservasPorSalon?idSalon=${idSalon}`);
-    if (!response.ok) throw new Error("Error al obtener las reservas por salón");
-    return response.json();
+/**
+ * Consulta una reserva específica por su ID.
+ * @param {string} idReserva - ID de la reserva.
+ * @returns {Promise<Object>} Datos de la reserva.
+ * @throws {Error} Si la reserva no existe o hay un error en la solicitud.
+ */
+export async function consultarReserva (idReserva) {
+    try {
+        const response = await axios.get(`${RESERVA_API}/${idReserva}/reserva`);
+        return response.data;
+    } catch (error) {
+        throw new Error(error.response.data.message);
+    }
 }
 
-export async function consultarReservasPorFecha(fecha) {
-    const response = await fetch(`${RESERVA_API}/consultarReservasPorFecha?fecha=${fecha}`);
-    if (!response.ok) throw new Error("Error al obtener las reservas por fecha");
-    return response.json();
+/**
+ * Crea una nueva reserva.
+ * @param {Object} reserva - Datos de la reserva.
+ * @returns {Promise<string>} Mensaje de confirmación.
+ * @throws {Error} Si ocurre un error en la solicitud.
+ */
+export async function crearReserva (reserva) {
+    try {
+        const response = await axios.post(RESERVA_API, reserva);
+        return response.data;
+    } catch (error) {
+        throw new Error(error.response.data.message);
+    }
 }
 
-export async function consultarReservasPorDiaSemana(diaSemana) {
-    const response = await fetch(`${RESERVA_API}/consultarReservasPorDiaSemana?diaSemana=${diaSemana}`);
-    if (!response.ok) throw new Error("Error al obtener las reservas por día de la semana");
-    return response.json();
+/**
+ * Actualiza una reserva existente.
+ * @param {string} idReserva - ID de la reserva a actualizar.
+ * @param {Object} reserva - Nuevos datos de la reserva.
+ * @returns {Promise<void>}
+ * @throws {Error} Si la reserva no existe o hay un error en la solicitud.
+ */
+export async function actualizarReserva (idReserva, reserva) {
+    try {
+        await axios.patch(`${RESERVA_API}/${idReserva}`, reserva);
+    } catch (error) {
+        throw new Error(error.response.data.message);
+    }
 }
 
-export async function consultarReservasPorEstado(estado) {
-    const response = await fetch(`${RESERVA_API}/consultarReservasPorEstado?estado=${estado}`);
-    if (!response.ok) throw new Error("Error al obtener las reservas por estado");
-    return response.json();
-}
-
-export async function consultarReservasPorDuracionBloque(duracionBloque) {
-    const response = await fetch(`${RESERVA_API}/consultarReservasPorDuracionBloque?duracionBloque=${duracionBloque}`);
-    if (!response.ok) throw new Error("Error al obtener las reservas por duración de bloque");
-    return response.json();
-}
-
-export async function consultarReserva(idReserva) {
-    const response = await fetch(`${RESERVA_API}/consultarReserva?idReserva=${idReserva}`);
-    if (!response.ok) throw new Error("Error al obtener la reserva");
-    return response.json();
-}
-
-export async function crearReserva(reserva) {
-    const response = await fetch(`${RESERVA_API}/crearReserva`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(reserva),
-    });
-    if (!response.ok) throw new Error("Error al crear la reserva");
-}
-
-export async function actualizarReserva(reserva) {
-    const response = await fetch(`${RESERVA_API}/actualizarReserva`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(reserva),
-    });
-    if (!response.ok) throw new Error("Error al actualizar la reserva");
-}
-
-export async function deleteReserva(idReserva) {
-    const response = await fetch(`${RESERVA_API}/${idReserva}/deleteReserva`, { method: "DELETE" });
-    if (!response.ok) throw new Error("Error al eliminar la reserva");
-}
-
-export async function cancelReserva(idReserva) {
-    const response = await fetch(`${RESERVA_API}/${idReserva}/cancelReserva`, { method: "PUT" });
-    if (!response.ok) throw new Error("Error al cancelar la reserva");
-}
-
-export async function rechazarReserva(idReserva) {
-    const response = await fetch(`${RESERVA_API}/${idReserva}/rechazarReserva`, { method: "PUT" });
-    if (!response.ok) throw new Error("Error al rechazar la reserva");
+/**
+ * Deshabilita (elimina lógicamente) una reserva.
+ * @param {string} idReserva - ID de la reserva a deshabilitar.
+ * @returns {Promise<string>} Mensaje de confirmación.
+ * @throws {Error} Si la reserva no existe o hay un error en la solicitud.
+ */
+export async function deleteReserva (idReserva) {
+    try {
+        const response = await axios.put(`${RESERVA_API}/${idReserva}/inactivo`);
+        return response.data;
+    } catch (error) {
+        throw new Error(error.response.data.message);
+    }
 }

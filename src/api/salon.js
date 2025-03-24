@@ -1,60 +1,96 @@
+import axios from "axios";
 import { BASE_URL } from "../config/config.js";
 
 const SALON_API = `${BASE_URL}/salones`;
 
+/**
+ * Obtiene la lista de salones con filtros opcionales.
+ * @param {Object} filtros - Filtros opcionales para la consulta.
+ * @param {boolean} [filtros.activo] - Filtrar por estado activo.
+ * @param {boolean} [filtros.disponible] - Filtrar por disponibilidad.
+ * @param {string} [filtros.nombre] - Filtrar por nombre.
+ * @param {string} [filtros.ubicacion] - Filtrar por ubicación.
+ * @param {number} [filtros.capacidadMin] - Filtrar por capacidad mínima.
+ * @param {number} [filtros.capacidadMax] - Filtrar por capacidad máxima.
+ * @returns {Promise<Object[]>} Lista de salones.
+ * @throws {Error} Error al obtener los salones.
+ */
 export async function getSalones(filtros = {}) {
-    const queryParams = new URLSearchParams(filtros).toString();
-    const response = await fetch(`${SALON_API}?${queryParams}`);
-    if (!response.ok) throw new Error("Error al obtener los salones");
-    return response.json();
+    try {
+        const response = await axios.get(SALON_API, { params: filtros });
+        return response.data;
+    } catch (error) {
+        throw new Error(error.response.data.message);
+    }
 }
 
+/**
+ * Obtiene un salón por su mnemónico.
+ * @param {string} mnemonico - Mnemónico del salón.
+ * @returns {Promise<Object>} Datos del salón.
+ * @throws {Error} Error al obtener el salón.
+ */
 export async function getSalonByMnemonico(mnemonico) {
-    const response = await fetch(`${SALON_API}/${mnemonico}`);
-    if (!response.ok) throw new Error("Error al obtener el salón");
-    return response.json();
+    try {
+        const response = await axios.get(`${SALON_API}/${mnemonico}`);
+        return response.data;
+    } catch (error) {
+        throw new Error(error.response.data.message);
+    }
 }
 
-export async function agregarSalon(salon) {
-    const response = await fetch(`${SALON_API}`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(salon),
-    });
-    if (!response.ok) throw new Error("Error al agregar el salón");
-}
-
-export async function deshabilitarSalon(mnemonico) {
-    const response = await fetch(`${SALON_API}/${mnemonico}/deshabilitar`, { method: "PUT" });
-    if (!response.ok) throw new Error("Error al deshabilitar el salón");
-}
-
-export async function habilitarSalon(mnemonico) {
-    const response = await fetch(`${SALON_API}/${mnemonico}/habilitar`, { method: "PUT" });
-    if (!response.ok) throw new Error("Error al habilitar el salón");
-}
-
+/**
+ * Verifica la disponibilidad de un salón.
+ * @param {string} mnemonico - Mnemónico del salón.
+ * @returns {Promise<boolean>} Estado de disponibilidad del salón.
+ * @throws {Error} Error al obtener la disponibilidad.
+ */
 export async function getDisponible(mnemonico) {
-    const response = await fetch(`${SALON_API}/${mnemonico}/disponible`);
-    if (!response.ok) throw new Error("Error al consultar la disponibilidad del salón");
-    return response.json();
+    try {
+        const response = await axios.get(`${SALON_API}/${mnemonico}/disponible`);
+        return response.data;
+    } catch (error) {
+        throw new Error(error.response.data.message);
+    }
 }
 
-export async function setDisponible(mnemonico) {
-    const response = await fetch(`${SALON_API}/${mnemonico}/disponible`, { method: "PUT" });
-    if (!response.ok) throw new Error("Error al marcar el salón como disponible");
+/**
+ * Agrega un nuevo salón.
+ * @param {Object} salon - Datos del salón a agregar.
+ * @param {string} salon.name - Nombre del salón.
+ * @param {string} salon.mnemonic - Mnemónico del salón.
+ * @param {string} salon.description - Descripción del salón.
+ * @param {string} salon.location - Ubicación del salón.
+ * @param {number} salon.capacity - Capacidad del salón.
+ * @param {Object[]} salon.resources - Recursos del salón.
+ * @returns {Promise<Object>} Respuesta del servidor.
+ * @throws {Error} Error al agregar el salón.
+ */
+export async function agregarSalon(salon) {
+    try {
+        const response = await axios.post(SALON_API, salon, {
+            headers: { "Content-Type": "application/json" }
+        });
+        return response.data;
+    } catch (error) {
+        throw new Error(error.response.data.message);
+    }
 }
 
-export async function setNoDisponible(mnemonico) {
-    const response = await fetch(`${SALON_API}/${mnemonico}/noDisponible`, { method: "PUT" });
-    if (!response.ok) throw new Error("Error al marcar el salón como no disponible");
-}
-
-export async function actualizarSalon(mnemonico, datosActualizados) {
-    const response = await fetch(`${SALON_API}/${mnemonico}`, {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(datosActualizados),
-    });
-    if (!response.ok) throw new Error("Error al actualizar el salón");
+/**
+ * Actualiza la información de un salón.
+ * @param {string} mnemonico - Mnemónico del salón a actualizar.
+ * @param {Object} salon - Datos actualizados del salón.
+ * @returns {Promise<Object>} Respuesta del servidor.
+ * @throws {Error} Error al actualizar el salón.
+ */
+export async function actualizarSalon(mnemonico, salon) {
+    try {
+        const response = await axios.patch(`${SALON_API}/${mnemonico}`, salon, {
+            headers: { "Content-Type": "application/json" }
+        });
+        return response.data;
+    } catch (error) {
+        throw new Error(error.response.data.message);
+    }
 }

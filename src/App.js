@@ -12,6 +12,9 @@ import Usarios from './pages/Usarios/Usarios.js';
 
 import './App.css';
 
+/**
+ * Configuración de rutas según el rol del usuario.
+ */
 const routesConfig = {
   admin: [
     { path: "/admin", name: "Panel de Control", icon: <House className="svg" /> },
@@ -23,6 +26,12 @@ const routesConfig = {
   ],
 };
 
+/**
+ * Componente de menú de navegación basado en el rol del usuario.
+ * @param {Object} props - Propiedades del componente.
+ * @param {"admin"|"profe"} props.role - Rol del usuario.
+ * @returns {JSX.Element} Lista de enlaces de navegación.
+ */
 const Menu = ({ role }) => (
   <ul className="menu">
     {routesConfig[role]?.map((item, index) => (
@@ -36,6 +45,12 @@ const Menu = ({ role }) => (
   </ul>
 )
 
+/**
+ * Componente de encabezado que muestra el título de la página y el saludo al usuario.
+ * @param {Object} props - Propiedades del componente.
+ * @param {"admin"|"profe"} props.role - Rol del usuario.
+ * @returns {JSX.Element} Encabezado de la aplicación.
+ */
 const Header = ({ role }) => {
   const location = useLocation();
   const currentPage = routesConfig[role]?.find(route => route.path === location.pathname);
@@ -54,7 +69,11 @@ const Header = ({ role }) => {
   );
 };
 
-
+/**
+ * Componente principal de la aplicación.
+ * Controla el estado del rol del usuario y maneja la lógica de enrutamiento.
+ * @returns {JSX.Element} Estructura principal de la aplicación.
+ */
 function App() {
   const [role, setRole] = useState("");
 
