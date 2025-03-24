@@ -38,9 +38,6 @@ const GestionarSalones = () => {
   return (
     <div className="gestionar-salones">
       <header className="header">
-        <h2>Panel de control</h2>
-        <p>Buen día, <strong>Admin</strong></p>
-        <p>Gestiona las reservas que has agendado últimamente</p>
       </header>
 
       <div className="top-bar">
@@ -93,7 +90,17 @@ const GestionarSalones = () => {
                 <option value="Ubicación 1">Ubicación 1</option>
                 <option value="Ubicación 2">Ubicación 2</option>
               </select>
-              <input type="range" min="0" max="32" value={newSalon.capacidad} onChange={(e) => setNewSalon({ ...newSalon, capacidad: e.target.value })} />
+              <div className="capacity-container">
+                <label htmlFor="capacidad">Capacidad: {newSalon.capacidad}</label>
+                <input 
+                  id="capacidad"
+                  type="range" 
+                  min="0" 
+                  max="32" 
+                  value={newSalon.capacidad} 
+                  onChange={(e) => setNewSalon({ ...newSalon, capacidad: e.target.value })} 
+                />
+              </div>
               <select multiple value={newSalon.recursos} onChange={(e) => setNewSalon({ ...newSalon, recursos: Array.from(e.target.selectedOptions, option => option.value) })}>
                 <option value="Recurso 1">Recurso 1</option>
                 <option value="Recurso 2">Recurso 2</option>
