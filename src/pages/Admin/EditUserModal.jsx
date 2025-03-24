@@ -1,8 +1,8 @@
-import React, { useState } from "react";
-import "./AddUserModal.css";
+import React, { useState, useEffect } from "react";
+import "./EditUserModal.css";
 
-function AddUserModal({ onClose, onAdd }) {
-  // Manejo de estados del formulario
+function EditUserModal({ user, onClose }) {
+  // Estado para manejar el formulario con los datos del usuario
   const [formData, setFormData] = useState({
     idInstitucional: "",
     nombre: "",
@@ -10,14 +10,29 @@ function AddUserModal({ onClose, onAdd }) {
     correo: "",
   });
 
+  // Cuando el modal recibe el usuario, actualiza el estado con sus datos
+  useEffect(() => {
+    if (user) {
+      setFormData({
+        idInstitucional: user.idInstitucional,
+        nombre: user.nombre,
+        apellido: user.apellido,
+        correo: user.correo,
+      });
+    }
+  }, [user]);
+
+  // Manejo de cambios en los inputs
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
+  // Al enviar el formulario (aquí puedes llamar a una API para actualizar)
   const handleSubmit = (e) => {
     e.preventDefault();
-    onAdd(formData); // Llama a la función para añadir el usuario
+    console.log("Usuario actualizado:", formData);
+    onClose(); // Cerrar modal tras guardar cambios
   };
 
   return (
@@ -68,17 +83,10 @@ function AddUserModal({ onClose, onAdd }) {
             </label>
 
             <div className="modal-buttons">
-              <button
-                type="button"
-                className="btn-cancel"
-                onClick={onClose}
-              >
+              <button type="button" className="btn-cancel" onClick={onClose}>
                 Cancelar
               </button>
-              <button
-                type="submit"
-                className="btn-save"
-              >
+              <button type="submit" className="btn-save">
                 Guardar
               </button>
             </div>
@@ -89,4 +97,4 @@ function AddUserModal({ onClose, onAdd }) {
   );
 }
 
-export default AddUserModal;
+export default EditUserModal;

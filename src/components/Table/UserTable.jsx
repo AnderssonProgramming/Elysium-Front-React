@@ -11,6 +11,7 @@ function UserTable({ users }) {
           <th>Id Institucional</th>
           <th>Nombre</th>
           <th>Apellido</th>
+          <th>Correo</th>
           <th>Admin</th>
           <th>Activo</th>
           <th>Editar</th>
@@ -18,7 +19,7 @@ function UserTable({ users }) {
       </thead>
       <tbody>
         {users.map((user) => (
-          <UserRow key={user.id} user={user} />
+          <UserRow key={user.idInstitucional} user={user} />
         ))}
       </tbody>
     </table>
