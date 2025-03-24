@@ -1,0 +1,25 @@
+import React from "react";
+import styled from "styled-components";
+import LoginForm from "../../components/Login/LoginForm";
+import ImageSection from "../../components/Login/ImageSection";
+
+const LoginPage = () => {
+  return (
+    <PageContainer>
+      <LoginForm />
+      <ImageSection />
+    </PageContainer>
+  );
+};
+
+const PageContainer = styled.main`
+  display: flex;
+  width: 100%;
+  height: 100vh;
+  background-color: #fff;
+  @media (max-width: 991px) {
+    flex-direction: column;
+  }
+`;
+
+export default LoginPage;
