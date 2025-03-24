@@ -1,194 +1,112 @@
-import React, { useState } from 'react';
-import { FaPencilAlt, FaTrash, FaSearch } from 'react-icons/fa';
-import './GestionarSalones.css';
-import AgregarSalones from './AgregarSalones';
+import React, { useState } from "react";
+import "./GestionarSalones.css";
 
 const GestionarSalones = () => {
-  // Estado para almacenar los salones
-  const [salones, setSalones] = useState([
-    {
-      id: 1,
-      nombre: 'Fundamentos computacionales',
-      descripcion: 'Lorem ipsum dolor sit amet, con...',
-      activo: true
-    },
-    {
-      id: 2,
-      nombre: 'Fundamentos computacionales',
-      descripcion: 'Lorem ipsum dolor sit amet, con...',
-      activo: true
-    },
-    {
-      id: 3,
-      nombre: 'Fundamentos computacionales',
-      descripcion: 'Lorem ipsum dolor sit amet, con...',
-      activo: true
-    },
-    {
-      id: 4,
-      nombre: 'Fundamentos computacionales',
-      descripcion: 'Lorem ipsum dolor sit amet, con...',
-      activo: true
-    },
-    {
-      id: 5,
-      nombre: 'Fundamentos computacionales',
-      descripcion: 'Lorem ipsum dolor sit amet, con...',
-      activo: true
+  const [salones, setSalones] = useState([]);
+  const [showModal, setShowModal] = useState(false);
+  const [newSalon, setNewSalon] = useState({
+    nombre: "",
+    mnemonico: "",
+    descripcion: "",
+    ubicacion: "",
+    capacidad: 0,
+    recursos: []
+  });
+
+  const toggleActivo = (id) => {
+    setSalones(salones.map(salon => salon.id === id ? { ...salon, activo: !salon.activo } : salon));
+  };
+
+  const handleEdit = (id) => {
+    alert(`Editar salón con ID: ${id}`);
+  };
+
+  const handleDelete = (id) => {
+    setSalones(salones.filter(salon => salon.id !== id));
+  };
+
+  const handleAddSalon = () => {
+    if (newSalon.nombre.trim() && newSalon.descripcion.trim()) {
+      setSalones([...salones, { id: Date.now(), ...newSalon, activo: true }]);
+      setNewSalon({ nombre: "", mnemonico: "", descripcion: "", ubicacion: "", capacidad: 0, recursos: [] });
+      setShowModal(false);
+    } else {
+      alert("Por favor, complete todos los campos.");
     }
-  ]);
-
-  // Estado para la búsqueda
-  const [busqueda, setBusqueda] = useState('');
-
-  // Estado para controlar la visibilidad del modal
-  const [modalOpen, setModalOpen] = useState(false);
-
-  // Función para manejar el cambio en el toggle de activo
-  const handleToggleActivo = (id) => {
-    setSalones(
-      salones.map((salon) =>
-        salon.id === id ? { ...salon, activo: !salon.activo } : salon
-      )
-    );
-  };
-
-  // Función para eliminar un salón
-  const handleBorrarSalon = (id) => {
-    setSalones(salones.filter((salon) => salon.id !== id));
-  };
-
-  // Función para filtrar salones según la búsqueda
-  const salonesFiltrados = salones.filter(
-    (salon) =>
-      salon.nombre.toLowerCase().includes(busqueda.toLowerCase()) ||
-      salon.descripcion.toLowerCase().includes(busqueda.toLowerCase())
-  );
-
-  // Función para guardar un nuevo salón
-  const handleSaveSalon = (nuevoSalon) => {
-    setSalones([
-      ...salones,
-      {
-        id: salones.length + 1,
-        ...nuevoSalon,
-        activo: true
-      }
-    ]);
   };
 
   return (
-    <div className="gestionar-salones-container">
-      <div className="sidebar">
-        <div className="sidebar-option active">
-          <div className="sidebar-icon">
-            <i className="panel-icon"></i>
-          </div>
-          <span>Panel de control</span>
-        </div>
-        <div className="sidebar-option selected">
-          <div className="sidebar-icon">
-            <i className="salones-icon"></i>
-          </div>
-          <span>Gestionar salones</span>
-        </div>
-        <div className="sidebar-option">
-          <div className="sidebar-icon">
-            <i className="usuarios-icon"></i>
-          </div>
-          <span>Gestionar usuarios</span>
-        </div>
-        <div className="sidebar-option">
-          <div className="sidebar-icon">
-            <i className="insights-icon"></i>
-          </div>
-          <span>Insights</span>
-        </div>
+    <div className="gestionar-salones">
+      <header className="header">
+        <h2>Panel de control</h2>
+        <p>Buen día, <strong>Admin</strong></p>
+        <p>Gestiona las reservas que has agendado últimamente</p>
+      </header>
+
+      <div className="top-bar">
+        <input type="text" placeholder="🔍 Buscar" className="search-bar" />
+        <button className="add-button" onClick={() => setShowModal(true)}>Agregar salón</button>
       </div>
 
-      <div className="main-content">
-        <div className="header">
-          <div className="header-title">
-            <h1>Panel de control</h1>
-            <h2>Buen día, admin Emily</h2>
-            <p>Gestiona las reservas que has agendado últimamente</p>
-          </div>
-          <div className="header-user">
-            <div className="user-avatar">
-              <img src="/avatar-placeholder.jpg" alt="Emily Rincon" />
-            </div>
-            <span>Emily Rincon</span>
-            <button className="logout-button">
-              <i className="logout-icon"></i>
-            </button>
-          </div>
-        </div>
-
-        <div className="actions">
-          <div className="search-bar">
-            <FaSearch className="search-icon" />
-            <input
-              type="text"
-              placeholder="Buscar"
-              value={busqueda}
-              onChange={(e) => setBusqueda(e.target.value)}
-            />
-          </div>
-          <button className="add-salon-button" onClick={() => setModalOpen(true)}>
-            <i className="add-icon"></i>
-            Agregar salon
-          </button>
-        </div>
-
-        <div className="table-container">
-          <table className="salones-table">
-            <thead>
-              <tr>
-                <th>Nombre</th>
-                <th>Descripción</th>
-                <th>Activo</th>
-                <th>Editar</th>
+      <div className="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th>Nombre</th>
+              <th>Descripción</th>
+              <th>Activo</th>
+              <th>Editar</th>
+            </tr>
+          </thead>
+          <tbody>
+            {salones.map((salon) => (
+              <tr key={salon.id}>
+                <td>{salon.nombre}</td>
+                <td>{salon.descripcion}</td>
+                <td>
+                  <label className="switch">
+                    <input type="checkbox" checked={salon.activo} onChange={() => toggleActivo(salon.id)} />
+                    <span className="slider round"></span>
+                  </label>
+                </td>
+                <td>
+                  <button className="edit-button" onClick={() => handleEdit(salon.id)}>✏️ Editar</button>
+                  <button className="delete-button" onClick={() => handleDelete(salon.id)}>🗑️ Borrar</button>
+                </td>
               </tr>
-            </thead>
-            <tbody>
-              {salonesFiltrados.map((salon) => (
-                <tr key={salon.id}>
-                  <td>{salon.nombre}</td>
-                  <td>{salon.descripcion}</td>
-                  <td>
-                    <label className="toggle">
-                      <input
-                        type="checkbox"
-                        checked={salon.activo}
-                        onChange={() => handleToggleActivo(salon.id)}
-                      />
-                      <span className="slider"></span>
-                    </label>
-                  </td>
-                  <td className="actions-cell">
-                    <button className="edit-button">
-                      <FaPencilAlt /> Editar
-                    </button>
-                    <button
-                      className="delete-button"
-                      onClick={() => handleBorrarSalon(salon.id)}
-                    >
-                      <FaTrash /> Borrar
-                    </button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+            ))}
+          </tbody>
+        </table>
       </div>
 
-      {/* Modal para agregar salón */}
-      <AgregarSalonModal
-        isOpen={modalOpen}
-        onClose={() => setModalOpen(false)}
-        onSave={handleSaveSalon}
-      />
+      {showModal && (
+        <div className="modal-overlay">
+          <div className="modal">
+            <h2>Crear nuevo salón</h2>
+            <h3>Agregar salón</h3>
+            <div className="modal-content">
+              <input type="text" placeholder="Nombre" value={newSalon.nombre} onChange={(e) => setNewSalon({ ...newSalon, nombre: e.target.value })} />
+              <input type="text" placeholder="Mnemónico" value={newSalon.mnemonico} onChange={(e) => setNewSalon({ ...newSalon, mnemonico: e.target.value })} />
+              <textarea placeholder="Descripción" value={newSalon.descripcion} onChange={(e) => setNewSalon({ ...newSalon, descripcion: e.target.value })}></textarea>
+              <select value={newSalon.ubicacion} onChange={(e) => setNewSalon({ ...newSalon, ubicacion: e.target.value })}>
+                <option value="">Seleccionar...</option>
+                <option value="Ubicación 1">Ubicación 1</option>
+                <option value="Ubicación 2">Ubicación 2</option>
+              </select>
+              <input type="range" min="0" max="32" value={newSalon.capacidad} onChange={(e) => setNewSalon({ ...newSalon, capacidad: e.target.value })} />
+              <select multiple value={newSalon.recursos} onChange={(e) => setNewSalon({ ...newSalon, recursos: Array.from(e.target.selectedOptions, option => option.value) })}>
+                <option value="Recurso 1">Recurso 1</option>
+                <option value="Recurso 2">Recurso 2</option>
+                <option value="Recurso 3">Recurso 3</option>
+              </select>
+            </div>
+            <div className="modal-buttons">
+              <button className="cancel-button" onClick={() => setShowModal(false)}>Cancelar</button>
+              <button className="save-button" onClick={handleAddSalon}>Crear</button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
