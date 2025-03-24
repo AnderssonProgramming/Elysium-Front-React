@@ -8,20 +8,13 @@ function AddUserModal({ onClose, onAdd }) {
     nombre: "",
     apellido: "",
     correo: "",
-    admin: false,
-    activo: false,
   });
 
-  // Manejo de cambios en los inputs
   const handleChange = (e) => {
-    const { name, value, type, checked } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: type === "checkbox" ? checked : value,
-    }));
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  // Al enviar el formulario
   const handleSubmit = (e) => {
     e.preventDefault();
     onAdd(formData); // Llama a la función para añadir el usuario
@@ -32,23 +25,15 @@ function AddUserModal({ onClose, onAdd }) {
       <div className="modal-content">
         {/* Encabezado del modal */}
         <div className="modal-header">
-          <h2 className="modal-title">Crear nuevo usuario</h2>
+          <h2 className="modal-title">
+            Id institucional - {formData.idInstitucional || "000000000"}
+          </h2>
         </div>
 
         {/* Cuerpo del modal */}
         <div className="modal-body">
+          <h3>Editar Usuario</h3>
           <form onSubmit={handleSubmit}>
-            <label>
-              Id institucional
-              <input
-                type="text"
-                name="idInstitucional"
-                value={formData.idInstitucional}
-                onChange={handleChange}
-                required
-              />
-            </label>
-
             <label>
               Nombre
               <input
@@ -81,22 +66,6 @@ function AddUserModal({ onClose, onAdd }) {
                 required
               />
             </label>
-
-            {/* Toggles de Admin y Activo */}
-            <div className="toggle-group">
-              <div className="toggle-item">
-                <label>Admin</label>
-                <label className="switch">
-                  <input
-                    type="checkbox"
-                    name="admin"
-                    checked={formData.admin}
-                    onChange={handleChange}
-                  />
-                  <span className="slider round"></span>
-                </label>
-              </div>
-            </div>
 
             <div className="modal-buttons">
               <button

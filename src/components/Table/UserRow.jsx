@@ -2,6 +2,8 @@
 import React from "react";
 import Toggle from "../Toggle/Toggle";
 import Button from "../Button/Button";
+import AddUserModal from "../../pages/EditUserModal";
+import 
 
 function UserRow({ user }) {
   const { id, idInstitucional, nombre, apellido, admin, activo } = user;
@@ -20,6 +22,7 @@ function UserRow({ user }) {
       <td>
         <Button variant="edit" onClick={() => console.log("Editar usuario", id)}>Editar</Button>
         {/* <Button variant="delete" onClick={() => console.log("Borrar usuario", id)}>Borrar</Button>k */}
+
       </td>
     </tr>
   );
