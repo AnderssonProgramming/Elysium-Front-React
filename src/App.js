@@ -20,18 +20,15 @@ import './App.css';
  */
 const routesConfig = {
   admin: [
-    { path: "/admin", name: "Panel de Control", icon: <House className="svg" /> },
-    { path: "/salones", name: "Gestión de Salones", icon: <Room className="svg" /> },
-    { path: "/usuarios", name: "Gestión de Usuarios", icon: <User className="svg" /> },
+    { path: "/administrador", name: "Panel de Control", icon: <House className="svg" /> },
+    { path: "/administrador/salones", name: "Gestión de Salones", icon: <Room className="svg" /> },
+    { path: "administrador/usuarios", name: "Gestión de Usuarios", icon: <User className="svg" /> },
   ],
   profe: [
     { path: "/home", name: "Gestión de Reservas", icon: <House className="svg" /> },
   ],
 };
 
-/**
- * Componente de menú de navegación basado en el rol del usuario.
- */
 const Menu = ({ role }) => (
   <ul className="menu">
     {routesConfig[role]?.map((item, index) => (
@@ -103,9 +100,9 @@ function App() {
             <Routes>
               {role === "admin" ? (
                 <>
-                  <Route path="/admin" element={<Home />} />
-                  <Route path="/salones" element={<div>Gestión de Salones</div>} />
-                  <Route path="/usuarios" element={<GestionarUsuarios />} />
+                  <Route path="/administrador" element={<Home />} />
+                  <Route path="/administrador/salones" element={<div>Gestión de Salones</div>} />
+                  <Route path="administrador/usuarios" element={<GestionarUsuarios />} />
                   <Route path="*" element={<Navigate to="/admin" />} />
                 </>
               ) : (
