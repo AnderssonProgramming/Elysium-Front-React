@@ -19,7 +19,7 @@ function UserRow({ user }) {
       </td>
       <td>
         <Button variant="edit" onClick={() => console.log("Editar usuario", id)}>Editar</Button>
-        <Button variant="delete" onClick={() => console.log("Borrar usuario", id)}>Borrar</Button>
+        {/* <Button variant="delete" onClick={() => console.log("Borrar usuario", id)}>Borrar</Button>k */}
       </td>
     </tr>
   );
