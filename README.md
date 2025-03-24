@@ -7,8 +7,8 @@
 # ELYSIUM
 
 ## PRE-RREQUISITOS
-- Servidor local para pruebas (opcional: Live Server o cualquier servidor web)
 - Node.js
+- JSDocs
 - MongoDB
 - AzureDevops
 
@@ -53,6 +53,7 @@ Esto creará una nueva aplicación React llamada "my-app". Puedes reemplazar "my
 Durante el desarrollo del proyecto, se utilizaron las siguientes librerías:
 ```sh
 npm install react-router-dom
+npm install axios
 ```
 
 ## MANTENIMIENTO Y CONSTRUCCIÓN

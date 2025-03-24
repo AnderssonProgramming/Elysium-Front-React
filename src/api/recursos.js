@@ -1,56 +1,82 @@
+import axios from "axios";
 import { BASE_URL } from "../config/config.js";
 
 const RECURSO_API = `${BASE_URL}/recurso`;
 
-export async function consultarRecursos() {
-    const response = await fetch(`${RECURSO_API}/consultarRecursos`);
-    if (!response.ok) throw new Error("Error al obtener los recursos");
-    return response.json();
+/**
+ * Obtiene la lista de todos los recursos disponibles.
+ * @returns {Promise<Object[]>} Lista de recursos.
+ * @throws {Error} Si la solicitud falla.
+ */
+export async function getRecursos(filtros) {
+    try {
+        const response = await axios.get(RECURSO_API, { params: filtros });
+        return response.data;
+    } catch (error) {
+        throw new Error(error.response.data.message);
+    }
 }
 
-export async function consultarNombre(nombre) {
-    const response = await fetch(`${RECURSO_API}/consultarNombre?nombre=${encodeURIComponent(nombre)}`);
-    if (!response.ok) throw new Error("Error al obtener el recurso por nombre");
-    return response.json();
-}
-
-export async function consultarCantidad(cantidad) {
-    const response = await fetch(`${RECURSO_API}/consultarCantidad?cantidad=${cantidad}`);
-    if (!response.ok) throw new Error("Error al obtener los recursos por cantidad");
-    return response.json();
-}
-
-export async function consultarEspecificaciones(especificaciones) {
-    const response = await fetch(`${RECURSO_API}/consultarEspecificaciones?especificaciones=${encodeURIComponent(especificaciones)}`);
-    if (!response.ok) throw new Error("Error al obtener los recursos por especificaciones");
-    return response.json();
-}
-
+/**
+ * Obtiene un recurso por su identificador.
+ * @param {string} id - Identificador único del recurso.
+ * @returns {Promise<Object>} Datos del recurso encontrado.
+ * @throws {Error} Si la solicitud falla.
+ */
 export async function consultarRecurso(id) {
-    const response = await fetch(`${RECURSO_API}/consultarRecurso?id=${id}`);
-    if (!response.ok) throw new Error("Error al obtener el recurso");
-    return response.json();
+    try {
+        const response = await axios.get(`${RECURSO_API}/${id}`);
+        return response.data;
+    } catch (error) {
+        throw new Error(error.response.data.message);
+    }
 }
 
+/**
+ * Agrega un nuevo recurso.
+ * @param {Object} recurso - Datos del recurso a agregar.
+ * @param {string} recurso.nombre - Nombre del recurso.
+ * @param {number} recurso.cantidad - Cantidad disponible.
+ * @param {string[]} recurso.especificaciones - Lista de especificaciones del recurso.
+ * @returns {Promise<void>}
+ * @throws {Error} Si la solicitud falla.
+ */
 export async function agregarRecurso(recurso) {
-    const response = await fetch(`${RECURSO_API}/agregarRecurso`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(recurso),
-    });
-    if (!response.ok) throw new Error("Error al agregar el recurso");
+    try {
+        const response = await axios.post(RECURSO_API, recurso);
+        return response.data;
+    } catch (error) {
+        throw new Error(error.response.data.message);
+    }
 }
 
-export async function actualizarRecurso(recurso) {
-    const response = await fetch(`${RECURSO_API}/actualizarRecurso`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(recurso),
-    });
-    if (!response.ok) throw new Error("Error al actualizar el recurso");
+/**
+ * Actualiza un recurso existente.
+ * @param {string} id - Identificador del recurso a actualizar.
+ * @param {Object} recurso - Datos actualizados del recurso.
+ * @returns {Promise<void>}
+ * @throws {Error} Si la solicitud falla.
+ */
+export async function actualizarRecurso(id, recurso) {
+    try {
+        const response = await axios.patch(`${RECURSO_API}/${id}`, recurso);
+        return response.data;
+    } catch (error) {
+        throw new Error(error.response.data.message);
+    }
 }
 
-export async function eliminarRecurso(id) {
-    const response = await fetch(`${RECURSO_API}/${id}/eliminarRecurso`, { method: "DELETE" });
-    if (!response.ok) throw new Error("Error al eliminar el recurso");
+/**
+ * Deshabilita un recurso existente.
+ * @param {string} id - Identificador del recurso a deshabilitar.
+ * @returns {Promise<void>}
+ * @throws {Error} Si la solicitud falla.
+ */
+export async function deshabilitarRecurso(id) {
+    try {
+        const response = await axios.put(`${RECURSO_API}/${id}/inactivo`);
+        return response.data;
+    } catch (error) {
+        throw new Error(error.response.data.message);
+    }
 }
