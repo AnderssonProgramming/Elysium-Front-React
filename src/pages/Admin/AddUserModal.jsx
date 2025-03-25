@@ -8,7 +8,7 @@ function AddUserModal({ onClose, onAdd }) {
     nombre: "",
     apellido: "",
     correo: "",
-    admin: false,
+    isAdmin: false,
     activo: false,
   });
 
@@ -89,8 +89,8 @@ function AddUserModal({ onClose, onAdd }) {
                 <label className="switch">
                   <input
                     type="checkbox"
-                    name="admin"
-                    checked={formData.admin}
+                    name="isAdmin"
+                    checked={formData.isAdmin}
                     onChange={handleChange}
                   />
                   <span className="slider round"></span>

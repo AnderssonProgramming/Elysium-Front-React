@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { consultarUsuarios } from "../../api/usuario/administrador";
+import { consultarUsuarios, agregarUsuario } from "../../api/usuario/administrador";
 import UserTable from "../../components/Table/UserTable";
 import "./GestionarUsuarios.css";
 import AddUserModal from "./AddUserModal";
@@ -27,14 +27,22 @@ const GestionarUsuarios = () => {
     fetchUsers();
   }, []);
 
-  // Función para manejar la adición de un nuevo usuario.
-  // Aquí puedes integrar la llamada a la API (por ejemplo, usando agregarUsuario) y actualizar el estado.
-  const handleAddUser = async (newUser) => {
-    // Ejemplo: actualizar la lista localmente y cerrar el modal.
-    setUsers((prevUsers) => [...prevUsers, { ...newUser, id: Date.now() }]);
-    setShowModal(false);
-  };
+  // Función para agregar usuario usando la API
 
+  const handleAddUser = async (newUser) => {
+    try {
+      // Llamamos a la API para agregar el usuario
+      const addedUser = await agregarUsuario(newUser);
+      // Actualizamos la lista de usuarios con el nuevo usuario agregado
+      console.log("Usuario agregado:", addedUser);
+      setUsers((prev) => [...prev, addedUser]);
+      // Cerramos el modal
+      setShowModal(false);
+    } catch (error) {
+      console.error("Error al agregar usuario:", error);
+    }
+  };
+ 
   if (loading) return <p>Cargando usuarios...</p>;
   if (error) return <p>Error: {error}</p>;
 
