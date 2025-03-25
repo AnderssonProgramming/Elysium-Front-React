@@ -7,7 +7,7 @@ function EditUserModal({ user, onClose }) {
     idInstitucional: "",
     nombre: "",
     apellido: "",
-    correo: "",
+    correoInstitucional: "",
   });
 
   // Cuando el modal recibe el usuario, actualiza el estado con sus datos
@@ -17,7 +17,7 @@ function EditUserModal({ user, onClose }) {
         idInstitucional: user.idInstitucional,
         nombre: user.nombre,
         apellido: user.apellido,
-        correo: user.correo,
+        correoInstitucional: user.correoInstitucional,
       });
     }
   }, [user]);
@@ -76,7 +76,7 @@ function EditUserModal({ user, onClose }) {
               <input
                 type="email"
                 name="correo"
-                value={formData.correo}
+                value={formData.correoInstitucional}
                 onChange={handleChange}
                 required
               />
