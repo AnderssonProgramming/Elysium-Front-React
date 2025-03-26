@@ -22,6 +22,24 @@ export async function consultarUsuarios(filtros) {
 }
 
 /**
+ * Consulta un usuario por su correo institucional.
+ * @param {string} correo - Correo institucional del usuario.
+ * @returns {Promise<Object>} - Datos del usuario.
+ * @throws {Error} - Si la consulta falla.
+ */
+export async function consultarUsuarioPorCorreo(correo) {
+    try {
+      // Verifica la ruta y el parámetro "correo"
+      const response = await axios.get(`${ADMIN_API}/usuarioPorCorreo`, {
+        params: { correo: correo },
+      });
+      return response.data;
+    } catch (error) {
+      throw new Error(error.response?.data?.message || "Error consultando usuario");
+    }
+  }
+
+/**
  * Agrega un nuevo usuario al sistema.
  * @param {Object} usuario - Datos del usuario a agregar.
  * @returns {Promise<void>} Promesa resuelta si el usuario se agrega correctamente.

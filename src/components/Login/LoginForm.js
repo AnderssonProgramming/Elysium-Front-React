@@ -2,37 +2,33 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import FormInput from "./FormInput";
 import { useNavigate } from "react-router-dom";
+import { consultarUsuarioPorCorreo } from "../../api/usuario/administrador"; // Importa la nueva función
+
 
 const LoginForm = () => {
   const navigate = useNavigate();
   const [correo, setCorreo] = useState("");
-  const [password, setPassword] = useState("");
+  const [password, setPassword] = useState(""); // Aquí se ingresa el idInstitucional
+  const [errorMsg, setErrorMsg] = useState("");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    // Aquí realiza la llamada a tu API de login con fetch o axios.
-    // Por ejemplo:
-    /*
+    setErrorMsg("");
     try {
-      const response = await fetch('https://localhost:8443/api/auth/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ correo, password })
-      });
-      if (!response.ok) throw new Error('Error en la autenticación');
-      const data = await response.json();
-      // Guarda el token en localStorage o maneja la cookie según corresponda
-      localStorage.setItem('token', data.token);
-      // Redirige a la pantalla de administrador
-      navigate('/adminhome');
+      // Consulta el usuario por su correo institucional
+      const usuario = await consultarUsuarioPorCorreo(correo);
+      // Valida que el idInstitucional (password) ingresado sea igual al del usuario retornado.
+      if (usuario && String(usuario.idInstitucional) === password) {
+        // Si coincide, redirige a la pantalla de administrador
+        localStorage.setItem("token", "dummy-token");
+        navigate("/adminhome");
+      } else {
+        setErrorMsg("Usuario no encontrado o contraseña incorrecta");
+      }
     } catch (error) {
+      setErrorMsg("Usuario no encontrado o contraseña incorrecta");
       console.error(error);
-      // Aquí puedes mostrar un mensaje de error en la UI
     }
-    */
-    // Para la demostración, simulamos un login exitoso:
-    localStorage.setItem("token", "dummy-token");
-    navigate("/adminhome");
   };
 
   return (
@@ -45,15 +41,18 @@ const LoginForm = () => {
         <FormInput
           label="CORREO INSTITUCIONAL"
           type="email"
+          placeholder="nombre.apellido@escuelaing.edu.co"
           onChange={(e) => setCorreo(e.target.value)}
         />
         <FormInput
           label="CONTRASEÑA"
           type="password"
+          placeholder="idInstitucional"
           onChange={(e) => setPassword(e.target.value)}
         />
         <LoginButton type="submit">Ingresar</LoginButton>
       </form>
+      {errorMsg && <ErrorMessage>{errorMsg}</ErrorMessage>}
       <CvdsLogo
         src="https://cdn.builder.io/api/v1/image/assets/TEMP/a04bfa90ef84cb31360009a48d4d01c2ac370589"
         alt="CVDS Logo"
@@ -93,17 +92,26 @@ const LoginButton = styled.button`
   height: 54px;
   border-radius: 2px;
   border: none;
-  color: #fff;
+  color:rgb(22, 45, 255);
   font-family: "Inter", sans-serif;
   font-size: 19px;
   font-weight: 700;
   margin: 0 auto;
+  margin-top: 100px;
   cursor: pointer;
   background-color: #d9ed92;
   display: block;
   @media (max-width: 640px) {
     width: 100%;
   }
+`;
+
+const ErrorMessage = styled.div`
+  color: red;
+  font-size: 16px;
+  font-weight: bold;
+  text-align: center;
+  margin-top: 20px;
 `;
 
 const CvdsLogo = styled.img`
