@@ -1,0 +1,54 @@
+.popup-overlay .popup-add-reserva {
+    background: white;
+    border-radius: 10px;
+    width: 80%;
+    text-align: center;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+.popup-overlay .popup-add-reserva .title {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding: 20px;
+    border-radius: 10px 10px 0 0;
+    background-color: var(--variable-collection-current-color);
+}
+
+.popup-overlay .popup-add-reserva .title span {
+    white-space: nowrap;
+    color: white;
+}
+
+.popup-overlay .popup-add-reserva .title .right-side-panel {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-end;
+    width: 100%;
+    height: 100%;
+    gap: 8%;
+}
+
+.popup-overlay .popup-add-reserva .title .right-side-panel .usuario-data {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    justify-content: center;
+    height: 100%;
+    gap: 10px;
+}
+
+.popup-overlay .popup-add-reserva .content {
+    height: fit-content;
+}
+
+.popup-overlay .popup-add-reserva .title .right-side-panel .close-btn {
+    display: flex;
+    flex-direction: column;
+    border: none;
+    color: white;
+    background-color: transparent;
+    border-radius: 5px;
+    cursor: pointer;
+}

@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { consultarUsuario, listarReservas } from "../../api/usuario/estandar.js";
-import { getSalonByMnemonico } from "../../api/salon.js";
-import FormGenerarReserva from "../../components/generarReserva/GenerarReservaForm.js";
-import imagenQuemada from '../../assets/images/D-310.png';
+import { consultarUsuario, listarReservas } from "../../api/usuario/estandar";
+import { getSalonByMnemonico } from "../../api/salon";
 import { ReactComponent as Trashcan } from '../../assets/icons/trash-can.svg';
 import { ReactComponent as Note } from '../../assets/icons/note-medical_9856368 1.svg';
+import imagenQuemada from '../../assets/images/D-310.png';
+import AddReservaModal from "../../components/popup/AddReservaModal/AddReservaModal";
+import DetalleReservaModal from "../../components/popup/DetalleReservaModal/DetalleReservaModal";
+import EliminarReservaModal from "../../components/popup/EliminarReservaModal/EliminarReservaModal";
 import './Home.css'
 
 /**
@@ -20,25 +22,7 @@ function Home() {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [coloresReservas, setColoresReservas] = useState({});
-    const [mostrarPopup, setMostrarPopup] = useState(false);
-    const [contenidoPopup, setContenidoPopup] = useState("");
-
-    /**
-     * Simula la obtención de los datos del usuario hasta que haya autenticación real.
-     */
-    useEffect(() => {
-        const fetchUsuario = async () => {
-            try {
-                // TODO: Reemplazar el ID 14 con el ID real cuando el login esté listo.
-                const data = await consultarUsuario(14);
-                setUsuario(data);
-            } catch (error) {
-                setError(error.response.data.message);
-            }
-        };
-
-        fetchUsuario();
-    }, []);
+    const [popup, setPopup] = useState({ tipo: "", reserva: null });
 
     /**
      * Paleta de colores opacos en formato RGBA.
@@ -60,65 +44,9 @@ function Home() {
             colorOscuro: colores[indiceAleatorio][1]
         };
     };
-    
-    /**
-     * Obtiene la lista de reservas del usuario desde la API.
-     * Se ejecuta solo una vez cuando el componente se monta.
-     * 
-     * @async
-     * @function fetchReservas
-     * @returns {Promise<void>}
-     */
-    useEffect(() => {
-        const fetchReservas = async () => {
-            if (!usuario) return;
 
-            try {
-                const data = await listarReservas(usuario.idInstitucional);
-                setReservas(data);
-                const nuevosColores = {};
-                data.forEach(reserva => {
-                    nuevosColores[reserva.idReserva] = obtenerColorAleatorio();
-                });
-                setColoresReservas(nuevosColores);
-            } catch (error) {
-                setError(error.message);
-            } finally {
-                setLoading(false); 
-            }
-        }
-
-        fetchReservas();
-    }, [usuario]);
-
-    
-    useEffect(() => {
-        const fetchSalones = async () => {
-            if (reservas.length === 0) return;
-
-            try {
-                const mnemonicosUnicos = [...new Set(reservas.map(reserva => reserva.idSalon))];
-                const salonesData = await Promise.all(mnemonicosUnicos.map(mnemonico => getSalonByMnemonico(mnemonico)));
-                const salonesMap = {};
-                salonesData.forEach(salon => {
-                    salonesMap[salon.mnemonico] = salon;
-                });
-                setSalones(salonesMap);
-            } catch (error) {
-                setError(error.message);
-            }
-        };
-
-        fetchSalones();
-    }, [reservas]); 
-
-    if (loading) {
-        return <div>Cargando...</div>;
-    }
-
-    if (error) {
-        return <div>{error}</div>;
-    }
+    const abrirPopup = (tipo, reserva = null) => setPopup({ tipo, reserva });
+    const cerrarPopup = () => setPopup({ tipo: "", reserva: null });
 
     /**
      * Formatea una fecha en formato "YYYY-MM-DD" a "Mes día, año" en español.
@@ -162,63 +90,106 @@ function Home() {
         return `${formatoHora(fechaInicio)} - ${formatoHora(fechaFin)}pm`;
     };
 
+    /**
+     * Obtiene la lista de reservas del usuario desde la API.
+     * Se ejecuta solo una vez cuando el componente se monta.
+     * 
+     * @async
+     * @function fetchReservas
+     * @returns {Promise<void>}
+     */
+    const fetchReservas = async () => {
+        if (!usuario) return;
 
-
-    const abrirPopup = (tipo, reserva = null) => {
-        if (tipo === "detalle" && reserva) {
-            setContenidoPopup(
-                <div>
-                    <h2>Detalles de la Reserva</h2>
-                    <p><strong>Salón:</strong> {salones[reserva.idSalon]?.nombre || reserva.idSalon}</p>
-                    <p><strong>Fecha:</strong> {reserva.fechaReserva}</p>
-                    <p><strong>Materia:</strong> {reserva.materia || "No especificada"}</p>
-                    <button onClick={() => setMostrarPopup(false)} className="close-btn">Cerrar</button>
-                </div>
-            );
-        } else if (tipo === "nuevaReserva") {
-            setContenidoPopup(
-                <div>
-                    <div className="title">
-                        <span className="crearReservaTitle">Crear nueva reserva</span>
-                        <div className="right-side-panel">
-                            <div className="usuario-data">
-                                <span>Nombre: {usuario.nombre}</span>
-                                <span>Id usuario: {usuario.idInstitucional}</span>
-                            </div>
-                            <button onClick={() => setMostrarPopup(false)} className="close-btn">✖</button>
-                        </div>
-                    </div>
-                    <FormGenerarReserva onClose={() => setMostrarPopup(false)} />
-                </div>
-            );
+        try {
+            const data = await listarReservas(usuario.idInstitucional);
+            setReservas(data);
+            const nuevosColores = {};
+            data.forEach(reserva => {
+                nuevosColores[reserva.idReserva] = obtenerColorAleatorio();
+            });
+            setColoresReservas(nuevosColores);
+        } catch (error) {
+            setError(error.message);
+        } finally {
+            setLoading(false); 
         }
-        setMostrarPopup(true);
-    };
+    }
 
+    /**
+     * Simula la obtención de los datos del usuario hasta que haya autenticación real.
+     */
+    useEffect(() => {
+        const fetchUsuario = async () => {
+            try {
+                // TODO: Reemplazar el ID 14 con el ID real cuando el login esté listo.
+                const data = await consultarUsuario(14);
+                setUsuario(data);
+            } catch (error) {
+                setError(error.response.data.message);
+            }
+        };
 
+        fetchUsuario();
+    }, []);
+    
+    useEffect(() => {
+        fetchReservas();
+    }, [usuario]);
+
+    
+    useEffect(() => {
+        const fetchSalones = async () => {
+            if (reservas.length === 0) return;
+
+            try {
+                const mnemonicosUnicos = [...new Set(reservas.map(reserva => reserva.idSalon))];
+                const salonesData = await Promise.all(mnemonicosUnicos.map(mnemonico => getSalonByMnemonico(mnemonico)));
+                const salonesMap = {};
+                salonesData.forEach(salon => {
+                    salonesMap[salon.mnemonico] = salon;
+                });
+                setSalones(salonesMap);
+            } catch (error) {
+                setError(error.message);
+            }
+        };
+
+        fetchSalones();
+    }, [reservas]); 
+
+    if (loading) { return <div>Cargando...</div>;}
+    if (error) { return <div>{error}</div>;}
 
     return (
         <div className="home">
             <div className="reservas">
                 <div className="title">
                     <h1>Reservas</h1>
-                    <span>{reservas.length} activas</span>
+                    <span>{reservas.filter(reserva => reserva.estado === "ACTIVA").length} activas</span>
                 </div>
                 <div className="agregarReserva">
+
+                    {/*
+                        TODO Integrar boton por componentes
+                    */}
                     <button className="agregarReservaBTN" onClick={() => abrirPopup("nuevaReserva")}>
                         <Note />
                         <span>Nueva reserva</span>
                     </button>
                 </div>
             </div>
+
             <ul className="reserva-lista">
-                {reservas.map((reserva) => {
-                if (!coloresReservas[reserva.idReserva]) {
-                    setColoresReservas((prev) => ({
-                        ...prev,
-                        [reserva.idReserva]: obtenerColorAleatorio(),
-                    }));
-                }
+                {reservas
+                    .filter(reserva => reserva.estado === "ACTIVA")
+                    .map((reserva) => {
+                    if (!coloresReservas[reserva.idReserva]) {
+                        setColoresReservas((prev) => ({
+                            ...prev,
+                            [reserva.idReserva]: obtenerColorAleatorio(),
+                        }));
+                    }
                 
                 const { colorOpaco, colorOscuro } = coloresReservas[reserva.idReserva];
 
@@ -244,7 +215,7 @@ function Home() {
 
                             <div className="datos-reserva">
                                 <span className="nombre">{salones[reserva.idSalon]?.nombre || reserva.idSalon}</span>
-                                <span className="subtitulo">{reserva.materia ? reserva.materia : 'Salon Clase'}</span>
+                                <span className="subtitulo">{reserva.materia ? reserva.materia : "No especificada"}</span>
                             </div>
                         </div>
 
@@ -260,7 +231,7 @@ function Home() {
                             </div>
                             <div className="btns">
                                 <button className="detalle" onClick={() => abrirPopup("detalle", reserva)} style={{ color: colorOscuro }}>Ver detalle</button>
-                                <button className="trsh"><Trashcan width="15" height="15" /></button>
+                                <button className="trsh" onClick={() => abrirPopup("eliminar", reserva)}><Trashcan width="15" height="15" /></button>
                             </div>
                         </div>
                     </li>
@@ -268,13 +239,18 @@ function Home() {
                 })}
             </ul>
 
-            {mostrarPopup && (
-                <div className="popup-overlay">
-                    <div className="popup-content">
-                        {contenidoPopup}
-                    </div>
-                </div>
-            )}
+            {popup.tipo === "nuevaReserva" && <AddReservaModal usuario={usuario} onClose={cerrarPopup} onReservaExitosa={fetchReservas} />}
+            {popup.tipo === "detalle" && popup.reserva && <DetalleReservaModal
+                reserva={popup.reserva}
+                salones={salones} 
+                hora={ formatearHora(popup.reserva.hora, popup.reserva.duracionBloque) }
+                onClose={cerrarPopup} />}
+            {popup.tipo === "eliminar" && popup.reserva &&<EliminarReservaModal
+                reserva={popup.reserva}
+                onClose={cerrarPopup}
+                hora={ formatearHora(popup.reserva.hora, popup.reserva.duracionBloque) }
+                onDelete={ fetchReservas }
+            />}
         </div>
     );
 }

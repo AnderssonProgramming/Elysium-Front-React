@@ -1,0 +1,110 @@
+.popup-delete form {
+    display: flex;
+    flex-direction: column;
+    height: fit-content;
+    justify-content: center;
+    align-items: center;
+    margin: 0;
+    padding: 0;
+}
+
+.popup-overlay .popup-delete {
+    display: flex;
+    flex-direction: column;
+    background-color: white;
+    border-radius: 10px;
+    width: 35%;
+    text-align: center;
+    gap: 10px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+.popup-overlay .popup-delete .verification {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+.popup-overlay .popup-delete .verification .header {
+    display: flex;
+    flex-direction: row;
+    padding: 4%;
+    width: auto;
+    border-radius: 10px 10px 0 0;
+    background-color: var(--variable-collection-current-color);
+}
+
+.popup-overlay .popup-delete .verification .header span {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--variable-collection-text-white);
+}
+
+.popup-overlay .popup-delete .verification .data {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 6%;
+    margin-left: 6%;
+    align-items: flex-start;
+    justify-content: center;
+}
+
+.popup-overlay .popup-delete .verification .data span {
+    color: var(--variable-collection-text);
+}
+
+.popup-overlay .popup-delete .btns {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    padding: 4%;
+    gap: 20px;
+}
+
+.cancelarBTN {
+    display: flex;
+    flex-direction: row;
+    padding: 10px 20px;
+    border-radius: 10px;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    cursor: pointer;
+    background: none;
+    outline: none;
+    gap: 10px;
+    color: var(--variable-collection-current-color);
+    border: 1px solid var(--variable-collection-current-color);
+    transition: all 0.1s ease-in-out;
+}
+
+.cancelarBTN:hover {
+    background-color: var(--variable-collection-current-color);
+    color: white;
+}
+
+.deleteBTN {
+    display: flex;
+    flex-direction: row;
+    padding: 10px 20px;
+    border-radius: 10px;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    cursor: pointer;
+    background: none;
+    outline: none;
+    gap: 10px;
+    color: white;
+    background-color: var(--variable-collection-delete-btn);
+    border: 1px solid var(--variable-collection-delete-btn);
+    transition: all 0.1s ease-in-out;
+}
+
+.deleteBTN:hover {
+    background-color: white;
+    color: var(--variable-collection-delete-btn);
+    border: 1px solid white;
+}
