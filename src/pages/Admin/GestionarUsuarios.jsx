@@ -1,67 +1,120 @@
-import { useEffect, useState } from "react";
-import { consultarUsuarios, agregarUsuario } from "../../api/usuario/administrador";
+import React, { useEffect, useState } from "react";
+import styled from "styled-components";
+import { consultarUsuarios } from "../../api/usuario/administrador";
 import UserTable from "../../components/Table/UserTable";
-import "./GestionarUsuarios.css";
 import AddUserModal from "./AddUserModal";
-import ButtonAddUser from "../../components/Button/ButtonAddUser"; // Ajusta la ruta según tu estructura
+import EditUserModal from "./EditUserModal";
+import ButtonAddUser from "../../components/Button/ButtonAddUser";
+
+const Container = styled.div`
+  padding: 20px;
+`;
+
+const Title = styled.h2`
+  margin-bottom: 20px;
+  color: #333;
+`;
+
+const Actions = styled.div`
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 20px;
+`;
+
+const LoadingMessage = styled.p`
+  color: #666;
+  font-size: 16px;
+  text-align: center;
+  margin: 40px 0;
+`;
+
+const ErrorMessage = styled.p`
+  color: #d32f2f;
+  background-color: #ffebee;
+  padding: 10px;
+  border-radius: 4px;
+  margin: 20px 0;
+`;
 
 const GestionarUsuarios = () => {
   const [users, setUsers] = useState([]);
-  const [loading, setLoading] = useState(true); // Estado para manejar la carga
-  const [error, setError] = useState(null); // Estado para manejar errores
-  const [showModal, setShowModal] = useState(false); // Controla la visibilidad del modal
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [showAddModal, setShowAddModal] = useState(false);
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [selectedUser, setSelectedUser] = useState(null);
 
+  // Cargar usuarios al iniciar
   useEffect(() => {
-    const fetchUsers = async () => {
-      try {
-        setLoading(true);
-        const usuarios = await consultarUsuarios({}); // Puedes personalizar los filtros aquí, sin filtros por ahora
-        setUsers(usuarios);
-      } catch (err) {
-        setError(err.message);
-      } finally {
-        setLoading(false);
-      }
-    };
-
     fetchUsers();
   }, []);
+  
+  // Función para cargar usuarios
+  const fetchUsers = async () => {
+    try {
+      setLoading(true);
+      const usuarios = await consultarUsuarios({});
+      setUsers(usuarios);
+      setError(null);
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   // Función para agregar usuario usando la API
-
   const handleAddUser = async (newUser) => {
     try {
-      // Llamamos a la API para agregar el usuario
-      const addedUser = await agregarUsuario(newUser);
-      // Actualizamos la lista de usuarios con el nuevo usuario agregado
-      console.log("Usuario agregado:", addedUser);
-      setUsers((prev) => [...prev, addedUser]);
-      // Cerramos el modal
-      setShowModal(false);
+      await fetchUsers(); // Recargar la lista de usuarios después de agregar
+      setShowAddModal(false);
     } catch (error) {
       console.error("Error al agregar usuario:", error);
     }
   };
+  
+  // Función para abrir modal de edición
+  const handleEditUser = (user) => {
+    setSelectedUser(user);
+    setShowEditModal(true);
+  };
+  
+  // Función para actualizar usuario en la lista después de edición
+  const handleUpdateUser = async () => {
+    await fetchUsers(); // Recargar la lista completa para asegurar datos actualizados
+  };
  
-  if (loading) return <p>Cargando usuarios...</p>;
-  if (error) return <p>Error: {error}</p>;
+  if (loading) return <LoadingMessage>Cargando usuarios...</LoadingMessage>;
+  if (error) return <ErrorMessage>Error: {error}</ErrorMessage>;
 
   return (
-    <div className="gestionar-usuarios">
-      <h2>Gestionar Usuarios</h2>
+    <Container>
+      <Title>Gestionar Usuarios</Title>
 
-      <div className="actions" style={{ display: 'flex', justifyContent: 'flex-end' }}>
-        <ButtonAddUser onClick={() => setShowModal(true)} />
-      </div>
-      <UserTable users={users} />
+      <Actions>
+        <ButtonAddUser onClick={() => setShowAddModal(true)} />
+      </Actions>
+      
+      <UserTable 
+        users={users} 
+        onEditUser={handleEditUser} 
+      />
 
-      {showModal && (
+      {showAddModal && (
         <AddUserModal
-          onClose={() => setShowModal(false)}
+          onClose={() => setShowAddModal(false)}
           onAdd={handleAddUser}
         />
       )}
-    </div>
+      
+      {showEditModal && selectedUser && (
+        <EditUserModal
+          user={selectedUser}
+          onClose={() => setShowEditModal(false)}
+          onUpdate={handleUpdateUser}
+        />
+      )}
+    </Container>
   );
 };
 
