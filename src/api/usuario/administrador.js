@@ -2,18 +2,29 @@ import api from "../../api/axiosInstance";
 
 const ADMIN_API = "/administrador"; // Ya no necesitas BASE_URL aquí
 
-export async function consultarUsuarios(filtros) {
+export async function consultarUsuarios(filtros = {}) {
     try {
-        const response = await api.get(`${ADMIN_API}/usuarios`, { params: filtros });
+        // Solo incluimos parámetros que no sean null o undefined
+        const params = {};
+        if (filtros.activo !== null && filtros.activo !== undefined) {
+            params.activo = filtros.activo;
+        }
+        if (filtros.isAdmin !== null && filtros.isAdmin !== undefined) {
+            params.isAdmin = filtros.isAdmin;
+        }
+
+        const response = await api.get(`${ADMIN_API}/usuarios`, { params });
         return response.data;
     } catch (error) {
-        throw new Error(error.response?.data?.message || "Error al consultar usuarios");
+        console.error("Error al consultar usuarios:", error);
+        const mensaje = error.response?.data?.message || "Error al consultar usuarios";
+        throw new Error(mensaje);
     }
 }
 
 export const agregarUsuario = async (datosUsuario) => {
     try {
-      const response = await api.post('/api/administrador/usuario', datosUsuario);
+      const response = await api.post(`${ADMIN_API}/usuario`, datosUsuario);
       return response.data;
     } catch (error) {
       // Extraer la información de error detallada

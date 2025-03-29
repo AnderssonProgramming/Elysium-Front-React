@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import { agregarUsuario } from "../../api/usuario/administrador";
 
-// Reutilizamos los mismos styled-components de EditUserModal
+// Definición completa de todos los styled components
 const ModalOverlay = styled.div`
   position: fixed;
   top: 0;
@@ -174,83 +174,20 @@ const ErrorMessage = styled.div`
   }
 `;
 
-
 function AddUserModal({ onClose, onAdd }) {
-  // Estado para manejar el formulario
+  // PRIMERO: Declara TODOS los estados
   const [formData, setFormData] = useState({
     idInstitucional: "",
     nombre: "",
     apellido: "",
-    correo: "",  // Cambiado de correoInstitucional a correo para coincidir con el backend
+    correo: "",
     isAdmin: false,
     activo: true
   });
-
-  // Actualiza el manejo de errores en handleSubmit
-
-const handleSubmit = async (e) => {
-  e.preventDefault();
-  setIsSubmitting(true);
-  setError(null);
-  
-  try {
-    // Crear nuevo usuario
-    const nuevoUsuario = await agregarUsuario({
-      id: formData.idInstitucional,
-      nombre: formData.nombre,
-      apellido: formData.apellido,
-      correo: formData.correo,
-      isAdmin: formData.isAdmin,
-      activo: formData.activo
-    });
-    
-    // Notificar al componente padre sobre la creación exitosa
-    if (onAdd) {
-      onAdd(nuevoUsuario);
-    }
-    
-    onClose(); // Cerrar modal tras guardar
-  } catch (err) {
-    console.error("Error en operación:", err);
-    
-    // Mensajes descriptivos basados en el código de error
-    let mensajeError = "Error al crear el usuario";
-    
-    switch (err.codigo) {
-      case 'INVALID_ID':
-        mensajeError = "El ID institucional no es válido. Debe tener 10 dígitos.";
-        break;
-      case 'INVALID_EMAIL':
-        mensajeError = "El formato del correo es inválido. Debe ser nombre.apellido@escuelaing.edu.co";
-        break;
-      case 'USER_EXISTS':
-        mensajeError = "Ya existe un usuario con este ID institucional.";
-        break;
-      case 'EMAIL_EXISTS':
-        mensajeError = "Ya existe un usuario con este correo electrónico.";
-        break;
-      case 'VALIDATION_ERROR':
-        mensajeError = "Hay errores en el formulario. Por favor verifica los campos.";
-        if (err.data?.errors) {
-          const camposInvalidos = Object.keys(err.data.errors).join(", ");
-          mensajeError += ` Campos inválidos: ${camposInvalidos}`;
-        }
-        break;
-      default:
-        // Usar el mensaje que viene del servidor si está disponible
-        mensajeError = err.message || mensajeError;
-    }
-    
-    setError(mensajeError);
-  } finally {
-    setIsSubmitting(false);
-  }
-};
-  
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState(null);
 
-  // Manejo de cambios en los inputs
+  // SEGUNDO: Define las funciones que utilizan esos estados
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
     setFormData((prev) => ({ 
@@ -258,19 +195,76 @@ const handleSubmit = async (e) => {
       [name]: type === "checkbox" ? checked : value 
     }));
   };
+  
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+    setError(null);
+    
+    try {
+      // Crear nuevo usuario
+      const nuevoUsuario = await agregarUsuario({
+        idInstitucional: parseInt(formData.idInstitucional),
+        nombre: formData.nombre,
+        apellido: formData.apellido,
+        correo: formData.correo,
+        isAdmin: formData.isAdmin,
+        activo: formData.activo
+      });
+      
+      // Notificar al componente padre sobre la creación exitosa
+      if (onAdd) {
+        onAdd(nuevoUsuario);
+      }
+      
+      onClose(); // Cerrar modal tras guardar
+    } catch (err) {
+      console.error("Error en operación:", err);
+      
+      // Mensajes descriptivos basados en el código de error
+      let mensajeError = "Error al crear el usuario";
+      
+      switch (err.codigo) {
+        case 'INVALID_ID':
+          mensajeError = "El ID institucional no es válido. Debe tener 10 dígitos.";
+          break;
+        case 'INVALID_EMAIL':
+          mensajeError = "El formato del correo es inválido. Debe ser nombre.apellido@escuelaing.edu.co";
+          break;
+        case 'USER_EXISTS':
+          mensajeError = "Ya existe un usuario con este ID institucional.";
+          break;
+        case 'EMAIL_EXISTS':
+          mensajeError = "Ya existe un usuario con este correo electrónico.";
+          break;
+        case 'VALIDATION_ERROR':
+          mensajeError = "Hay errores en el formulario. Por favor verifica los campos.";
+          if (err.data?.errors) {
+            const camposInvalidos = Object.keys(err.data.errors).join(", ");
+            mensajeError += ` Campos inválidos: ${camposInvalidos}`;
+          }
+          break;
+        default:
+          // Usar el mensaje que viene del servidor si está disponible
+          mensajeError = err.message || mensajeError;
+      }
+      
+      setError(mensajeError);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
-
+  // TERCERO: Retorna el JSX
   return (
     <ModalOverlay>
       <ModalContent>
-        {/* Encabezado del modal */}
         <ModalHeader>
           <ModalTitle>
             Crear nuevo usuario
           </ModalTitle>
         </ModalHeader>
 
-        {/* Cuerpo del modal */}
         <ModalBody>
           {error && <ErrorMessage>{error}</ErrorMessage>}
           <Form onSubmit={handleSubmit}>
@@ -314,15 +308,14 @@ const handleSubmit = async (e) => {
               Correo Institucional
               <FormInput
                 type="email"
-                name="correo"  // Cambiado para coincidir con el backend
-                value={formData.correo}  // Actualizado para usar el nuevo nombre de campo
+                name="correo"
+                value={formData.correo}
                 onChange={handleChange}
                 placeholder="correo@mail.escuelaing.edu.co"
                 required
               />
             </FormLabel>
 
-            {/* Toggles de Admin y Activo */}
             <ToggleGroup>
               <ToggleItem>
                 <span>Admin</span>
