@@ -6,11 +6,11 @@ import Button from "../Button/Button"; // Asegúrate de que este import apunte a
 // Estilos para la fila
 const StyledTableRow = styled.tr`
   &:nth-child(even) {
-    background-color: #f9f9f9;
+    background-color:rgba(167, 224, 208, 0.31);
   }
   
   &:hover {
-    background-color: #f0f7ff;
+    background-color: rgba(167, 224, 208, 0.31);
   }
 `;
 

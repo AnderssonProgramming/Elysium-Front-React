@@ -11,14 +11,15 @@ const StyledTable = styled.table`
 `;
 
 const TableHeader = styled.thead`
-  background-color: #f5f5f5;
+  background-color: #52b69a;
+  color: white;
 `;
 
 const TableHeaderCell = styled.th`
   padding: 1rem;
   text-align: left;
   font-weight: 600;
-  color: #333;
+  color: white;
 `;
 
 function UserTable({ users, onUpdateUser }) {

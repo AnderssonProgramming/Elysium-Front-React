@@ -9,6 +9,7 @@ const PageContainer = styled.div`
   padding: 20px;
 `;
 
+
 const PageHeader = styled.div`
   display: flex;
   justify-content: space-between;
@@ -187,7 +188,7 @@ function GestionarUsuarios() {
   return (
     <PageContainer>
       <PageHeader>
-        <Title>Gestión de Usuarios</Title>
+        <Title style={{ color: "#52b69a" }}>Gestión de Usuarios</Title>
         <AddButton onClick={() => setShowAddModal(true)}>
           <i className="fas fa-plus"></i> Añadir Usuario
         </AddButton>
