@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { consultarUsuarios } from '../../api/usuario/administrador';
 import UserFilters from '../../components/UserFilters/UserFilters';
-import UserTable from '../../components/UserTable/UserTable';
+import UserTable from '../../components/Table/UserTable';
+import AddUserModal from './AddUserModal';
 import styled from 'styled-components';
 
 const Container = styled.div`
@@ -52,40 +53,45 @@ const ButtonAdd = styled.button`
 `;
 
 function UserManagement() {
+  // Estados para manejar los usuarios, filtros, carga y errores
   const [users, setUsers] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
   const [filters, setFilters] = useState({
-    activo: null,  // true, false, o null
-    isAdmin: null  // true, false, o null
+    activo: null,  // true, false, o null (sin filtro)
+    isAdmin: null  // true, false, o null (sin filtro)
   });
   const [showAddModal, setShowAddModal] = useState(false);
 
-  // Cargar usuarios con filtros
+  // Efecto para cargar usuarios con filtros aplicados
   useEffect(() => {
     const loadUsers = async () => {
+      console.log("Cargando usuarios con filtros:", filters);
       setIsLoading(true);
       setError(null);
       try {
         const data = await consultarUsuarios(filters);
+        console.log("Usuarios recibidos:", data);
         setUsers(data);
       } catch (err) {
-        setError(err.message || "Error al cargar usuarios");
         console.error("Error cargando usuarios:", err);
+        setError(err.message || "Error al cargar usuarios");
       } finally {
         setIsLoading(false);
       }
     };
 
     loadUsers();
-  }, [filters]); // Recargar cuando cambien los filtros
+  }, [filters]); // Recargar cuando cambian los filtros
 
   const handleAddUser = (newUser) => {
+    console.log("Usuario agregado:", newUser);
     // Actualizar lista de usuarios después de agregar uno nuevo
     setUsers(prevUsers => [...prevUsers, newUser]);
   };
 
   const handleUpdateUser = (updatedUser) => {
+    console.log("Usuario actualizado:", updatedUser);
     // Actualizar un usuario existente en la lista
     setUsers(prevUsers => 
       prevUsers.map(user => 
@@ -125,7 +131,7 @@ function UserManagement() {
         <NoResultsMessage>No se encontraron usuarios con los filtros seleccionados.</NoResultsMessage>
       ) : null}
       
-      {/* Modal para agregar usuario - implementar según necesidad */}
+      {/* Modal para agregar usuario */}
       {showAddModal && (
         <AddUserModal 
           onClose={() => setShowAddModal(false)}

@@ -1,52 +1,68 @@
 import React from 'react';
 import styled from 'styled-components';
 
-const FilterContainer = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  gap: 1.5rem;
-  padding: 1rem;
-  margin-bottom: 1.5rem;
-  background-color: #f5f5f5;
+const FiltersContainer = styled.div`
+  margin-bottom: 20px;
+  padding: 16px;
+  background-color: #f5f7fa;
   border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 `;
 
-const FilterGroup = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-`;
-
-const FilterTitle = styled.h3`
-  margin: 0;
-  font-size: 1rem;
+const FiltersTitle = styled.h3`
+  margin-top: 0;
+  margin-bottom: 12px;
+  font-size: 16px;
   font-weight: 600;
   color: #333;
 `;
 
+const FiltersGrid = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+`;
+
+const FilterGroup = styled.div`
+  min-width: 200px;
+`;
+
+const FilterGroupTitle = styled.div`
+  font-weight: 500;
+  margin-bottom: 8px;
+  font-size: 14px;
+  color: #555;
+`;
+
 const FilterOptions = styled.div`
   display: flex;
-  gap: 1rem;
+  gap: 16px;
 `;
 
 const FilterOption = styled.label`
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: 6px;
   cursor: pointer;
+  user-select: none;
+  font-size: 14px;
+
+  input {
+    cursor: pointer;
+  }
 `;
 
-const UserFilters = ({ filters, setFilters }) => {
+function UserFilters({ filters, setFilters }) {
+  // Función para manejar cambios en los filtros de estado (activo)
   const handleActiveFilterChange = (value) => {
-    // Si se selecciona el mismo valor, lo deseleccionamos (null)
     setFilters(prev => ({
       ...prev,
       activo: prev.activo === value ? null : value
     }));
   };
 
+  // Función para manejar cambios en los filtros de rol (isAdmin)
   const handleAdminFilterChange = (value) => {
-    // Si se selecciona el mismo valor, lo deseleccionamos (null)
     setFilters(prev => ({
       ...prev,
       isAdmin: prev.isAdmin === value ? null : value
@@ -54,56 +70,59 @@ const UserFilters = ({ filters, setFilters }) => {
   };
 
   return (
-    <FilterContainer>
-      <FilterGroup>
-        <FilterTitle>Estado</FilterTitle>
-        <FilterOptions>
-          <FilterOption>
-            <input
-              type="checkbox"
-              checked={filters.activo === true}
-              onChange={() => handleActiveFilterChange(true)}
-              id="filter-activo"
-            />
-            <label htmlFor="filter-activo">Activos</label>
-          </FilterOption>
-          <FilterOption>
-            <input
-              type="checkbox"
-              checked={filters.activo === false}
-              onChange={() => handleActiveFilterChange(false)}
-              id="filter-inactivo"
-            />
-            <label htmlFor="filter-inactivo">Inactivos</label>
-          </FilterOption>
-        </FilterOptions>
-      </FilterGroup>
+    <FiltersContainer>
+      <FiltersTitle>Filtros</FiltersTitle>
+      <FiltersGrid>
+        <FilterGroup>
+          <FilterGroupTitle>Estado</FilterGroupTitle>
+          <FilterOptions>
+            <FilterOption>
+              <input
+                type="checkbox"
+                id="filter-active"
+                checked={filters.activo === true}
+                onChange={() => handleActiveFilterChange(true)}
+              />
+              <span>Activos</span>
+            </FilterOption>
+            <FilterOption>
+              <input
+                type="checkbox"
+                id="filter-inactive"
+                checked={filters.activo === false}
+                onChange={() => handleActiveFilterChange(false)}
+              />
+              <span>Inactivos</span>
+            </FilterOption>
+          </FilterOptions>
+        </FilterGroup>
 
-      <FilterGroup>
-        <FilterTitle>Rol</FilterTitle>
-        <FilterOptions>
-          <FilterOption>
-            <input
-              type="checkbox"
-              checked={filters.isAdmin === true}
-              onChange={() => handleAdminFilterChange(true)}
-              id="filter-admin"
-            />
-            <label htmlFor="filter-admin">Administradores</label>
-          </FilterOption>
-          <FilterOption>
-            <input
-              type="checkbox"
-              checked={filters.isAdmin === false}
-              onChange={() => handleAdminFilterChange(false)}
-              id="filter-estandar"
-            />
-            <label htmlFor="filter-estandar">Estándar</label>
-          </FilterOption>
-        </FilterOptions>
-      </FilterGroup>
-    </FilterContainer>
+        <FilterGroup>
+          <FilterGroupTitle>Rol</FilterGroupTitle>
+          <FilterOptions>
+            <FilterOption>
+              <input
+                type="checkbox"
+                id="filter-admin"
+                checked={filters.isAdmin === true}
+                onChange={() => handleAdminFilterChange(true)}
+              />
+              <span>Administradores</span>
+            </FilterOption>
+            <FilterOption>
+              <input
+                type="checkbox"
+                id="filter-standard"
+                checked={filters.isAdmin === false}
+                onChange={() => handleAdminFilterChange(false)}
+              />
+              <span>Estándar</span>
+            </FilterOption>
+          </FilterOptions>
+        </FilterGroup>
+      </FiltersGrid>
+    </FiltersContainer>
   );
-};
+}
 
 export default UserFilters;
