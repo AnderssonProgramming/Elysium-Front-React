@@ -200,7 +200,23 @@ function AddUserModal({ onClose, onAdd }) {
     e.preventDefault();
     setIsSubmitting(true);
     setError(null);
-    
+
+     // Validaciones
+  const idValue = formData.idInstitucional;
+  // Verificar que sea exactamente 10 dígitos
+  if (!/^\d{10}$/.test(idValue)) {
+    setError("El ID institucional debe contener exactamente 10 dígitos");
+    setIsSubmitting(false);
+    return;
+  }
+  
+  // Verificar que no exceda el límite del tipo int de Java
+  if (parseInt(idValue) > 2147483647 || parseInt(idValue) < 0) {
+    setError("El ID institucional está fuera del rango permitido (1000000000 - 2147483647)");
+    setIsSubmitting(false);
+    return;
+  }
+  
     try {
       // Crear nuevo usuario
       const nuevoUsuario = await agregarUsuario({

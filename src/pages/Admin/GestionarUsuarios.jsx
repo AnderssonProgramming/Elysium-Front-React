@@ -23,7 +23,7 @@ const Title = styled.h2`
 `;
 
 const AddButton = styled.button`
-  background-color: #2196f3;
+  background-color: #52b69a;
   color: white;
   border: none;
   border-radius: 4px;
