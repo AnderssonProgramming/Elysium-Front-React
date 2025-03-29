@@ -159,9 +159,19 @@ const SaveButton = styled(Button)`
 const ErrorMessage = styled.div`
   background-color: #ffebee;
   color: #c62828;
-  padding: 0.75rem;
+  padding: 1rem;
   border-radius: 4px;
-  margin-bottom: 1rem;
+  border-left: 4px solid #c62828;
+  margin-bottom: 1.5rem;
+  font-size: 0.95rem;
+  display: flex;
+  align-items: center;
+  
+  &::before {
+    content: "⚠️";
+    margin-right: 8px;
+    font-size: 1.2rem;
+  }
 `;
 
 
@@ -175,6 +185,67 @@ function AddUserModal({ onClose, onAdd }) {
     isAdmin: false,
     activo: true
   });
+
+  // Actualiza el manejo de errores en handleSubmit
+
+const handleSubmit = async (e) => {
+  e.preventDefault();
+  setIsSubmitting(true);
+  setError(null);
+  
+  try {
+    // Crear nuevo usuario
+    const nuevoUsuario = await agregarUsuario({
+      id: formData.idInstitucional,
+      nombre: formData.nombre,
+      apellido: formData.apellido,
+      correo: formData.correo,
+      isAdmin: formData.isAdmin,
+      activo: formData.activo
+    });
+    
+    // Notificar al componente padre sobre la creación exitosa
+    if (onAdd) {
+      onAdd(nuevoUsuario);
+    }
+    
+    onClose(); // Cerrar modal tras guardar
+  } catch (err) {
+    console.error("Error en operación:", err);
+    
+    // Mensajes descriptivos basados en el código de error
+    let mensajeError = "Error al crear el usuario";
+    
+    switch (err.codigo) {
+      case 'INVALID_ID':
+        mensajeError = "El ID institucional no es válido. Debe tener 10 dígitos.";
+        break;
+      case 'INVALID_EMAIL':
+        mensajeError = "El formato del correo es inválido. Debe ser nombre.apellido@escuelaing.edu.co";
+        break;
+      case 'USER_EXISTS':
+        mensajeError = "Ya existe un usuario con este ID institucional.";
+        break;
+      case 'EMAIL_EXISTS':
+        mensajeError = "Ya existe un usuario con este correo electrónico.";
+        break;
+      case 'VALIDATION_ERROR':
+        mensajeError = "Hay errores en el formulario. Por favor verifica los campos.";
+        if (err.data?.errors) {
+          const camposInvalidos = Object.keys(err.data.errors).join(", ");
+          mensajeError += ` Campos inválidos: ${camposInvalidos}`;
+        }
+        break;
+      default:
+        // Usar el mensaje que viene del servidor si está disponible
+        mensajeError = err.message || mensajeError;
+    }
+    
+    setError(mensajeError);
+  } finally {
+    setIsSubmitting(false);
+  }
+};
   
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState(null);
@@ -188,36 +259,6 @@ function AddUserModal({ onClose, onAdd }) {
     }));
   };
 
-  // Al enviar el formulario
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setIsSubmitting(true);
-    setError(null);
-    
-    try {
-      // Crear nuevo usuario con la estructura correcta que espera el backend
-      const nuevoUsuario = await agregarUsuario({
-        idInstitucional: formData.idInstitucional,
-        nombre: formData.nombre,
-        apellido: formData.apellido,
-        correo: formData.correo,  // ¡Asegúrate de que coincida con el backend!
-        isAdmin: formData.isAdmin,
-        activo: formData.activo
-      });
-      
-      // Notificar al componente padre sobre la creación exitosa
-      if (onAdd) {
-        onAdd(nuevoUsuario);
-      }
-      
-      onClose(); // Cerrar modal tras guardar
-    } catch (err) {
-      console.error("Error completo:", err);
-      setError(err.message || "Error al crear el usuario");
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
 
   return (
     <ModalOverlay>
