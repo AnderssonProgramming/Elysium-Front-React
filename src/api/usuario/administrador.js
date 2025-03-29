@@ -4,6 +4,8 @@ const ADMIN_API = "/administrador"; // Ya no necesitas BASE_URL aquí
 
 export async function consultarUsuarios(filtros = {}) {
     try {
+        console.log("Enviando filtros al backend:", filtros);
+        
         // Solo incluimos parámetros que no sean null o undefined
         const params = {};
         if (filtros.activo !== null && filtros.activo !== undefined) {
@@ -12,6 +14,10 @@ export async function consultarUsuarios(filtros = {}) {
         if (filtros.isAdmin !== null && filtros.isAdmin !== undefined) {
             params.isAdmin = filtros.isAdmin;
         }
+
+        // Mostrar la URL completa para depuración
+        console.log("URL de solicitud:", `${ADMIN_API}/usuarios`);
+        console.log("Parámetros:", params);
 
         const response = await api.get(`${ADMIN_API}/usuarios`, { params });
         return response.data;

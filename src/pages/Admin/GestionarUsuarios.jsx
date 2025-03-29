@@ -1,118 +1,155 @@
-import React, { useEffect, useState } from "react";
-import styled from "styled-components";
-import { consultarUsuarios } from "../../api/usuario/administrador";
-import UserTable from "../../components/Table/UserTable";
-import AddUserModal from "./AddUserModal";
-import EditUserModal from "./EditUserModal";
-import ButtonAddUser from "../../components/Button/ButtonAddUser";
+import React, { useState, useEffect } from 'react';
+import styled from 'styled-components';
+import { consultarUsuarios } from '../../api/usuario/administrador';
+import UserFilters from '../../components/UserFilters';
+import UserTable from '../../components/Table/UserTable';
+import AddUserModal from './AddUserModal';
 
-const Container = styled.div`
+const PageContainer = styled.div`
   padding: 20px;
 `;
 
+const PageHeader = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+`;
+
 const Title = styled.h2`
-  margin-bottom: 20px;
+  margin: 0;
+  font-size: 24px;
   color: #333;
 `;
 
-const Actions = styled.div`
+const AddButton = styled.button`
+  background-color: #2196f3;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 10px 16px;
+  font-weight: 500;
+  cursor: pointer;
   display: flex;
-  justify-content: flex-end;
+  align-items: center;
+  gap: 8px;
+  
+  &:hover {
+    background-color: #1976d2;
+  }
+`;
+
+const LoadingIndicator = styled.div`
+  text-align: center;
+  padding: 40px;
+  color: #666;
+  font-size: 16px;
+`;
+
+const ErrorMessage = styled.div`
+  background-color: #ffebee;
+  color: #c62828;
+  padding: 16px;
+  border-radius: 4px;
   margin-bottom: 20px;
 `;
 
-const LoadingMessage = styled.p`
-  color: #666;
-  font-size: 16px;
+const EmptyState = styled.div`
   text-align: center;
-  margin: 40px 0;
+  padding: 40px;
+  background-color: #f5f5f5;
+  border-radius: 8px;
+  color: #666;
 `;
 
-const ErrorMessage = styled.p`
-  color: #d32f2f;
-  background-color: #ffebee;
-  padding: 10px;
-  border-radius: 4px;
-  margin: 20px 0;
-`;
-
-const GestionarUsuarios = () => {
+function GestionarUsuarios() {
+  // Estados para manejar los datos
   const [users, setUsers] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [showAddModal, setShowAddModal] = useState(false);
-  const [showEditModal, setShowEditModal] = useState(false);
-  const [selectedUser, setSelectedUser] = useState(null);
+  
+  // Estado para los filtros
+  const [filters, setFilters] = useState({
+    activo: null, // null = sin filtro, true = activos, false = inactivos
+    isAdmin: null  // null = sin filtro, true = admins, false = no admins
+  });
 
-  // Cargar usuarios al iniciar
+  // Efecto para cargar usuarios con los filtros aplicados
   useEffect(() => {
-    fetchUsers();
-  }, []);
-  
-  // Función para cargar usuarios
-  const fetchUsers = async () => {
-    try {
+    const loadUsers = async () => {
       setLoading(true);
-      const usuarios = await consultarUsuarios({});
-      setUsers(usuarios);
       setError(null);
-    } catch (err) {
-      setError(err.message);
-    } finally {
-      setLoading(false);
-    }
-  };
+      
+      try {
+        const data = await consultarUsuarios(filters);
+        setUsers(data || []);
+      } catch (err) {
+        console.error("Error al cargar usuarios:", err);
+        setError(err.message || "No se pudieron cargar los usuarios");
+      } finally {
+        setLoading(false);
+      }
+    };
+    
+    loadUsers();
+  }, [filters]); // Re-fetch cuando cambian los filtros
 
-  // Función para agregar usuario
-  const handleAddUser = async () => {
-    // Refrescar la lista completa después de agregar
-    await fetchUsers();
-    setShowAddModal(false);
+  // Manejador para añadir un nuevo usuario
+  const handleAddUser = (newUser) => {
+    setUsers(prevUsers => [...prevUsers, newUser]);
   };
   
-  // Función para editar usuario
-  const handleEditUser = (user) => {
-    setSelectedUser(user);
-    setShowEditModal(true);
+  // Manejador para actualizar un usuario existente
+  const handleUpdateUser = (updatedUser) => {
+    setUsers(prevUsers => 
+      prevUsers.map(user => 
+        user.idInstitucional === updatedUser.idInstitucional 
+        ? updatedUser 
+        : user
+      )
+    );
   };
-  
-  // Función para actualizar la lista después de editar
-  const handleUpdateUser = async () => {
-    await fetchUsers();
-  };
- 
-  if (loading) return <p>Cargando usuarios...</p>;
-  if (error) return <p>Error: {error}</p>;
 
   return (
-    <div className="gestionar-usuarios">
-      <h2>Gestionar Usuarios</h2>
+    <PageContainer>
+      <PageHeader>
+        <Title>Gestión de Usuarios</Title>
+        <AddButton onClick={() => setShowAddModal(true)}>
+          <i className="fas fa-plus"></i> Añadir Usuario
+        </AddButton>
+      </PageHeader>
 
-      <div className="actions" style={{ display: 'flex', justifyContent: 'flex-end' }}>
-        <ButtonAddUser onClick={() => setShowAddModal(true)} />
-      </div>
+      {/* Componente de filtros */}
+      <UserFilters filters={filters} setFilters={setFilters} />
       
-      <UserTable 
-        users={users} 
-        onEditUser={handleEditUser} 
-      />
-
+      {/* Manejo de estados de carga y error */}
+      {loading && <LoadingIndicator>Cargando usuarios...</LoadingIndicator>}
+      
+      {error && <ErrorMessage>{error}</ErrorMessage>}
+      
+      {/* Tabla de usuarios */}
+      {!loading && !error && users.length > 0 && (
+        <UserTable 
+          users={users}
+          onUpdateUser={handleUpdateUser}
+        />
+      )}
+      
+      {/* Mensaje cuando no hay resultados */}
+      {!loading && !error && users.length === 0 && (
+        <EmptyState>No se encontraron usuarios con los filtros seleccionados</EmptyState>
+      )}
+      
+      {/* Modal para añadir usuarios */}
       {showAddModal && (
         <AddUserModal
           onClose={() => setShowAddModal(false)}
           onAdd={handleAddUser}
         />
       )}
-      
-      {showEditModal && selectedUser && (
-        <EditUserModal
-          user={selectedUser}
-          onClose={() => setShowEditModal(false)}
-          onUpdate={handleUpdateUser}
-        />
-      )}
-    </div>
+    </PageContainer>
   );
-};
+}
 
 export default GestionarUsuarios;

@@ -112,6 +112,7 @@ function UserTable({ users, onUpdateUser }) {
         </tbody>
       </StyledTable>
       
+      {/* Modal de edición */}
       {editingUser && (
         <EditUserModal
           user={editingUser}

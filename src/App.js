@@ -13,6 +13,7 @@ import { ReactComponent as User } from './assets/icons/User.svg';
 import Home from './pages/Home/Home.js';
 import GestionarUsuarios from './pages/Admin/GestionarUsuarios'; // Asegúrate de que la ruta es correcta
 
+
 import './App.css';
 
 /**
@@ -103,6 +104,8 @@ function App() {
                   <Route path="/administrador" element={<Home />} />
                   <Route path="/administrador/salones" element={<div>Gestión de Salones</div>} />
                   <Route path="administrador/usuarios" element={<GestionarUsuarios />} />
+                  
+
                   <Route path="*" element={<Navigate to="/admin" />} />
                 </>
               ) : (

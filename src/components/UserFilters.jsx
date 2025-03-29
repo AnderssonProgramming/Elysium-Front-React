@@ -63,16 +63,18 @@ const UserFilters = ({ filters, setFilters }) => {
               type="checkbox"
               checked={filters.activo === true}
               onChange={() => handleActiveFilterChange(true)}
+              id="filter-activo"
             />
-            Activos
+            <label htmlFor="filter-activo">Activos</label>
           </FilterOption>
           <FilterOption>
             <input
               type="checkbox"
               checked={filters.activo === false}
               onChange={() => handleActiveFilterChange(false)}
+              id="filter-inactivo"
             />
-            Inactivos
+            <label htmlFor="filter-inactivo">Inactivos</label>
           </FilterOption>
         </FilterOptions>
       </FilterGroup>
@@ -85,16 +87,18 @@ const UserFilters = ({ filters, setFilters }) => {
               type="checkbox"
               checked={filters.isAdmin === true}
               onChange={() => handleAdminFilterChange(true)}
+              id="filter-admin"
             />
-            Administradores
+            <label htmlFor="filter-admin">Administradores</label>
           </FilterOption>
           <FilterOption>
             <input
               type="checkbox"
               checked={filters.isAdmin === false}
               onChange={() => handleAdminFilterChange(false)}
+              id="filter-estandar"
             />
-            Estándar
+            <label htmlFor="filter-estandar">Estándar</label>
           </FilterOption>
         </FilterOptions>
       </FilterGroup>
