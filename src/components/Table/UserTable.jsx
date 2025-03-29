@@ -1,25 +1,22 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
+import EditUserModal from '../../pages/Admin/EditUserModal';
 
-const TableContainer = styled.div`
-  overflow-x: auto;
-  border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-`;
-
-const Table = styled.table`
+const StyledTable = styled.table`
   width: 100%;
   border-collapse: collapse;
-  background-color: white;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  border-radius: 8px;
+  overflow: hidden;
 `;
 
-const TableHead = styled.thead`
+const TableHeader = styled.thead`
   background-color: #f5f5f5;
 `;
 
 const TableRow = styled.tr`
   &:nth-child(even) {
-    background-color: #fafafa;
+    background-color: #f9f9f9;
   }
   
   &:hover {
@@ -27,63 +24,67 @@ const TableRow = styled.tr`
   }
 `;
 
-const TableHeader = styled.th`
-  padding: 12px 15px;
+const TableHeaderCell = styled.th`
+  padding: 1rem;
   text-align: left;
   font-weight: 600;
   color: #333;
 `;
 
 const TableCell = styled.td`
-  padding: 12px 15px;
-  border-top: 1px solid #eee;
+  padding: 0.8rem 1rem;
 `;
 
-const EditButton = styled.button`
-  background-color: #2196f3;
-  color: white;
+const ActionButton = styled.button`
+  background: none;
   border: none;
-  border-radius: 4px;
-  padding: 6px 12px;
+  color: #2196f3;
   cursor: pointer;
-  font-weight: 500;
+  padding: 0.3rem;
+  margin: 0 0.2rem;
   
   &:hover {
-    background-color: #1976d2;
+    color: #0d47a1;
   }
 `;
 
 const StatusBadge = styled.span`
   display: inline-block;
-  padding: 4px 8px;
+  padding: 0.25rem 0.5rem;
   border-radius: 12px;
-  font-size: 13px;
+  font-size: 0.8rem;
   font-weight: 500;
-  
-  ${props => props.active ? `
-    background-color: #e8f5e9;
-    color: #2e7d32;
-  ` : `
-    background-color: #ffebee;
-    color: #c62828;
-  `}
+  background-color: ${props => props.active ? '#e8f5e9' : '#ffebee'};
+  color: ${props => props.active ? '#2e7d32' : '#c62828'};
 `;
 
-const UserTable = ({ users, onEditUser }) => {
+const RoleBadge = styled.span`
+  display: inline-block;
+  padding: 0.25rem 0.5rem;
+  border-radius: 12px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  background-color: ${props => props.isAdmin ? '#e3f2fd' : '#f5f5f5'};
+  color: ${props => props.isAdmin ? '#1976d2' : '#616161'};
+`;
+
+function UserTable({ users, onUpdateUser }) {
+  const [editingUser, setEditingUser] = useState(null);
+  
   return (
-    <TableContainer>
-      <Table>
-        <TableHead>
-          <TableRow>
-            <TableHeader>ID</TableHeader>
-            <TableHeader>Nombre</TableHeader>
-            <TableHeader>Apellido</TableHeader>
-            <TableHeader>Correo</TableHeader>
-            <TableHeader>Rol</TableHeader>
-            <TableHeader>Estado</TableHeader>
-            <TableHeader>Acciones</TableHeader>
-          </TableRow>
-        </TableHead>
+    <>
+      <StyledTable>
+        <TableHeader>
+          <tr>
+            <TableHeaderCell>ID</TableHeaderCell>
+            <TableHeaderCell>Nombre</TableHeaderCell>
+            <TableHeaderCell>Apellido</TableHeaderCell>
+            <TableHeaderCell>Correo</TableHeaderCell>
+            <TableHeaderCell>Estado</TableHeaderCell>
+            <TableHeaderCell>Rol</TableHeaderCell>
+            <TableHeaderCell>Acciones</TableHeaderCell>
+          </tr>
+        </TableHeader>
         <tbody>
           {users.map(user => (
             <TableRow key={user.idInstitucional}>
@@ -91,23 +92,38 @@ const UserTable = ({ users, onEditUser }) => {
               <TableCell>{user.nombre}</TableCell>
               <TableCell>{user.apellido}</TableCell>
               <TableCell>{user.correoInstitucional}</TableCell>
-              <TableCell>{user.isAdmin ? 'Administrador' : 'Estándar'}</TableCell>
               <TableCell>
                 <StatusBadge active={user.activo}>
                   {user.activo ? 'Activo' : 'Inactivo'}
                 </StatusBadge>
               </TableCell>
               <TableCell>
-                <EditButton onClick={() => onEditUser(user)}>
-                  Editar
-                </EditButton>
+                <RoleBadge isAdmin={user.isAdmin}>
+                  {user.isAdmin ? 'Administrador' : 'Estándar'}
+                </RoleBadge>
+              </TableCell>
+              <TableCell>
+                <ActionButton onClick={() => setEditingUser(user)}>
+                  <i className="fas fa-edit"></i>
+                </ActionButton>
               </TableCell>
             </TableRow>
           ))}
         </tbody>
-      </Table>
-    </TableContainer>
+      </StyledTable>
+      
+      {editingUser && (
+        <EditUserModal
+          user={editingUser}
+          onClose={() => setEditingUser(null)}
+          onUpdate={(updatedUser) => {
+            onUpdateUser(updatedUser);
+            setEditingUser(null);
+          }}
+        />
+      )}
+    </>
   );
-};
+}
 
 export default UserTable;
