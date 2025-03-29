@@ -18,7 +18,13 @@ export function Sidebar() {
         />
         <NavText>Gestionar salones</NavText>
       </NavItem>
-      <NavButton>Gestionar usuarios</NavButton>
+      <NavItem>
+        <NavIcon
+          src="https://img.freepik.com/vector-gratis/diseno-fondo-concepto-topologia-conexion-grupos-humanos_1017-53324.jpg?ga=GA1.1.204243624.1732496744&semt=ais_hybrid" //Imagen extraída de starline Freepik
+          alt=""
+        />
+        <NavText>Gestionar usuarios</NavText>
+      </NavItem>
     </Nav>
   );
 }
@@ -26,10 +32,10 @@ export function Sidebar() {
 const Nav = styled.nav`
   align-self: start;
   margin-top: 42px;
-  font-family: Inter, -apple-system, Roboto, Helvetica, sans-serif;
+  font-family: "Inter", -apple-system, Roboto, Helvetica, sans-serif;
   font-size: 13px;
   color: rgba(82, 182, 154, 1);
-  font-weight: 700;
+  font-weight: 700; /* Mantiene un peso base para todo el nav */
   letter-spacing: -0.26px;
   @media (max-width: 991px) {
     margin-top: 40px;
@@ -38,8 +44,7 @@ const Nav = styled.nav`
 
 const NavItem = styled.div`
   border-radius: 20px;
-  background-color: ${(props) =>
-    props.active ? "rgba(82, 182, 154, 1)" : "transparent"};
+  background-color: ${(props) => (props.active ? "rgba(82, 182, 154, 1)" : "transparent")};
   border: 1px solid
     ${(props) => (props.active ? "transparent" : "rgba(82, 182, 154, 1)")};
   display: flex;
@@ -48,6 +53,7 @@ const NavItem = styled.div`
   gap: 14px;
   color: ${(props) => (props.active ? "#fff" : "inherit")};
   margin-top: ${(props) => (props.active ? "0" : "21px")};
+  cursor: pointer;
 `;
 
 const NavIcon = styled.img`
@@ -61,18 +67,6 @@ const NavText = styled.span`
   flex-grow: 1;
   flex-shrink: 1;
   width: 127px;
+  font-weight: bold; /* Texto en negrilla */
 `;
 
-const NavButton = styled.button`
-  border-radius: 20px;
-  background-color: transparent;
-  border: 1px solid rgba(82, 182, 154, 1);
-  margin-top: 27px;
-  padding: 7px 41px;
-  color: inherit;
-  font: inherit;
-  cursor: pointer;
-  @media (max-width: 991px) {
-    padding: 7px 20px;
-  }
-`;

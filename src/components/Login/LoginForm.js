@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import FormInput from "./FormInput";
 import { useNavigate } from "react-router-dom";
-import { consultarUsuarioPorCorreo } from "../../api/usuario/administrador"; // Importa la nueva función
+import { consultarUsuarioPorCorreo } from "../../api/usuario"; // Importa la nueva función
 
 
 const LoginForm = () => {
@@ -13,22 +13,25 @@ const LoginForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setErrorMsg("");
-    try {
-      // Consulta el usuario por su correo institucional
-      const usuario = await consultarUsuarioPorCorreo(correo);
-      // Valida que el idInstitucional (password) ingresado sea igual al del usuario retornado.
-      if (usuario && String(usuario.idInstitucional) === password) {
-        // Si coincide, redirige a la pantalla de administrador
-        localStorage.setItem("token", "dummy-token");
-        navigate("/adminhome");
-      } else {
-        setErrorMsg("Usuario no encontrado o contraseña incorrecta");
-      }
-    } catch (error) {
-      setErrorMsg("Usuario no encontrado o contraseña incorrecta");
-      console.error(error);
-    }
+    // setErrorMsg("");
+    // try {
+    //   // Consulta el usuario por su correo institucional
+    //   const usuario = await consultarUsuarioPorCorreo(correo);
+    //   // Valida que el idInstitucional (password) ingresado sea igual al del usuario retornado.
+    //   if (usuario && String(usuario.idInstitucional) === password) {
+    //     // Si coincide, redirige a la pantalla de administrador
+    //     localStorage.setItem("token", "dummy-token");
+    //     navigate("/adminhome");
+    //   } else {
+    //     setErrorMsg("Usuario no encontrado o contraseña incorrecta");
+    //   }
+    // } catch (error) {
+    //   setErrorMsg("Usuario no encontrado o contraseña incorrecta");
+    //   console.error(error);
+    // }
+
+    localStorage.setItem("token", "dummy-token");
+    navigate("/adminhome");
   };
 
   return (

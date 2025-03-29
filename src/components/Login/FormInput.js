@@ -25,7 +25,7 @@ const InputWrapper = styled.div`
 `;
 
 const InputLabel = styled.label`
-  color: rgb(22, 45, 255); /* Negro */
+  color: rgb(107, 155, 61); /* Negro */
   font-family: "Inter", sans-serif;
   font-size: 18px; /* Tamaño mayor */
   font-weight: bold;

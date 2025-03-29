@@ -1,7 +1,15 @@
 import React from "react";
 import styled from "styled-components";
+import { useNavigate } from "react-router-dom";
 
 export function Header() {
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    // Aquí podrías limpiar el token o hacer la lógica de logout
+    navigate("/"); // Redirige a la página principal (login)
+  };
+
   return (
     <HeaderContainer>
       <TopSection>
@@ -9,23 +17,20 @@ export function Header() {
         <UserSection>
           <UserInfo>
             <UserAvatar
-              src="https://cdn.builder.io/api/v1/image/assets/TEMP/58bf04ffc9ee8a8b854720035b7be8730269d7b6?placeholderIfAbsent=true&apiKey=d9e0070a9dd8432fa5ecd841300d02ae"
-              alt="Emily Rincon profile"
+              src="https://img.freepik.com/vector-gratis/establecimiento-circulos-usuarios_78370-4704.jpg?ga=GA1.1.204243624.1732496744&semt=ais_hybrid" //Imagen extraída de juicy_fish Freepik
+              alt="Generic user icon"
             />
-            <UserName>Emily Rincon</UserName>
+            <UserName>Admin</UserName>
           </UserInfo>
-          <NotificationIcon
-            src="https://cdn.builder.io/api/v1/image/assets/TEMP/1954f6c7c642021490080ffd4c81bc9798bf0beb?placeholderIfAbsent=true&apiKey=d9e0070a9dd8432fa5ecd841300d02ae"
-            alt="Notifications"
+          <LogoutIcon
+            src="https://cdn.builder.io/api/v1/image/assets/TEMP/1954f6c7c642021490080ffd4c81bc9798bf0beb?placeholderIfAbsent=true&apiKey=/." 
+            alt="Logout"
+            onClick={handleLogout}
           />
         </UserSection>
       </TopSection>
-      <WelcomeMessage>
-        Buen día, admin <strong>Emily</strong>
-      </WelcomeMessage>
-      <SubHeading>
-        Gestiona las reservas que has agendado últimamente
-      </SubHeading>
+      <WelcomeMessage>Buen día, admin</WelcomeMessage>
+      <SubHeading>Gestiona las reservas que has agendado últimamente</SubHeading>
     </HeaderContainer>
   );
 }
@@ -51,13 +56,14 @@ const ControlPanel = styled.h1`
   font-size: 21px;
   font-weight: 600;
   letter-spacing: -0.42px;
+  padding: 0 210px;
   margin: auto 0;
 `;
 
 const UserSection = styled.div`
   display: flex;
-  align-items: stretch;
-  gap: 40px 50px;
+  align-items: center;
+  gap: 40px;
   font-size: 16px;
   color: #52b69a;
   font-weight: 400;
@@ -71,28 +77,28 @@ const UserInfo = styled.div`
 `;
 
 const UserAvatar = styled.img`
-  aspect-ratio: 1;
+  width: 40px;
+  height: 40px;
   object-fit: contain;
-  object-position: center;
-  width: 49px;
   border-radius: 50%;
 `;
 
 const UserName = styled.span`
   margin: auto 0;
+  color: rgba(82, 182, 154, 1);
+  font-weight: 500;
 `;
 
-const NotificationIcon = styled.img`
-  aspect-ratio: 1;
-  object-fit: contain;
-  object-position: center;
+const LogoutIcon = styled.img`
   width: 32px;
-  margin: auto 0;
+  height: 32px;
+  cursor: pointer;
 `;
 
 const WelcomeMessage = styled.h2`
   color: rgba(82, 182, 154, 1);
   font-size: 21px;
+  padding: 0 210px;
   font-weight: 400;
   letter-spacing: -0.42px;
   margin-top: 10px;
@@ -100,8 +106,9 @@ const WelcomeMessage = styled.h2`
 
 const SubHeading = styled.p`
   color: rgba(82, 182, 154, 1);
-  font-size: 14px;
+  font-size: 17px;
   font-weight: 300;
+  padding: 0 210px;
   letter-spacing: -0.28px;
   margin-top: 20px;
 `;

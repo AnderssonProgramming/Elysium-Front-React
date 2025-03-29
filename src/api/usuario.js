@@ -1,7 +1,7 @@
 import axios from "axios";
-import { BASE_URL } from "../../config/config.js";
+import { BASE_URL } from "../config/config.js";
 
-const ADMIN_API = `${BASE_URL}/administrador`;
+const USUARIO_API = `${BASE_URL}/usuario`;
 
 /**
  * Consulta usuarios con filtros opcionales.
@@ -14,7 +14,7 @@ const ADMIN_API = `${BASE_URL}/administrador`;
  */
 export async function consultarUsuarios(filtros) {
     try {
-        const response = await axios.get(`${ADMIN_API}/usuarios`, { params: filtros });
+        const response = await axios.get(`${USUARIO_API}/usuarios`, { params: filtros });
         return response.data;
     } catch (error) {
         throw new Error(error.response.data.message);
@@ -30,7 +30,7 @@ export async function consultarUsuarios(filtros) {
 export async function consultarUsuarioPorCorreo(correo) {
     try {
       // Verifica la ruta y el parámetro "correo"
-      const response = await axios.get(`${ADMIN_API}/usuarioPorCorreo`, {
+      const response = await axios.get(`${USUARIO_API}/usuarioPorCorreo`, {
         params: { correo: correo },
       });
       return response.data;
@@ -47,7 +47,7 @@ export async function consultarUsuarioPorCorreo(correo) {
  */
 export async function agregarUsuario(usuario) {
     try {
-        const response = await axios.post(`${ADMIN_API}/usuario`, usuario);
+        const response = await axios.post(`${USUARIO_API}/usuario`, usuario);
         return response.data;
     } catch (error) {
         throw new Error(error.response.data.message);
@@ -63,7 +63,7 @@ export async function agregarUsuario(usuario) {
  */
 export async function actualizarInformacionUsuario(id, actualizacion) {
     try {
-        const response = await axios.patch(`${ADMIN_API}/usuario/${id}`, actualizacion);
+        const response = await axios.patch(`${USUARIO_API}/usuario/${id}`, actualizacion);
         return response.data;
     } catch (error) {
         throw new Error(error.response.data.message);
@@ -79,7 +79,7 @@ export async function actualizarInformacionUsuario(id, actualizacion) {
  */
 export async function agregarSalon(id, salon) {
     try {
-        const response = await axios.post(`${ADMIN_API}/${id}/salon`, salon);
+        const response = await axios.post(`${USUARIO_API}/${id}/salon`, salon);
         return response.data;
     } catch (error) {
         throw new Error(error.response.data.message);
@@ -95,7 +95,35 @@ export async function agregarSalon(id, salon) {
  */
 export async function crearReserva(id, reserva) {
     try {
-        const response = await axios.post(`${ADMIN_API}/${id}/reserva`, reserva);
+        const response = await axios.post(`${USUARIO_API}/${id}/reserva`, reserva);
+        return response.data;
+    } catch (error) {
+        throw new Error(error.response.data.message);
+    }
+}
+
+/**
+ * Consulta un usuario por su ID.
+ * @param {number} id - ID del usuario a consultar.
+ * @returns {Promise<Object>} - Datos del usuario.
+ */
+export async function consultarUsuario(id) {
+    try {
+        const response = await axios.get(`${USUARIO_API}/${id}`);
+        return response.data;
+    } catch (error) {
+        throw new Error(error.response.data.message);
+    }
+}
+
+/**
+ * Lista todas las reservas de un usuario.
+ * @param {number} id - ID del usuario.
+ * @returns {Promise<Object[]>} - Lista de reservas.
+ */
+export async function listarReservas(id) {
+    try {
+        const response = await axios.get(`${USUARIO_API}/${id}/reserva`);
         return response.data;
     } catch (error) {
         throw new Error(error.response.data.message);

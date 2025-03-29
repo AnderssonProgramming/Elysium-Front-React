@@ -1,68 +1,119 @@
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 
-export function FilterSection() {
+export function FilterSection({ onBuscar }) {
+  // Estados para cada filtro
+  const [mes, setMes] = useState("");
+  const [salon, setSalon] = useState("");
+  const [diaSemana, setDiaSemana] = useState("");
+  const [fechaInicio, setFechaInicio] = useState("");
+  const [fechaFin, setFechaFin] = useState("");
+
+  const handleBuscar = () => {
+    // Empaquetamos los filtros en un objeto
+    onBuscar({ mes, salon, diaSemana, fechaInicio, fechaFin });
+  };
+
   return (
-    <FilterContainer>
+    <Container>
       <HeaderSection>
         <Title>Reservas</Title>
-        <Period>Deciembre 2025</Period>
+        <MonthSelectWrapper>
+          <MonthLabel>Mes:</MonthLabel>
+          <MonthSelect value={mes} onChange={(e) => setMes(e.target.value)}>
+            <option value="">Selecciona...</option>
+            <option value="2025-01">Enero 2025</option>
+            <option value="2025-02">Febrero 2025</option>
+            <option value="2025-03">Marzo 2025</option>
+            <option value="2025-04">Abril 2025</option>
+            <option value="2025-05">Mayo 2025</option>
+            <option value="2025-06">Junio 2025</option>
+            <option value="2025-07">Julio 2025</option>
+            <option value="2025-08">Agosto 2025</option>
+            <option value="2025-09">Septiembre 2025</option>
+            <option value="2025-10">Octubre 2025</option>
+            <option value="2025-11">Noviembre 2025</option>
+            <option value="2025-12">Diciembre 2025</option>
+          </MonthSelect>
+        </MonthSelectWrapper>
       </HeaderSection>
-      <FiltersContainer>
-        <FilterColumn>
-          <FilterGroup>
-            <Label htmlFor="salon">Salon</Label>
-            <SelectWrapper>
-              <Select id="salon">
-                <option>Seleccionar...</option>
-              </Select>
-              <SelectIcon
-                src="https://cdn.builder.io/api/v1/image/assets/TEMP/d0e980bbfa3fd613fdaa0fbc8027968755d13692?placeholderIfAbsent=true&apiKey=d9e0070a9dd8432fa5ecd841300d02ae"
-                alt=""
-              />
-            </SelectWrapper>
-            <SearchButton>Buscar</SearchButton>
-          </FilterGroup>
-        </FilterColumn>
-        <FilterColumn>
-          <FilterGroup>
-            <Label htmlFor="weekday">Dia de la semana</Label>
-            <SelectWrapper>
-              <Select id="weekday">
-                <option>Seleccionar...</option>
-              </Select>
-              <SelectIcon
-                src="https://cdn.builder.io/api/v1/image/assets/TEMP/d0e980bbfa3fd613fdaa0fbc8027968755d13692?placeholderIfAbsent=true&apiKey=d9e0070a9dd8432fa5ecd841300d02ae"
-                alt=""
-              />
-            </SelectWrapper>
-            <SearchButton>Buscar</SearchButton>
-          </FilterGroup>
-        </FilterColumn>
-      </FiltersContainer>
-    </FilterContainer>
+
+      <FiltersRow>
+        <FilterGroup>
+          <Label htmlFor="salon">Salón</Label>
+          <SelectWrapper>
+            <Select
+              id="salon"
+              value={salon}
+              onChange={(e) => setSalon(e.target.value)}
+            >
+              <option value="">Seleccionar...</option>
+              <option value="A-201">A-201</option>
+              <option value="B-103">B-103</option>
+              <option value="LAB-1">LAB-1</option>
+              {/* Más opciones según tus datos */}
+            </Select>
+          </SelectWrapper>
+        </FilterGroup>
+
+        <FilterGroup>
+          <Label htmlFor="weekday">Día de la semana</Label>
+          <SelectWrapper>
+            <Select
+              id="weekday"
+              value={diaSemana}
+              onChange={(e) => setDiaSemana(e.target.value)}
+            >
+              <option value="">Seleccionar...</option>
+              <option value="LUNES">Lunes</option>
+              <option value="MARTES">Martes</option>
+              <option value="MIERCOLES">Miércoles</option>
+              <option value="JUEVES">Jueves</option>
+              <option value="VIERNES">Viernes</option>
+              <option value="SABADO">Sábado</option>
+              <option value="DOMINGO">Domingo</option>
+            </Select>
+          </SelectWrapper>
+        </FilterGroup>
+      </FiltersRow>
+
+      <DateRow>
+        <FilterGroup>
+          <Label>Fecha Inicio</Label>
+          <InputDate
+            type="date"
+            value={fechaInicio}
+            onChange={(e) => setFechaInicio(e.target.value)}
+          />
+        </FilterGroup>
+        <FilterGroup>
+          <Label>Fecha Fin</Label>
+          <InputDate
+            type="date"
+            value={fechaFin}
+            onChange={(e) => setFechaFin(e.target.value)}
+          />
+        </FilterGroup>
+      </DateRow>
+
+      <SearchButton onClick={handleBuscar}>Buscar</SearchButton>
+    </Container>
   );
 }
 
-/* Contenedor general para toda la sección de filtros */
-const FilterContainer = styled.div`
+/* Estilos para FilterSection */
+const Container = styled.div`
   width: 100%;
   box-sizing: border-box;
+  padding: 0 17px;
 `;
 
-/* Fila donde están 'Reservas' y 'Diciembre 2025' */
 const HeaderSection = styled.div`
   display: flex;
   align-items: center;
-  width: 100%;
-  box-sizing: border-box;
-  padding: 0 17px; /* Espacio lateral si lo deseas */
-  font-family: Inter, -apple-system, Roboto, Helvetica, sans-serif;
-  color: rgba(82, 182, 154, 1);
   gap: 20px;
 `;
 
-/* Reservas queda a la izquierda */
 const Title = styled.h2`
   font-size: 23px;
   font-weight: 400;
@@ -70,39 +121,49 @@ const Title = styled.h2`
   margin: 0;
 `;
 
-/* Diciembre 2025 se empuja automáticamente a la derecha */
-const Period = styled.div`
+const MonthSelectWrapper = styled.div`
   margin-left: auto;
-  font-size: 19px;
-  font-weight: 600;
-  letter-spacing: -0.38px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
 `;
 
-const FiltersContainer = styled.div`
+const MonthLabel = styled.span`
+  font-size: 16px;
+  font-weight: bold;
+  color: #1e1e1e;
+`;
+
+const MonthSelect = styled.select`
+  border-radius: 8px;
+  background-color: #fff;
+  border: 1px solid #d9d9d9;
+  padding: 8px 16px;
+  font-size: 16px;
+  font-weight: bold;
+  appearance: none;
+`;
+
+const FiltersRow = styled.div`
   display: flex;
   gap: 20px;
   margin-top: 31px;
-  padding: 0 17px; /* Si quieres alinear con el HeaderSection */
   @media (max-width: 991px) {
     flex-direction: column;
   }
-`;
-
-const FilterColumn = styled.div`
-  flex: 1;
 `;
 
 const FilterGroup = styled.div`
   display: flex;
   flex-direction: column;
   gap: 8px;
+  flex: 1;
 `;
 
 const Label = styled.label`
   font-size: 16px;
   color: #1e1e1e;
   font-weight: 400;
-  line-height: 1.4;
 `;
 
 const SelectWrapper = styled.div`
@@ -121,27 +182,32 @@ const Select = styled.select`
   font-size: 16px;
 `;
 
-const SelectIcon = styled.img`
-  position: absolute;
-  right: 12px;
-  width: 16px;
-  pointer-events: none;
+const DateRow = styled.div`
+  display: flex;
+  gap: 20px;
+  margin-top: 20px;
+  @media (max-width: 991px) {
+    flex-direction: column;
+  }
+`;
+
+const InputDate = styled.input`
+  border-radius: 8px;
+  padding: 8px 16px;
+  border: 1px solid #d9d9d9;
+  font-size: 16px;
 `;
 
 const SearchButton = styled.button`
   border-radius: 20px;
   background-color: rgba(82, 182, 154, 1);
-  align-self: center;
-  margin-top: 34px;
-  width: 181px;
-  padding: 7px;
+  margin: 20px auto 0;
+  padding: 7px 41px;
   font-size: 13px;
   color: #fff;
-  font-weight: 700;
-  letter-spacing: -0.26px;
+  font-weight: bold;
   border: none;
   cursor: pointer;
-  @media (max-width: 991px) {
-    padding: 7px 20px;
-  }
 `;
+
+export default FilterSection;
