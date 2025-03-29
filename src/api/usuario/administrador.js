@@ -11,14 +11,32 @@ export async function consultarUsuarios(filtros) {
     }
 }
 
-export async function agregarUsuario(usuario) {
+export const agregarUsuario = async (datosUsuario) => {
     try {
-        const response = await api.post(`${ADMIN_API}/usuario`, usuario);
-        return response.data;
+      const response = await api.post('/api/administrador/usuario', datosUsuario);
+      return response.data;
     } catch (error) {
-        throw new Error(error.response?.data?.message || "Error al agregar usuario");
+      // Extraer la información de error detallada
+      const mensaje = error.response?.data?.message || 'Error al agregar usuario';
+      const codigo = error.response?.data?.code || 'UNKNOWN_ERROR';
+      const status = error.response?.status || 500;
+      
+      // Crear un error enriquecido para mejor manejo en UI
+      const errorEnriquecido = new Error(mensaje);
+      errorEnriquecido.codigo = codigo;
+      errorEnriquecido.status = status;
+      errorEnriquecido.data = error.response?.data;
+      
+      console.error('Error detallado:', {
+        codigo,
+        status,
+        mensaje,
+        respuestaCompleta: error.response?.data
+      });
+      
+      throw errorEnriquecido;
     }
-}
+  };
 
 export async function actualizarInformacionUsuario(id, actualizacion) {
     try {
