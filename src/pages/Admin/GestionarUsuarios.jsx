@@ -63,37 +63,34 @@ const GestionarUsuarios = () => {
     }
   };
 
-  // Función para agregar usuario usando la API
-  const handleAddUser = async (newUser) => {
-    try {
-      await fetchUsers(); // Recargar la lista de usuarios después de agregar
-      setShowAddModal(false);
-    } catch (error) {
-      console.error("Error al agregar usuario:", error);
-    }
+  // Función para agregar usuario
+  const handleAddUser = async () => {
+    // Refrescar la lista completa después de agregar
+    await fetchUsers();
+    setShowAddModal(false);
   };
   
-  // Función para abrir modal de edición
+  // Función para editar usuario
   const handleEditUser = (user) => {
     setSelectedUser(user);
     setShowEditModal(true);
   };
   
-  // Función para actualizar usuario en la lista después de edición
+  // Función para actualizar la lista después de editar
   const handleUpdateUser = async () => {
-    await fetchUsers(); // Recargar la lista completa para asegurar datos actualizados
+    await fetchUsers();
   };
  
-  if (loading) return <LoadingMessage>Cargando usuarios...</LoadingMessage>;
-  if (error) return <ErrorMessage>Error: {error}</ErrorMessage>;
+  if (loading) return <p>Cargando usuarios...</p>;
+  if (error) return <p>Error: {error}</p>;
 
   return (
-    <Container>
-      <Title>Gestionar Usuarios</Title>
+    <div className="gestionar-usuarios">
+      <h2>Gestionar Usuarios</h2>
 
-      <Actions>
+      <div className="actions" style={{ display: 'flex', justifyContent: 'flex-end' }}>
         <ButtonAddUser onClick={() => setShowAddModal(true)} />
-      </Actions>
+      </div>
       
       <UserTable 
         users={users} 
@@ -114,7 +111,7 @@ const GestionarUsuarios = () => {
           onUpdate={handleUpdateUser}
         />
       )}
-    </Container>
+    </div>
   );
 };
 

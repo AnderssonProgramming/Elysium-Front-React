@@ -1,122 +1,334 @@
 import React, { useState } from "react";
-import "./AddUserModal.css";
+import styled from "styled-components";
+import { agregarUsuario } from "../../api/usuario/administrador";
+
+// Reutilizamos los mismos styled-components de EditUserModal
+const ModalOverlay = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+`;
+
+const ModalContent = styled.div`
+  background-color: white;
+  border-radius: 8px;
+  width: 90%;
+  max-width: 500px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  max-height: 90vh;
+  overflow-y: auto;
+`;
+
+const ModalHeader = styled.div`
+  padding: 1rem;
+  border-bottom: 1px solid #e0e0e0;
+`;
+
+const ModalTitle = styled.h2`
+  margin: 0;
+  font-size: 1.25rem;
+  color: #333;
+`;
+
+const ModalBody = styled.div`
+  padding: 1.5rem;
+`;
+
+const Form = styled.form`
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+`;
+
+const FormLabel = styled.label`
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  font-weight: 500;
+`;
+
+const FormInput = styled.input`
+  padding: 0.75rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 1rem;
+`;
+
+const ToggleGroup = styled.div`
+  display: flex;
+  justify-content: space-between;
+  margin: 1rem 0;
+`;
+
+const ToggleItem = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+`;
+
+const Switch = styled.label`
+  position: relative;
+  display: inline-block;
+  width: 48px;
+  height: 24px;
+`;
+
+const SwitchInput = styled.input`
+  opacity: 0;
+  width: 0;
+  height: 0;
+`;
+
+const Slider = styled.span`
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  transition: 0.4s;
+  border-radius: 24px;
+
+  &:before {
+    position: absolute;
+    content: "";
+    height: 18px;
+    width: 18px;
+    left: 3px;
+    bottom: 3px;
+    background-color: white;
+    transition: 0.4s;
+    border-radius: 50%;
+  }
+
+  ${SwitchInput}:checked + & {
+    background-color: #2196f3;
+  }
+
+  ${SwitchInput}:checked + &:before {
+    transform: translateX(24px);
+  }
+`;
+
+const ModalButtons = styled.div`
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+  margin-top: 1.5rem;
+`;
+
+const Button = styled.button`
+  padding: 0.6rem 1.5rem;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 500;
+  
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+`;
+
+const CancelButton = styled(Button)`
+  background-color: #f2f2f2;
+  color: #333;
+  
+  &:hover:not(:disabled) {
+    background-color: #e0e0e0;
+  }
+`;
+
+const SaveButton = styled(Button)`
+  background-color: #2196f3;
+  color: white;
+  
+  &:hover:not(:disabled) {
+    background-color: #1976d2;
+  }
+`;
+
+const ErrorMessage = styled.div`
+  background-color: #ffebee;
+  color: #c62828;
+  padding: 0.75rem;
+  border-radius: 4px;
+  margin-bottom: 1rem;
+`;
+
 
 function AddUserModal({ onClose, onAdd }) {
-  // Manejo de estados del formulario
+  // Estado para manejar el formulario
   const [formData, setFormData] = useState({
     idInstitucional: "",
     nombre: "",
     apellido: "",
-    correo: "",
+    correo: "",  // Cambiado de correoInstitucional a correo para coincidir con el backend
     isAdmin: false,
-    activo: false,
+    activo: true
   });
+  
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [error, setError] = useState(null);
 
   // Manejo de cambios en los inputs
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: type === "checkbox" ? checked : value,
+    setFormData((prev) => ({ 
+      ...prev, 
+      [name]: type === "checkbox" ? checked : value 
     }));
   };
 
   // Al enviar el formulario
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    onAdd(formData); // Llama a la función para añadir el usuario
+    setIsSubmitting(true);
+    setError(null);
+    
+    try {
+      // Crear nuevo usuario con la estructura correcta que espera el backend
+      const nuevoUsuario = await agregarUsuario({
+        idInstitucional: formData.idInstitucional,
+        nombre: formData.nombre,
+        apellido: formData.apellido,
+        correo: formData.correo,  // ¡Asegúrate de que coincida con el backend!
+        isAdmin: formData.isAdmin,
+        activo: formData.activo
+      });
+      
+      // Notificar al componente padre sobre la creación exitosa
+      if (onAdd) {
+        onAdd(nuevoUsuario);
+      }
+      
+      onClose(); // Cerrar modal tras guardar
+    } catch (err) {
+      console.error("Error completo:", err);
+      setError(err.message || "Error al crear el usuario");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
-    <div className="modal-overlay">
-      <div className="modal-content">
+    <ModalOverlay>
+      <ModalContent>
         {/* Encabezado del modal */}
-        <div className="modal-header">
-          <h2 className="modal-title">Crear nuevo usuario</h2>
-        </div>
+        <ModalHeader>
+          <ModalTitle>
+            Crear nuevo usuario
+          </ModalTitle>
+        </ModalHeader>
 
         {/* Cuerpo del modal */}
-        <div className="modal-body">
-          <form onSubmit={handleSubmit}>
-            <label>
-              Id institucional
-              <input
+        <ModalBody>
+          {error && <ErrorMessage>{error}</ErrorMessage>}
+          <Form onSubmit={handleSubmit}>
+            <FormLabel>
+              ID Institucional
+              <FormInput
                 type="text"
                 name="idInstitucional"
                 value={formData.idInstitucional}
                 onChange={handleChange}
+                placeholder="Ejemplo: 2022123456"
                 required
               />
-            </label>
+            </FormLabel>
 
-            <label>
+            <FormLabel>
               Nombre
-              <input
+              <FormInput
                 type="text"
                 name="nombre"
                 value={formData.nombre}
                 onChange={handleChange}
+                placeholder="Nombre del usuario"
                 required
               />
-            </label>
+            </FormLabel>
 
-            <label>
+            <FormLabel>
               Apellido
-              <input
+              <FormInput
                 type="text"
                 name="apellido"
                 value={formData.apellido}
                 onChange={handleChange}
+                placeholder="Apellido del usuario"
                 required
               />
-            </label>
+            </FormLabel>
 
-            <label>
-              Correo
-              <input
+            <FormLabel>
+              Correo Institucional
+              <FormInput
                 type="email"
-                name="correo"
-                value={formData.correo}
+                name="correo"  // Cambiado para coincidir con el backend
+                value={formData.correo}  // Actualizado para usar el nuevo nombre de campo
                 onChange={handleChange}
+                placeholder="correo@mail.escuelaing.edu.co"
                 required
               />
-            </label>
+            </FormLabel>
 
             {/* Toggles de Admin y Activo */}
-            <div className="toggle-group">
-              <div className="toggle-item">
-                <label>Admin</label>
-                <label className="switch">
-                  <input
+            <ToggleGroup>
+              <ToggleItem>
+                <span>Admin</span>
+                <Switch>
+                  <SwitchInput
                     type="checkbox"
                     name="isAdmin"
                     checked={formData.isAdmin}
                     onChange={handleChange}
                   />
-                  <span className="slider round"></span>
-                </label>
-              </div>
-            </div>
+                  <Slider />
+                </Switch>
+              </ToggleItem>
+              
+              <ToggleItem>
+                <span>Activo</span>
+                <Switch>
+                  <SwitchInput
+                    type="checkbox"
+                    name="activo"
+                    checked={formData.activo}
+                    onChange={handleChange}
+                  />
+                  <Slider />
+                </Switch>
+              </ToggleItem>
+            </ToggleGroup>
 
-            <div className="modal-buttons">
-              <button
+            <ModalButtons>
+              <CancelButton
                 type="button"
-                className="btn-cancel"
                 onClick={onClose}
+                disabled={isSubmitting}
               >
                 Cancelar
-              </button>
-              <button
+              </CancelButton>
+              <SaveButton
                 type="submit"
-                className="btn-save"
+                disabled={isSubmitting}
               >
-                Guardar
-              </button>
-            </div>
-          </form>
-        </div>
-      </div>
-    </div>
+                {isSubmitting ? "Guardando..." : "Guardar"}
+              </SaveButton>
+            </ModalButtons>
+          </Form>
+        </ModalBody>
+      </ModalContent>
+    </ModalOverlay>
   );
 }
 
