@@ -39,6 +39,56 @@ const AddButton = styled.button`
   }
 `;
 
+// Nuevo componente para la barra de búsqueda
+const SearchContainer = styled.div`
+  margin-bottom: 20px;
+  width: 100%;
+`;
+
+const SearchBar = styled.div`
+  display: flex;
+  gap: 10px;
+  margin-bottom: 10px;
+  max-width: 600px;
+`;
+
+const SearchInput = styled.input`
+  flex: 1;
+  padding: 10px 15px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 15px;
+  outline: none;
+  
+  &:focus {
+    border-color: #52b69a;
+    box-shadow: 0 0 0 1px rgba(82, 182, 154, 0.3);
+  }
+`;
+
+const SearchButton = styled.button`
+  background-color: #52b69a;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 0 20px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  
+  &:hover {
+    background-color: #1976d2;
+  }
+`;
+
+const FilterLabel = styled.p`
+  margin: 0 0 5px 0;
+  font-size: 14px;
+  color: #666;
+  font-weight: 500;
+`;
+
 const LoadingIndicator = styled.div`
   text-align: center;
   padding: 40px;
@@ -69,6 +119,10 @@ function GestionarUsuarios() {
   const [error, setError] = useState(null);
   const [showAddModal, setShowAddModal] = useState(false);
   
+  // Estado para búsqueda de texto
+  const [searchTerm, setSearchTerm] = useState('');
+  const [searchInput, setSearchInput] = useState('');
+  
   // Estado para los filtros
   const [filters, setFilters] = useState({
     activo: null, // null = sin filtro, true = activos, false = inactivos
@@ -82,8 +136,21 @@ function GestionarUsuarios() {
       setError(null);
       
       try {
+        // Obtener usuarios con filtros
         const data = await consultarUsuarios(filters);
-        setUsers(data || []);
+        
+        // Filtrar por término de búsqueda si existe
+        let filteredUsers = data || [];
+        if (searchTerm) {
+          const searchLower = searchTerm.toLowerCase();
+          filteredUsers = filteredUsers.filter(user => 
+            user.nombre?.toLowerCase().includes(searchLower) || 
+            user.apellido?.toLowerCase().includes(searchLower) || 
+            user.correoInstitucional?.toLowerCase().includes(searchLower)
+          );
+        }
+        
+        setUsers(filteredUsers);
       } catch (err) {
         console.error("Error al cargar usuarios:", err);
         setError(err.message || "No se pudieron cargar los usuarios");
@@ -93,7 +160,13 @@ function GestionarUsuarios() {
     };
     
     loadUsers();
-  }, [filters]); // Re-fetch cuando cambian los filtros
+  }, [filters, searchTerm]); // Re-fetch cuando cambian los filtros o el término de búsqueda
+
+  // Manejador para la búsqueda
+  const handleSearch = (e) => {
+    e.preventDefault();
+    setSearchTerm(searchInput);
+  };
 
   // Manejador para añadir un nuevo usuario
   const handleAddUser = (newUser) => {
@@ -120,6 +193,24 @@ function GestionarUsuarios() {
         </AddButton>
       </PageHeader>
 
+      {/* Barra de búsqueda */}
+      <SearchContainer>
+        <FilterLabel>Buscar usuarios por nombre, apellido o correo:</FilterLabel>
+        <form onSubmit={handleSearch}>
+          <SearchBar>
+            <SearchInput 
+              type="text" 
+              placeholder="Buscar usuarios..." 
+              value={searchInput}
+              onChange={e => setSearchInput(e.target.value)}
+            />
+            <SearchButton type="submit">
+              <i className="fas fa-search"></i>
+            </SearchButton>
+          </SearchBar>
+        </form>
+      </SearchContainer>
+
       {/* Componente de filtros */}
       <UserFilters filters={filters} setFilters={setFilters} />
       
@@ -138,7 +229,11 @@ function GestionarUsuarios() {
       
       {/* Mensaje cuando no hay resultados */}
       {!loading && !error && users.length === 0 && (
-        <EmptyState>No se encontraron usuarios con los filtros seleccionados</EmptyState>
+        <EmptyState>
+          {searchTerm ? 
+            `No se encontraron usuarios que coincidan con "${searchTerm}"` : 
+            "No se encontraron usuarios con los filtros seleccionados"}
+        </EmptyState>
       )}
       
       {/* Modal para añadir usuarios */}
