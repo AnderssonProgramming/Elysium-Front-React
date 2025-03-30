@@ -98,11 +98,17 @@ ul {
   height: 20%;
 }
 
-.content .panel .header .title {
+.content .panel .header .info {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.content .panel .header .info .title {
   font-weight: bold;
 }
 
-.content .panel .header .title, .content .panel .header .greetings {
+.content .panel .header .info .title, .content .panel .header .greetings {
   font-size: 21px;
 }
 
