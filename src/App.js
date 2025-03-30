@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Route, Routes, Link, useLocation } from "react
 import { ReactComponent as House } from './assets/icons/house-user_11269953 1.svg';
 import { ReactComponent as Room } from './assets/icons/workshop_14672030 1.svg';
 import { ReactComponent as User } from './assets/icons/User.svg';
-import Home from './pages/Home/Home.js';
+import Home from './pages/Home/Home';
 /*
 import Admin from './pages/Admin/Admin.js';
 import Salones from './pages/Salones/Salones.js';

@@ -1,0 +1,67 @@
+.popup-overlay .popup-detalle-reserva {
+    display: flex;
+    flex-direction: column;
+    background-color: white;
+    border-radius: 10px;
+    width: 50%;
+    text-align: center;
+    justify-content: center;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+.popup-overlay .popup-detalle-reserva .title {
+    display: flex;
+    flex-direction: column;
+    padding: 2%;
+    width: auto;
+    border-radius: 10px 10px 0 0;
+    background-color: var(--variable-collection-current-color);
+}
+
+.popup-overlay .popup-detalle-reserva .title span {
+    color: var(--variable-collection-text-white);
+    font-weight: 600;
+    font-size: 16px;
+}
+
+.popup-overlay .popup-detalle-reserva .details {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    padding: 4%;
+}
+
+.popup-overlay .popup-detalle-reserva .details span {
+    color: var(--variable-collection-text);
+}
+
+.popup-overlay .popup-detalle-reserva .btn {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 2%;
+}
+
+.popup-overlay .popup-detalle-reserva .btn .closeBTN {
+    display: flex;
+    flex-direction: row;
+    padding: 10px 20px;
+    border-radius: 10px;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    cursor: pointer;
+    background: none;
+    outline: none;
+    gap: 10px;
+    color: var(--variable-collection-current-color);
+    border: 1px solid var(--variable-collection-current-color);
+    transition: all 0.1s ease-in-out;
+}
+
+.popup-overlay .popup-detalle-reserva .btn .closeBTN:hover {
+    background-color: var(--variable-collection-current-color);
+    color: white;
+}
