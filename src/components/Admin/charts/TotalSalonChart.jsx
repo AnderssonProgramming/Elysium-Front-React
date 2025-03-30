@@ -1,4 +1,4 @@
-// src/components/Admin/charts/TotalSalonChart.js
+// src/components/Admin/charts/TotalSalonChart.jsx
 import React, { useEffect, useRef } from "react";
 import * as d3 from "d3";
 

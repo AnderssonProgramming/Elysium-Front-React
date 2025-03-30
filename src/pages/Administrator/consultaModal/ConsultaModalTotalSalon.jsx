@@ -1,23 +1,23 @@
-// src/components/Admin/consultaModal/ConsultaModalEstado.js
+// src/components/Admin/consultaModal/ConsultaModalTotalSalon.jsx
 import React, { useState } from "react";
 import styled from "styled-components";
 import { createPortal } from "react-dom";
-import EstadoFilter from "../../../components/Admin/filters/EstadoFilter";
-import EstadoChart from "../../../components/Admin/charts/EstadoChart";
-import { getReservas } from "../../../api/reserva"; // Ajusta la ruta según tu estructura
+import TotalSalonFilter from "../../../components/Admin/filters/TotalSalonFilter";
+import TotalSalonChart from "../../../components/Admin/charts/TotalSalonChart";
+import { getReservas } from "../../../api/reserva"; // Asegúrate de que la ruta es correcta
 
-const ConsultaModalEstado = ({ onClose }) => {
+const ConsultaModalTotalSalon = ({ onClose }) => {
   const [reservas, setReservas] = useState([]);
   const [errorMsg, setErrorMsg] = useState("");
 
-  const handleBuscar = async () => {
+  const handleBuscar = async (filtros) => {
     try {
       setErrorMsg("");
       setReservas([]);
-      // Llamar al endpoint de reservas sin filtro específico de estado
-      const data = await getReservas({});
+      // Si se envía un filtro de idSalon, se usa; si no, se obtiene la data de todos los salones.
+      const data = await getReservas({ ...(filtros.idSalon && { idSalon: filtros.idSalon }) });
       if (!data || data.length === 0) {
-        setErrorMsg("No se encontraron reservas.");
+        setErrorMsg("No se encontraron reservas para el salón seleccionado.");
       } else {
         setReservas(data);
       }
@@ -30,13 +30,13 @@ const ConsultaModalEstado = ({ onClose }) => {
     <Overlay>
       <ModalContainer>
         <ModalHeader>
-          <h2>Comparativo Activas vs. Inactivas</h2>
+          <h2>Reservas Totales por Salón</h2>
           <CloseButton onClick={onClose}>X</CloseButton>
         </ModalHeader>
         <ModalBody>
-          <EstadoFilter onBuscar={handleBuscar} />
+          <TotalSalonFilter onBuscar={handleBuscar} />
           {errorMsg && <ErrorMessage>{errorMsg}</ErrorMessage>}
-          {reservas.length > 0 && <EstadoChart reservas={reservas} />}
+          {reservas.length > 0 && <TotalSalonChart reservas={reservas} />}
         </ModalBody>
       </ModalContainer>
     </Overlay>,
@@ -44,7 +44,7 @@ const ConsultaModalEstado = ({ onClose }) => {
   );
 };
 
-export default ConsultaModalEstado;
+export default ConsultaModalTotalSalon;
 
 /* Estilos del modal */
 const Overlay = styled.div`
@@ -53,7 +53,7 @@ const Overlay = styled.div`
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: rgba(0,0,0,0.5);
   display: flex;
   align-items: center;
   justify-content: center;

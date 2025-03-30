@@ -1,28 +1,30 @@
-// src/components/Admin/consultaModal/ConsultaModalTotalSalon.js
+// src/components/Admin/ConsultaModalPrioridad.jsx
 import React, { useState } from "react";
 import styled from "styled-components";
 import { createPortal } from "react-dom";
-import TotalSalonFilter from "../../../components/Admin/filters/TotalSalonFilter";
-import TotalSalonChart from "../../../components/Admin/charts/TotalSalonChart";
-import { getReservas } from "../../../api/reserva"; // Asegúrate de que la ruta es correcta
+import PrioridadFilter from "../../../components/Admin/filters/PrioridadFilter";
+import PromedioPrioridadChart from "../../../components/Admin/charts/PromedioPrioridadChart";
+import { getReservas } from "../../../api/reserva"; // Ajusta la ruta según tu estructura
 
-const ConsultaModalTotalSalon = ({ onClose }) => {
-  const [reservas, setReservas] = useState([]);
+const ConsultaModalPrioridad = ({ onClose }) => {
+  const [data, setData] = useState([]);
   const [errorMsg, setErrorMsg] = useState("");
 
-  const handleBuscar = async (filtros) => {
+  const handleBuscar = async () => {
     try {
       setErrorMsg("");
-      setReservas([]);
-      // Si se envía un filtro de idSalon, se usa; si no, se obtiene la data de todos los salones.
-      const data = await getReservas({ ...(filtros.idSalon && { idSalon: filtros.idSalon }) });
-      if (!data || data.length === 0) {
-        setErrorMsg("No se encontraron reservas para el salón seleccionado.");
+      setData([]);
+      // Se asume que el endpoint interpreta el parámetro "consultarPorPrioridad"
+      const filtros = { consultarPorPrioridad: true };
+      const result = await getReservas(filtros);
+      if (!result || result.length === 0) {
+        setErrorMsg("No se encontraron datos para el promedio de reservas por prioridad.");
       } else {
-        setReservas(data);
+        // Se asume que cada objeto viene con { priority, promedio }
+        setData(result);
       }
     } catch (error) {
-      setErrorMsg(error.message || "Error consultando reservas");
+      setErrorMsg(error.message || "Error consultando datos.");
     }
   };
 
@@ -30,13 +32,13 @@ const ConsultaModalTotalSalon = ({ onClose }) => {
     <Overlay>
       <ModalContainer>
         <ModalHeader>
-          <h2>Reservas Totales por Salón</h2>
+          <h2>Promedio de Reservas por Prioridad</h2>
           <CloseButton onClick={onClose}>X</CloseButton>
         </ModalHeader>
         <ModalBody>
-          <TotalSalonFilter onBuscar={handleBuscar} />
+          <PrioridadFilter onBuscar={handleBuscar} />
           {errorMsg && <ErrorMessage>{errorMsg}</ErrorMessage>}
-          {reservas.length > 0 && <TotalSalonChart reservas={reservas} />}
+          <PromedioPrioridadChart data={data} />
         </ModalBody>
       </ModalContainer>
     </Overlay>,
@@ -44,9 +46,8 @@ const ConsultaModalTotalSalon = ({ onClose }) => {
   );
 };
 
-export default ConsultaModalTotalSalon;
+export default ConsultaModalPrioridad;
 
-/* Estilos del modal */
 const Overlay = styled.div`
   position: fixed;
   top: 0;

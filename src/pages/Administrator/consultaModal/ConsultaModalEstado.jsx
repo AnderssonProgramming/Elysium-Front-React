@@ -1,12 +1,12 @@
-// src/components/Admin/ConsultaModalDemanda.js
+// src/components/Admin/consultaModal/ConsultaModalEstado.jsx
 import React, { useState } from "react";
 import styled from "styled-components";
 import { createPortal } from "react-dom";
-import DemandaFilter from "../../../components/Admin/filters/DemandaFilter";
-import DemandaChart from "../../../components/Admin/charts/DemandaChart";
-import { getReservas } from "../../../api/reserva"; // Asegúrate de que la ruta sea correcta
+import EstadoFilter from "../../../components/Admin/filters/EstadoFilter";
+import EstadoChart from "../../../components/Admin/charts/EstadoChart";
+import { getReservas } from "../../../api/reserva"; // Ajusta la ruta según tu estructura
 
-const ConsultaModalDemanda = ({ onClose }) => {
+const ConsultaModalEstado = ({ onClose }) => {
   const [reservas, setReservas] = useState([]);
   const [errorMsg, setErrorMsg] = useState("");
 
@@ -14,11 +14,10 @@ const ConsultaModalDemanda = ({ onClose }) => {
     try {
       setErrorMsg("");
       setReservas([]);
-
-      // No se envían filtros; se obtiene el total de reservas
+      // Llamar al endpoint de reservas sin filtro específico de estado
       const data = await getReservas({});
       if (!data || data.length === 0) {
-        setErrorMsg("No se encontraron reservas para mostrar la demanda.");
+        setErrorMsg("No se encontraron reservas.");
       } else {
         setReservas(data);
       }
@@ -31,13 +30,13 @@ const ConsultaModalDemanda = ({ onClose }) => {
     <Overlay>
       <ModalContainer>
         <ModalHeader>
-          <h2>Demanda por Laboratorios</h2>
+          <h2>Comparativo Activas vs. Inactivas</h2>
           <CloseButton onClick={onClose}>X</CloseButton>
         </ModalHeader>
         <ModalBody>
-          <DemandaFilter onBuscar={handleBuscar} />
+          <EstadoFilter onBuscar={handleBuscar} />
           {errorMsg && <ErrorMessage>{errorMsg}</ErrorMessage>}
-          <DemandaChart reservas={reservas} />
+          {reservas.length > 0 && <EstadoChart reservas={reservas} />}
         </ModalBody>
       </ModalContainer>
     </Overlay>,
@@ -45,15 +44,16 @@ const ConsultaModalDemanda = ({ onClose }) => {
   );
 };
 
-export default ConsultaModalDemanda;
+export default ConsultaModalEstado;
 
+/* Estilos del modal */
 const Overlay = styled.div`
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0,0,0,0.5);
+  background-color: rgba(0, 0, 0, 0.5);
   display: flex;
   align-items: center;
   justify-content: center;

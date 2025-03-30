@@ -1,4 +1,3 @@
-// src/components/Admin/charts/DiaSalonChart.js
 import React, { useEffect, useRef } from "react";
 import * as d3 from "d3";
 

@@ -1,4 +1,4 @@
-// src/components/Admin/charts/EstadoChart.js
+// src/components/Admin/charts/EstadoChart.jsx
 import React, { useEffect, useRef } from "react";
 import * as d3 from "d3";
 

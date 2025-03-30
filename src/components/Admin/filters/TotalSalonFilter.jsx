@@ -1,4 +1,4 @@
-// src/components/Admin/filters/TotalSalonFilter.js
+// src/components/Admin/filters/TotalSalonFilter.jsx
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { getSalones } from "../../../api/salon"; // Ajusta la ruta según tu estructura

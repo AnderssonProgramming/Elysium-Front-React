@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { BrowserRouter as Router, Route, Routes, Navigate } from "react-router-dom";
 import Home from './pages/Home/Home.js';
-import LoginPage from './pages/Login/LoginPage.js';
-import AdministratorHome from './pages/Administrator/AdministratorHome.js'; // Importa el componente
+import LoginPage from './pages/Login/LoginPage.jsx';
+import AdministratorHome from './pages/Administrator/AdministratorHome.jsx'; // Importa el componente
 
 import './App.css';
 

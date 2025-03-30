@@ -1,30 +1,24 @@
-// src/components/Admin/ConsultaModalRangoFechas.js
+// src/components/Admin/ConsultaModalDemanda.js
 import React, { useState } from "react";
 import styled from "styled-components";
 import { createPortal } from "react-dom";
-import RangoFechasFilter from "../../../components/Admin/filters/RangoFechasFilter";
-import RangoFechasChart from "../../../components/Admin/charts/RangoFechasChart";
-import { getReservas } from "../../../api/reserva"; // Ajusta la ruta según tu estructura
+import DemandaFilter from "../../../components/Admin/filters/DemandaFilter";
+import DemandaChart from "../../../components/Admin/charts/DemandaChart";
+import { getReservas } from "../../../api/reserva"; // Asegúrate de que la ruta sea correcta
 
-const ConsultaModalRangoFechas = ({ onClose }) => {
+const ConsultaModalDemanda = ({ onClose }) => {
   const [reservas, setReservas] = useState([]);
   const [errorMsg, setErrorMsg] = useState("");
 
-  const handleBuscar = async (filtros) => {
+  const handleBuscar = async () => {
     try {
       setErrorMsg("");
       setReservas([]);
-      if (!filtros.fechaInicio || !filtros.fechaFin) {
-        setErrorMsg("Por favor, selecciona ambas fechas.");
-        return;
-      }
-      // Se llama al endpoint con los parámetros fechaInicio y fechaFin
-      const data = await getReservas({ 
-        fechaInicio: filtros.fechaInicio, 
-        fechaFin: filtros.fechaFin 
-      });
+
+      // No se envían filtros; se obtiene el total de reservas
+      const data = await getReservas({});
       if (!data || data.length === 0) {
-        setErrorMsg("No se encontraron reservas en el rango de fechas seleccionado.");
+        setErrorMsg("No se encontraron reservas para mostrar la demanda.");
       } else {
         setReservas(data);
       }
@@ -37,13 +31,13 @@ const ConsultaModalRangoFechas = ({ onClose }) => {
     <Overlay>
       <ModalContainer>
         <ModalHeader>
-          <h2>Reservas por Rango de Fechas</h2>
+          <h2>Demanda por Laboratorios</h2>
           <CloseButton onClick={onClose}>X</CloseButton>
         </ModalHeader>
         <ModalBody>
-          <RangoFechasFilter onBuscar={handleBuscar} />
+          <DemandaFilter onBuscar={handleBuscar} />
           {errorMsg && <ErrorMessage>{errorMsg}</ErrorMessage>}
-          <RangoFechasChart reservas={reservas} />
+          <DemandaChart reservas={reservas} />
         </ModalBody>
       </ModalContainer>
     </Overlay>,
@@ -51,16 +45,15 @@ const ConsultaModalRangoFechas = ({ onClose }) => {
   );
 };
 
-export default ConsultaModalRangoFechas;
+export default ConsultaModalDemanda;
 
-/* Estilos del modal */
 const Overlay = styled.div`
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: rgba(0,0,0,0.5);
   display: flex;
   align-items: center;
   justify-content: center;

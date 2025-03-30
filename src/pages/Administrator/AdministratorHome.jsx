@@ -1,4 +1,4 @@
-// src/pages/Admin/AdministratorHome.js
+// src/pages/Admin/AdministratorHome.jsx
 import React, { useState } from "react";
 import styled from "styled-components";
 import { Header } from "../../components/Admin/Header";

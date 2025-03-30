@@ -9,7 +9,7 @@ import { getReservas } from "../../../api/reserva"; // Asegúrate de que la ruta
 const ConsultaModalDiaSalon = ({ onClose }) => {
     const [reservas, setReservas] = useState([]);
     const [errorMsg, setErrorMsg] = useState("");
-  
+
     const handleBuscar = async (filtros) => {
       try {
         setErrorMsg("");
@@ -29,7 +29,7 @@ const ConsultaModalDiaSalon = ({ onClose }) => {
         setErrorMsg(error.message || "Error consultando reservas");
       }
     };
-  
+
     return createPortal(
       <Overlay>
         <ModalContainer>
@@ -47,9 +47,9 @@ const ConsultaModalDiaSalon = ({ onClose }) => {
       document.body
     );
   };
-  
+
   export default ConsultaModalDiaSalon;
-  
+
   /* Estilos del modal */
   const Overlay = styled.div`
     position: fixed;
@@ -63,7 +63,7 @@ const ConsultaModalDiaSalon = ({ onClose }) => {
     justify-content: center;
     z-index: 10000;
   `;
-  
+
   const ModalContainer = styled.div`
     background-color: #fff;
     width: 700px;
@@ -71,24 +71,24 @@ const ConsultaModalDiaSalon = ({ onClose }) => {
     border-radius: 8px;
     padding: 20px;
   `;
-  
+
   const ModalHeader = styled.div`
     display: flex;
     justify-content: space-between;
     align-items: center;
   `;
-  
+
   const CloseButton = styled.button`
     background: transparent;
     border: none;
     font-size: 22px;
     cursor: pointer;
   `;
-  
+
   const ModalBody = styled.div`
     margin-top: 10px;
   `;
-  
+
   const ErrorMessage = styled.div`
     color: red;
     font-weight: bold;

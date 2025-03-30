@@ -1,4 +1,3 @@
-// src/components/Admin/charts/DemandaChart.js
 import React, { useEffect, useRef } from "react";
 import * as d3 from "d3";
 
@@ -29,13 +28,10 @@ const DemandaChart = ({ reservas }) => {
     }));
 
     // Usamos d3.hierarchy para crear una estructura para el pack layout.
-    const root = d3.hierarchy({ children: data })
-      .sum(d => d.count);
+    const root = d3.hierarchy({ children: data }).sum((d) => d.count);
 
     // Configurar el pack layout
-    const pack = d3.pack()
-      .size([width, height])
-      .padding(10);
+    const pack = d3.pack().size([width, height]).padding(10);
 
     const nodes = pack(root).leaves();
 
@@ -43,33 +39,37 @@ const DemandaChart = ({ reservas }) => {
     const color = d3.scaleOrdinal(d3.schemeSet3);
 
     // Dibujar las burbujas
-    const node = svg.selectAll("g")
+    const node = svg
+      .selectAll("g")
       .data(nodes)
       .enter()
       .append("g")
-      .attr("transform", d => `translate(${d.x}, ${d.y})`);
+      .attr("transform", (d) => `translate(${d.x}, ${d.y})`);
 
-    node.append("circle")
+    node
+      .append("circle")
       .attr("r", 0)
       .attr("fill", (d, i) => color(i))
       .transition()
       .duration(800)
-      .attr("r", d => d.r);
+      .attr("r", (d) => d.r);
 
     // Agregar etiquetas dentro de cada burbuja (nombre del salón y cantidad)
-    node.append("text")
+    node
+      .append("text")
       .attr("text-anchor", "middle")
       .attr("dy", "-0.3em")
-      .attr("font-size", d => Math.min(2 * d.r / d.data.salon.length, 18))
+      .attr("font-size", (d) => Math.min((2 * d.r) / d.data.salon.length, 18))
       .attr("fill", "#000")
-      .text(d => d.data.salon);
+      .text((d) => d.data.salon);
 
-    node.append("text")
+    node
+      .append("text")
       .attr("text-anchor", "middle")
       .attr("dy", "1em")
       .attr("font-size", "12px")
       .attr("fill", "#000")
-      .text(d => d.data.count);
+      .text((d) => d.data.count);
   }, [reservas]);
 
   return <svg ref={chartRef}></svg>;

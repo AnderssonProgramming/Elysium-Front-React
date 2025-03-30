@@ -1,4 +1,4 @@
-// src/components/Admin/filters/DiaSalonFilter.js
+// src/components/Admin/filters/DiaSalonFilter.jsx
 import React, { useState } from "react";
 import styled from "styled-components";
 

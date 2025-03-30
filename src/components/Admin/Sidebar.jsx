@@ -69,4 +69,3 @@ const NavText = styled.span`
   width: 127px;
   font-weight: bold; /* Texto en negrilla */
 `;
-

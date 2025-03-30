@@ -1,4 +1,4 @@
-// src/components/Admin/filters/EstadoFilter.js
+// src/components/Admin/filters/EstadoFilter.jsx
 import React from "react";
 import styled from "styled-components";
 

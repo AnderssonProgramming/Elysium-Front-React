@@ -1,4 +1,4 @@
-// src/components/Admin/filters/PrioridadFilter.js
+// src/components/Admin/filters/PrioridadFilter.jsx
 import React from "react";
 import styled from "styled-components";
 

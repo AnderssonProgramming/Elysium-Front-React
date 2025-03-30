@@ -1,30 +1,35 @@
-// src/components/Admin/ConsultaModalPrioridad.js
+// src/components/Admin/ConsultaModalRangoFechas.jsx
 import React, { useState } from "react";
 import styled from "styled-components";
 import { createPortal } from "react-dom";
-import PrioridadFilter from "../../../components/Admin/filters/PrioridadFilter";
-import PromedioPrioridadChart from "../../../components/Admin/charts/PromedioPrioridadChart";
+import RangoFechasFilter from "../../../components/Admin/filters/RangoFechasFilter";
+import RangoFechasChart from "../../../components/Admin/charts/RangoFechasChart";
 import { getReservas } from "../../../api/reserva"; // Ajusta la ruta según tu estructura
 
-const ConsultaModalPrioridad = ({ onClose }) => {
-  const [data, setData] = useState([]);
+const ConsultaModalRangoFechas = ({ onClose }) => {
+  const [reservas, setReservas] = useState([]);
   const [errorMsg, setErrorMsg] = useState("");
 
-  const handleBuscar = async () => {
+  const handleBuscar = async (filtros) => {
     try {
       setErrorMsg("");
-      setData([]);
-      // Se asume que el endpoint interpreta el parámetro "consultarPorPrioridad"
-      const filtros = { consultarPorPrioridad: true };
-      const result = await getReservas(filtros);
-      if (!result || result.length === 0) {
-        setErrorMsg("No se encontraron datos para el promedio de reservas por prioridad.");
+      setReservas([]);
+      if (!filtros.fechaInicio || !filtros.fechaFin) {
+        setErrorMsg("Por favor, selecciona ambas fechas.");
+        return;
+      }
+      // Se llama al endpoint con los parámetros fechaInicio y fechaFin
+      const data = await getReservas({ 
+        fechaInicio: filtros.fechaInicio, 
+        fechaFin: filtros.fechaFin 
+      });
+      if (!data || data.length === 0) {
+        setErrorMsg("No se encontraron reservas en el rango de fechas seleccionado.");
       } else {
-        // Se asume que cada objeto viene con { priority, promedio }
-        setData(result);
+        setReservas(data);
       }
     } catch (error) {
-      setErrorMsg(error.message || "Error consultando datos.");
+      setErrorMsg(error.message || "Error consultando reservas");
     }
   };
 
@@ -32,13 +37,13 @@ const ConsultaModalPrioridad = ({ onClose }) => {
     <Overlay>
       <ModalContainer>
         <ModalHeader>
-          <h2>Promedio de Reservas por Prioridad</h2>
+          <h2>Reservas por Rango de Fechas</h2>
           <CloseButton onClick={onClose}>X</CloseButton>
         </ModalHeader>
         <ModalBody>
-          <PrioridadFilter onBuscar={handleBuscar} />
+          <RangoFechasFilter onBuscar={handleBuscar} />
           {errorMsg && <ErrorMessage>{errorMsg}</ErrorMessage>}
-          <PromedioPrioridadChart data={data} />
+          <RangoFechasChart reservas={reservas} />
         </ModalBody>
       </ModalContainer>
     </Overlay>,
@@ -46,15 +51,16 @@ const ConsultaModalPrioridad = ({ onClose }) => {
   );
 };
 
-export default ConsultaModalPrioridad;
+export default ConsultaModalRangoFechas;
 
+/* Estilos del modal */
 const Overlay = styled.div`
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0,0,0,0.5);
+  background-color: rgba(0, 0, 0, 0.5);
   display: flex;
   align-items: center;
   justify-content: center;
