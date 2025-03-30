@@ -54,6 +54,7 @@ Durante el desarrollo del proyecto, se utilizaron las siguientes librerías:
 ```sh
 npm install react-router-dom
 npm install axios
+npm install framer-motion
 npm install react-datepicker
 npm install date-fns
 ```
