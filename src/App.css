@@ -12,7 +12,7 @@ html, body {
   user-select: none;
 }
 
-p, span, h1 {
+p, span, h1,h2 {
   color: var(--variable-collection-current-color);
 }
 

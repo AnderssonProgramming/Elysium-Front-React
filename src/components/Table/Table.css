@@ -1,0 +1,28 @@
+/* src/components/Table/Table.css */
+.user-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  .user-table th,
+  .user-table td {
+    border: 1px solid #52b69a00;
+    padding: 8px;
+    text-align: left;
+  }
+  
+.user-table th {
+    background-color: #52b69a;
+    color: white;
+  }
+  
+  .user-table th:first-child {
+    border-top-left-radius: 10px;
+    border-bottom-left-radius: 10px;
+  }
+  
+  .user-table th:last-child {
+    border-top-right-radius: 10px;
+    border-bottom-right-radius: 10px;
+  }
+  

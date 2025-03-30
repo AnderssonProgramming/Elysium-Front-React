@@ -1,0 +1,23 @@
+/* ButtonAddUser.css */
+.btn-add-user {
+    display: inline-block;
+    /* align-self: flex-end; */
+    background-color: #3eb48941;
+    color: #3EB489; /* Verde menta */
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-left: auto; /* Align to the right */
+    margin-bottom: 20px;
+    font-weight: bold;
+}
+
+.btn-add-user:hover {
+    transform: scale(1.05);
+    background-color: #3EB489; /* Verde menta */
+    color: #fff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}

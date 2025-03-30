@@ -1,85 +1,83 @@
-import axios from "axios";
-import { BASE_URL } from "../../config/config.js";
+import api from "../../api/axiosInstance";
 
-const ADMIN_API = `${BASE_URL}/administrador`;
+const ADMIN_API = "/administrador"; // Ya no necesitas BASE_URL aquí
 
-/**
- * Consulta usuarios con filtros opcionales.
- * 
- * @param {Object} filtros - Filtros opcionales para la consulta.
- * @param {boolean} [filtros.activo] - Filtrar usuarios activos/inactivos.
- * @param {boolean} [filtros.isAdmin] - Filtrar usuarios administradores/no administradores.
- * @returns {Promise<Object[]>} - Lista de usuarios filtrados.
- * @throws {Error} - Si la consulta falla.
- */
-export async function consultarUsuarios(filtros) {
+export async function consultarUsuarios(filtros = {}) {
     try {
-        const response = await axios.get(`${ADMIN_API}/usuarios`, { params: filtros });
+        console.log("Enviando filtros al backend:", filtros);
+        
+        // Solo incluimos parámetros que no sean null o undefined
+        const params = {};
+        if (filtros.activo !== null && filtros.activo !== undefined) {
+            params.activo = filtros.activo;
+        }
+        if (filtros.isAdmin !== null && filtros.isAdmin !== undefined) {
+            params.isAdmin = filtros.isAdmin;
+        }
+
+        // Mostrar la URL completa para depuración
+        console.log("URL de solicitud:", `${ADMIN_API}/usuarios`);
+        console.log("Parámetros:", params);
+
+        const response = await api.get(`${ADMIN_API}/usuarios`, { params });
         return response.data;
     } catch (error) {
-        throw new Error(error.response.data.message);
+        console.error("Error al consultar usuarios:", error);
+        const mensaje = error.response?.data?.message || "Error al consultar usuarios";
+        throw new Error(mensaje);
     }
 }
 
-/**
- * Agrega un nuevo usuario al sistema.
- * @param {Object} usuario - Datos del usuario a agregar.
- * @returns {Promise<void>} Promesa resuelta si el usuario se agrega correctamente.
- * @throws {Error} Si hay un problema al agregar el usuario.
- */
-export async function agregarUsuario(usuario) {
+export const agregarUsuario = async (datosUsuario) => {
     try {
-        const response = await axios.post(`${ADMIN_API}/usuario`, usuario);
-        return response.data;
+      const response = await api.post(`${ADMIN_API}/usuario`, datosUsuario);
+      return response.data;
     } catch (error) {
-        throw new Error(error.response.data.message);
+      // Extraer la información de error detallada
+      const mensaje = error.response?.data?.message || 'Error al agregar usuario';
+      const codigo = error.response?.data?.code || 'UNKNOWN_ERROR';
+      const status = error.response?.status || 500;
+      
+      // Crear un error enriquecido para mejor manejo en UI
+      const errorEnriquecido = new Error(mensaje);
+      errorEnriquecido.codigo = codigo;
+      errorEnriquecido.status = status;
+      errorEnriquecido.data = error.response?.data;
+      
+      console.error('Error detallado:', {
+        codigo,
+        status,
+        mensaje,
+        respuestaCompleta: error.response?.data
+      });
+      
+      throw errorEnriquecido;
     }
-}
+  };
 
-/**
- * Actualiza parcialmente la información de un usuario.
- * @param {number} id - ID del usuario a actualizar.
- * @param {Object} actualizacion - Datos a actualizar.
- * @returns {Promise<void>} Promesa resuelta si la actualización es exitosa.
- * @throws {Error} Si hay un problema al actualizar el usuario.
- */
 export async function actualizarInformacionUsuario(id, actualizacion) {
     try {
-        const response = await axios.patch(`${ADMIN_API}/usuario/${id}`, actualizacion);
+        const response = await api.patch(`${ADMIN_API}/usuario/${id}`, actualizacion);
         return response.data;
     } catch (error) {
-        throw new Error(error.response.data.message);
+        throw new Error(error.response?.data?.message || "Error al actualizar usuario");
     }
 }
 
-/**
- * Agrega un nuevo salón al sistema.
- * @param {number} id - ID del administrador que agrega el salón.
- * @param {Object} salon - Datos del salón a agregar.
- * @returns {Promise<void>} Promesa resuelta si el salón se agrega correctamente.
- * @throws {Error} Si hay un problema al agregar el salón.
- */
 export async function agregarSalon(id, salon) {
     try {
-        const response = await axios.post(`${ADMIN_API}/${id}/salon`, salon);
+        const response = await api.post(`${ADMIN_API}/${id}/salon`, salon);
         return response.data;
     } catch (error) {
-        throw new Error(error.response.data.message);
+        throw new Error(error.response?.data?.message || "Error al agregar salón");
     }
 }
 
-/**
- * Crea una nueva reserva en el sistema.
- * @param {number} id - ID del usuario que realiza la reserva.
- * @param {Object} reserva - Datos de la reserva a crear.
- * @returns {Promise<string>} Mensaje de éxito.
- * @throws {Error} Si hay un problema al crear la reserva.
- */
 export async function crearReserva(id, reserva) {
     try {
-        const response = await axios.post(`${ADMIN_API}/${id}/reserva`, reserva);
+        const response = await api.post(`${ADMIN_API}/${id}/reserva`, reserva);
         return response.data;
     } catch (error) {
-        throw new Error(error.response.data.message);
+        throw new Error(error.response?.data?.message || "Error al crear reserva");
     }
 }
