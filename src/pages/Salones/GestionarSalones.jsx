@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "./GestionarSalones.css";
-import { getSalones, agregarSalon, actualizarSalon, getSalonByMnemonico } from "../../api/salon";
+import { getSalones, actualizarSalon, getSalonByMnemonico } from "../../api/salon";
+import { agregarSalon } from "../../api/usuario/administrador";
 import { getRecursos, consultarRecurso, agregarRecurso, actualizarRecurso} from "../../api/recursos";
 import { ReactComponent as Editar} from '../../assets/icons/edit-3-svgrepo-com.svg';
 import { ReactComponent as Buscar} from '../../assets/icons/Search Glyph.svg';
@@ -11,22 +12,31 @@ import EditarSalonModal from "../../components/popup/CRUDSalonModal/EditarSalonM
 
 function GestionarSalones() {
   const [salones, setSalones] = useState([]);
+  const [searchTerm, setSearchTerm] = useState("");
   const [popup, setPopup] = useState({tipo: ""});
   const [recursosDisponibles, setRecursosDisponibles] = useState([]);
   const [newSalon, setNewSalon] = useState({
-    nombre: "",
-    mnemonico: "",
-    descripcion: "",
-    ubicacion: "",
-    capacidad: 0,
-    recursos: []
+    mnemonic: "",
+    name: "",
+    description: "",
+    location: "",
+    capacity: 0,
+    resources: []
   });
+  const user={   //simulacion de usuario administrador
+    "idInstitucional": 1000098257,
+    "nombre": "Santiago",
+    "apellido": "Botero",
+    "correoInstitucional": "santiago.botero@escuelaing.edu.co",
+    "activo": true,
+    "isAdmin": true
+  };
 
   const abrirPopup = (tipo, salon = null) => {
     if (tipo === "editar-salon" && salon) {
       setNewSalon(salon);
     } else if (tipo === "agregar-salon") {
-      setNewSalon({ nombre: "", mnemonico: "", descripcion: "", ubicacion: "", capacidad: 0, recursos: [] });
+      setNewSalon({ mnemonic: "", name: "", description: "", location: "", capacity: 0, resources: [] });
     }
     setPopup({ tipo });
   };
@@ -40,9 +50,8 @@ function GestionarSalones() {
     async function cargarDatos() {
       try {
         const dataSalones = await getSalones();
-        setSalones(dataSalones);
-        const dataRecursos = await getRecursos();
-        setRecursosDisponibles(dataRecursos);
+        console.log("Datos de salones cargados:", dataSalones);
+        setSalones(dataSalones || []);
       } catch (error) {
         console.error("Error al cargar los datos", error);
       }
@@ -53,24 +62,32 @@ function GestionarSalones() {
   // Alternar estado activo/inactivo
   const toggleActivo = async (salonId) => {
     try {
-      setSalones((prevSalones) => 
-        prevSalones.map(salon => 
+      setSalones((prevSalones) =>
+        prevSalones.map(salon =>
           salon.id === salonId ? { ...salon, activo: !salon.activo } : salon
         )
       );
-      
+
       const salonActualizado = salones.find(s => s.id === salonId);
       await actualizarSalon(salonId, { activo: !salonActualizado?.activo });
     } catch (error) {
       console.error("Error al cambiar estado de salón:", error);
     }
-  }; 
+  };
 
   // Agregar un nuevo salón
   const handleAddSalon = async () => {
     if (newSalon.nombre.trim() && newSalon.descripcion.trim()) {
       try {
-        const addedSalon = await agregarSalon({ ...newSalon, activo: true });
+        const formattedSalon = {
+          mnemonic: newSalon.mnemonico,
+          name: newSalon.nombre,
+          description: newSalon.descripcion,
+          location: newSalon.ubicacion,
+          capacity: newSalon.capacidad,
+          resources: newSalon.recursos || [],
+        };
+        const addedSalon = await agregarSalon(user.idInstitucional, formattedSalon);
         setSalones([...salones, addedSalon]);
         cerrarPopup();
       } catch (error) {
@@ -96,14 +113,25 @@ function GestionarSalones() {
     }
   };
 
+  // Filtrar los salones según el término de búsqueda
+  const salonesFiltrados = salones.filter((salon) =>
+    salon.nombre?.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
   return (
     <div className="gestionar-salones">
       <div className="top-bar">
         <div className="search-container">
           <Buscar className="search-icon" />
-          <input type="text" className="search-bar" placeholder="Buscar..." />
+          <input
+            type="text"
+            className="search-bar"
+            placeholder="Buscar..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)} // Actualizar el estado de búsqueda
+          />
         </div>
-        <button className="add-button" onClick={() => abrirPopup("agregar-salon")}> 
+        <button className="add-button" onClick={() => abrirPopup("agregar-salon")}>
           <Puerta />
           <span>Agregar salón</span>
         </button>
@@ -120,7 +148,7 @@ function GestionarSalones() {
             </tr>
           </thead>
           <tbody>
-            {salones.map((salon) => (
+            {salonesFiltrados.map((salon) => (
               <tr key={salon.id}>
                 <td>{salon.nombre}</td>
                 <td>{salon.descripcion}</td>
