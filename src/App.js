@@ -4,7 +4,7 @@ import { ReactComponent as House } from './assets/icons/house-user_11269953 1.sv
 import { ReactComponent as Room } from './assets/icons/workshop_14672030 1.svg';
 import { ReactComponent as User } from './assets/icons/User.svg';
 import Home from './pages/Home/Home.js';
-import GestionarSalones from './pages/Salones/GestionarSalones.js';
+import GestionarSalones from './pages/Salones/GestionarSalones';
 /*
 import Admin from './pages/Admin/Admin.js';
 import Salones from './pages/Salones/Salones.js';
