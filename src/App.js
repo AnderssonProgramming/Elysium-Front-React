@@ -1,14 +1,18 @@
 import React, { useState, useEffect } from "react";
-import { BrowserRouter as Router, Route, Routes, Link, useLocation } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Route,
+  Routes,
+  Link,
+  useLocation,
+  Navigate
+} from "react-router-dom";
 import { ReactComponent as House } from './assets/icons/house-user_11269953 1.svg';
 import { ReactComponent as Room } from './assets/icons/workshop_14672030 1.svg';
 import { ReactComponent as User } from './assets/icons/User.svg';
 import Home from './pages/Home/Home.js';
-/*
-import Admin from './pages/Admin/Admin.js';
-import Salones from './pages/Salones/Salones.js';
-import Usarios from './pages/Usarios/Usarios.js';
-*/
+import GestionarUsuarios from './pages/Admin/GestionarUsuarios'; // Asegúrate de que la ruta es correcta
+
 
 import './App.css';
 
@@ -17,21 +21,15 @@ import './App.css';
  */
 const routesConfig = {
   admin: [
-    { path: "/admin", name: "Panel de Control", icon: <House className="svg" /> },
-    { path: "/salones", name: "Gestión de Salones", icon: <Room className="svg" /> },
-    { path: "/usuarios", name: "Gestión de Usuarios", icon: <User className="svg" /> },
+    { path: "/administrador", name: "Panel de Control", icon: <House className="svg" /> },
+    { path: "/administrador/salones", name: "Gestión de Salones", icon: <Room className="svg" /> },
+    { path: "administrador/usuarios", name: "Gestión de Usuarios", icon: <User className="svg" /> },
   ],
   profe: [
     { path: "/home", name: "Gestión de Reservas", icon: <House className="svg" /> },
   ],
 };
 
-/**
- * Componente de menú de navegación basado en el rol del usuario.
- * @param {Object} props - Propiedades del componente.
- * @param {"admin"|"profe"} props.role - Rol del usuario.
- * @returns {JSX.Element} Lista de enlaces de navegación.
- */
 const Menu = ({ role }) => (
   <ul className="menu">
     {routesConfig[role]?.map((item, index) => (
@@ -43,17 +41,16 @@ const Menu = ({ role }) => (
       </li>
     ))}
   </ul>
-)
+);
 
 /**
  * Componente de encabezado que muestra el título de la página y el saludo al usuario.
- * @param {Object} props - Propiedades del componente.
- * @param {"admin"|"profe"} props.role - Rol del usuario.
- * @returns {JSX.Element} Encabezado de la aplicación.
  */
 const Header = ({ role }) => {
   const location = useLocation();
-  const currentPage = routesConfig[role]?.find(route => route.path === location.pathname);
+  const currentPage = routesConfig[role]?.find(
+    (route) => route.path === location.pathname
+  );
   const title = currentPage ? currentPage.name : "Elysium";
 
   useEffect(() => {
@@ -61,48 +58,62 @@ const Header = ({ role }) => {
   }, [title]);
 
   return (
-    <div className='header'>
+    <div className="header">
       <span className="title">{title}</span>
-      <span className="greetings">Buen día, {role === "admin" ? "Admin" : "Profe"}</span>
-      <span className="subtitle">Gestiona las reservas que has agendado últimamente</span>
+      <span className="greetings">
+        Buen día, {role === "admin" ? "Admin" : "Profe"}
+      </span>
+      <span className="subtitle">
+        Gestiona las reservas que has agendado últimamente
+      </span>
     </div>
   );
 };
 
 /**
  * Componente principal de la aplicación.
- * Controla el estado del rol del usuario y maneja la lógica de enrutamiento.
- * @returns {JSX.Element} Estructura principal de la aplicación.
  */
 function App() {
   const [role, setRole] = useState("");
 
   useEffect(() => {
-      const randomRole = Math.random() > 0.5 ? "admin" : "profe"; // Configurar logica de login para obtener el usuario que usa la pagina
-      setRole(randomRole);
-      const colorVariable =
+    const randomRole = Math.random() > 0.5 ? "admin" : "profe"; // Simulación de login
+    setRole(randomRole);
+    const colorVariable =
       randomRole === "admin"
         ? "var(--variable-collection-user-admin)"
         : "var(--variable-collection-user-estandar)";
-      document.documentElement.style.setProperty("--variable-collection-current-color", colorVariable);
+    document.documentElement.style.setProperty(
+      "--variable-collection-current-color",
+      colorVariable
+    );
   }, []);
 
   return (
     <Router>
-      <div className='content'>
-        <div className='navBar'>
-          <Menu role={role}/>
+      <div className="content">
+        <div className="navBar">
+          <Menu role={role} />
         </div>
-        <div className='panel'>
+        <div className="panel">
           <Header role={role} />
-          <div className='container'>
+          <div className="container">
             <Routes>
-              <Route path="/home" element={<Home />}></Route>
-              {/*
-              <Route path="/admin" element={<Admin />}></Route>
-              <Route path="/salones" element={<Salones />}></Route>
-              <Route path="/usuarios" element={<Usarios />}></Route>
-              */}
+              {role === "admin" ? (
+                <>
+                  <Route path="/administrador" element={<Home />} />
+                  <Route path="/administrador/salones" element={<div>Gestión de Salones</div>} />
+                  <Route path="administrador/usuarios" element={<GestionarUsuarios />} />
+                  
+
+                  <Route path="*" element={<Navigate to="/admin" />} />
+                </>
+              ) : (
+                <>
+                  <Route path="/home" element={<Home />} />
+                  <Route path="*" element={<Navigate to="/home" />} />
+                </>
+              )}
             </Routes>
           </div>
         </div>
