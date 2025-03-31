@@ -95,18 +95,39 @@ ul {
 
 .content .panel .header {
   display: flex;
-  flex-direction: column;
-  justify-content: center;
-  width: 100%;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
   height: 20%;
+  margin-right: 5%;
 }
 
-.content .panel .header .title {
+.content .panel .header .info {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  width: 100%;
+}
+
+.content .panel .header .info .title {
   font-weight: bold;
 }
 
-.content .panel .header .title, .content .panel .header .greetings {
+.content .panel .header .info .title, .content .panel .header .greetings {
   font-size: 21px;
+}
+
+.content .panel .header .user-info {
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
+  width: 100%;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.content .panel .header .user-info span {
+  font-size: 18px;
 }
 
 .content .panel .container {
