@@ -4,7 +4,7 @@ import RangoFechasFilter from "../../../components/Admin/filters/RangoFechasFilt
 import RangoFechasChart from "../../../components/Admin/charts/RangoFechasChart";
 import { getReservas } from "../../../api/reserva";
 
-const ConsultaRangoFechas = () => {
+const ConsultaRangoFechas = ({ token }) => {
   const [reservas, setReservas] = useState([]);
   const [errorMsg, setErrorMsg] = useState("");
 
@@ -20,7 +20,7 @@ const ConsultaRangoFechas = () => {
       const data = await getReservas({ 
         fechaInicio: filtros.fechaInicio, 
         fechaFin: filtros.fechaFin 
-      });
+      }, token);
       if (!data || data.length === 0) {
         setErrorMsg("No se encontraron reservas en el rango de fechas seleccionado.");
       } else {

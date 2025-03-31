@@ -3,10 +3,10 @@ import styled from "styled-components";
 import LoginForm from "../../components/Login/LoginForm";
 import ImageSection from "../../components/Login/ImageSection";
 
-const LoginPage = () => {
+function LoginPage({ onLogin }) {
   return (
     <PageContainer>
-      <LoginForm />
+      <LoginForm onLogin={onLogin} />
       <ImageSection />
     </PageContainer>
   );

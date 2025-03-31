@@ -15,9 +15,15 @@ const SALON_API = `${BASE_URL}/salones`;
  * @returns {Promise<Object[]>} Lista de salones.
  * @throws {Error} Error al obtener los salones.
  */
-export async function getSalones(filtros = {}) {
+export async function getSalones(filtros = {}, token) {
     try {
-        const response = await axios.get(SALON_API, { params: filtros });
+        const response = await axios.get(SALON_API, {
+            params: filtros,
+            headers: {
+                "Authorization": `Bearer ${token}`,
+                "Content-Type": "application/json"
+            },
+         });
         return response.data;
     } catch (error) {
         throw new Error(error.response.data.message);
@@ -30,9 +36,14 @@ export async function getSalones(filtros = {}) {
  * @returns {Promise<Object>} Datos del salón.
  * @throws {Error} Error al obtener el salón.
  */
-export async function getSalonByMnemonico(mnemonico) {
+export async function getSalonByMnemonico(mnemonico, token) {
     try {
-        const response = await axios.get(`${SALON_API}/${mnemonico}`);
+        const response = await axios.get(`${SALON_API}/${mnemonico}`, {
+            headers: {
+                "Authorization": `Bearer ${token}`,
+                "Content-Type": "application/json"
+            },
+        });
         return response.data;
     } catch (error) {
         throw new Error(error.response.data.message);
@@ -45,9 +56,14 @@ export async function getSalonByMnemonico(mnemonico) {
  * @returns {Promise<boolean>} Estado de disponibilidad del salón.
  * @throws {Error} Error al obtener la disponibilidad.
  */
-export async function getDisponible(mnemonico) {
+export async function getDisponible(mnemonico, token) {
     try {
-        const response = await axios.get(`${SALON_API}/${mnemonico}/disponible`);
+        const response = await axios.get(`${SALON_API}/${mnemonico}/disponible`, {
+            headers: {
+                "Authorization": `Bearer ${token}`,
+                "Content-Type": "application/json"
+            },
+        });
         return response.data;
     } catch (error) {
         throw new Error(error.response.data.message);
@@ -66,10 +82,14 @@ export async function getDisponible(mnemonico) {
  * @returns {Promise<Object>} Respuesta del servidor.
  * @throws {Error} Error al agregar el salón.
  */
-export async function agregarSalon(salon) {
+export async function agregarSalon(salon, token) {
     try {
-        const response = await axios.post(SALON_API, salon, {
-            headers: { "Content-Type": "application/json" }
+        const response = await axios.post(SALON_API, {
+            params: salon,
+            headers: {
+                "Authorization": `Bearer ${token}`,
+                "Content-Type": "application/json"
+            },
         });
         return response.data;
     } catch (error) {
@@ -84,10 +104,14 @@ export async function agregarSalon(salon) {
  * @returns {Promise<Object>} Respuesta del servidor.
  * @throws {Error} Error al actualizar el salón.
  */
-export async function actualizarSalon(mnemonico, salon) {
+export async function actualizarSalon(mnemonico, salon, token) {
     try {
-        const response = await axios.patch(`${SALON_API}/${mnemonico}`, salon, {
-            headers: { "Content-Type": "application/json" }
+        const response = await axios.patch(`${SALON_API}/${mnemonico}`, {
+            params: salon,
+            headers: {
+                "Authorization": `Bearer ${token}`,
+                "Content-Type": "application/json"
+            },
         });
         return response.data;
     } catch (error) {

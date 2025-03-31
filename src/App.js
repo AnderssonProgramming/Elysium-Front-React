@@ -12,10 +12,12 @@ import {
 import { ReactComponent as House } from "./assets/icons/house-user_11269953 1.svg";
 import { ReactComponent as Room } from "./assets/icons/workshop_14672030 1.svg";
 import { ReactComponent as UserIcon } from "./assets/icons/User.svg";
-import Home from "./pages/Home/Home.js";
-import LoginPage from "./pages/Login/LoginPage.jsx";
-import AdministratorHome from "./pages/Administrator/AdministratorHome.jsx";
+import { consultarUsuarioPorCorreo } from "./api/usuario";
+import Home from "./pages/Home/Home";
+import LoginPage from "./pages/Login/LoginPage";
+import AdministratorHome from "./pages/Administrator/AdministratorHome";
 import styled from "styled-components";
+import { jwtDecode } from "jwt-decode";
 import "./App.css";
 
 /**
@@ -32,9 +34,11 @@ const routesConfig = {
 
 const Menu = ({ user }) => {
   if (!user) return null;
+  const userRoutes = routesConfig[user.isAdmin ? "admin" : "profe"] || [];
+
   return (
     <ul className="menu">
-      {routesConfig[(user.isAdmin ? "admin" : "profe")]?.map((item, index) => (
+      {userRoutes.map((item, index) => (
         <li className="item-menu" key={index}>
           <Link className="navBarBTN" to={item.path}>
             {item.icon}
@@ -54,16 +58,14 @@ const Header = ({ user, onLogout }) => {
   const navigate = useNavigate();
   let title = "Elysium";
 
-  if (user) {
-    const currentPage = routesConfig[(user.isAdmin ? "admin" : "profe")]?.find(
-      (route) => route.path === location.pathname
-    );
-    title = currentPage ? currentPage.name : "Elysium";
-  }
-
   useEffect(() => {
-    document.title = title;
-  }, [title]);
+    if (user) {
+      const currentPage = routesConfig[user.isAdmin ? "admin" : "profe"]?.find(
+        (route) => route.path === location.pathname
+      );
+      document.title = currentPage ? currentPage.name : "Elysium";
+    }
+  }, [location.pathname, user]);
 
   if (!user) return null;
 
@@ -83,12 +85,13 @@ const Header = ({ user, onLogout }) => {
           src="https://img.freepik.com/vector-gratis/establecimiento-circulos-usuarios_78370-4704.jpg?ga=GA1.1.204243624.1732496744&semt=ais_hybrid"
           alt="Avatar de usuario"
         />
+        <span>{user.nombre} {user.apellido}</span>
         <LogoutIcon
           src="https://cdn.builder.io/api/v1/image/assets/TEMP/1954f6c7c642021490080ffd4c81bc9798bf0beb?placeholderIfAbsent=true"
           alt="Logout"
           onClick={() => {
             onLogout();
-            navigate("/"); // Regresa al LoginPage
+            navigate("/");
           }}
         />
       </div>
@@ -107,68 +110,122 @@ const LogoutIcon = styled.img`
   width: 32px;
   height: 32px;
   cursor: pointer;
+  fill: var(--variable-collection-current-color);
 `;
 
-//
-// Componente principal de la aplicación
-//
-function App() {
-  // El usuario se establecerá a través del LoginPage, por lo que no simulamos nada aquí.
-  const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(true);
+const obtenerCorreoDesdeToken = (token) => {
+  try {
+    const decoded = jwtDecode(token);
+    return decoded.sub;
+  } catch (error) {
+    return null;
+  }
+};
 
-  // Simulación de carga inicial; en producción, no se simula usuario.
+
+
+//
+// Componente principal de rutas
+//
+function AppRoutes({ user, setUser }) {
+  const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
+
   useEffect(() => {
-    setLoading(false);
+    const fetchUser = async () => {
+      const token = localStorage.getItem("token");
+      if (token) {
+        try {
+          const correoGuardado = obtenerCorreoDesdeToken(token);
+          if (correoGuardado) {
+            const usuario = await consultarUsuarioPorCorreo(correoGuardado);
+            setUser(usuario);
+
+            if (usuario.isAdmin) {
+              document.documentElement.style.setProperty("--variable-collection-current-color", "var(--variable-collection-user-admin)");
+              navigate("/administrador");
+            } else {
+              document.documentElement.style.setProperty("--variable-collection-current-color", "var(--variable-collection-user-estandar)");
+              navigate("/home");
+            }
+          } else {
+            localStorage.removeItem("token");
+          }
+        } catch (error) {
+          console.error("Error obteniendo usuario:", error);
+          localStorage.removeItem("token");
+        }
+      }
+      setLoading(false);
+    };
+
+    fetchUser();
   }, []);
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    setUser(null);
+  };
 
   if (loading) return <div>Cargando...</div>;
 
   return (
-    <Router>
-      <Routes>
-        {/* Si no hay usuario autenticado, se muestra LoginPage */}
-        {!user ? (
-          <>
-            <Route path="/" element={<LoginPage onLogin={setUser} />} />
-            <Route path="*" element={<Navigate to="/" replace />} />
-          </>
-        ) : (
-          // Una vez autenticado, se muestra la aplicación completa (Header, Menu, contenido)
-          <Route
-            path="/*"
-            element={
-              <div className="content">
-                <div className="navBar">
-                  <Menu user={user} />
-                </div>
-                <div className="panel">
-                  <Header user={user} onLogout={() => setUser(null)} />
-                  <div className="container">
-                    <Routes>
-                      {user.isAdmin ? (
-                        <>
-                          <Route path="/administrador" element={<AdministratorHome />} />
-                          <Route path="/administrador/salones" element={<div>Gestión de Salones</div>} />
-                          <Route path="/administrador/usuarios" element={<div>Gestión de Usuarios</div>} />
-                          <Route path="*" element={<Navigate to="/administrador" />} />
-                        </>
-                      ) : (
-                        <>
-                          <Route path="/home" element={<Home />} />
-                          <Route path="*" element={<Navigate to="/home" />} />
-                        </>
-                      )}
-                    </Routes>
-                  </div>
+    <Routes>
+      {/* Si no hay usuario autenticado, se muestra LoginPage */}
+      {!user ? (
+        <>
+          <Route path="/" element={<LoginPage onLogin={setUser} />} />
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </>
+      ) : (
+        // Una vez autenticado, se muestra la aplicación completa (Header, Menu, contenido)
+        <Route
+          path="/*"
+          element={
+            <div className="content">
+              <div className="navBar">
+                <Menu user={user} />
+              </div>
+              <div className="panel">
+                <Header user={user} onLogout={handleLogout} />
+                <div className="container">
+                  <Routes>
+                    {user.isAdmin ? (
+                      <>
+                        <Route path="/administrador" element={<AdministratorHome token={localStorage.getItem("token")} />} />
+                        <Route path="/administrador/salones" element={<div>Gestión de Salones</div>} />
+                        <Route path="/administrador/usuarios" element={<div>Gestión de Usuarios</div>} />
+                        <Route path="*" element={<Navigate to="/administrador" />} />
+                      </>
+                    ) : (
+                      <>
+                        <Route path="/home" element={<Home />} />
+                        <Route path="*" element={<Navigate to="/home" />} />
+                      </>
+                    )}
+                  </Routes>
                 </div>
               </div>
-            }
-          />
-        )}
-      </Routes>
+            </div>
+          }
+        />
+      )}
+    </Routes>
+  );
+}
+
+//
+// Componente principal de la aplicación con <Router> en el nivel más alto
+//
+function App() {
+  const [user, setUser] = useState(null);
+
+  return (
+    <Router>
+      <AppRoutes user={user} setUser={setUser} />
     </Router>
   );
 }
+
 
 export default App;

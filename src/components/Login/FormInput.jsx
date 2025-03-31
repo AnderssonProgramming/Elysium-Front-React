@@ -1,17 +1,17 @@
 import React from "react";
 import styled from "styled-components";
 
-const FormInput = ({ label, type = "text", onChange, placeholder }) => {
+const FormInput = ({ label, type, onChange, value }) => {
   return (
     <InputWrapper>
-      <InputLabel>{label}</InputLabel>
       <StyledInput
         type={type}
-        aria-label={label}
         onChange={onChange}
-        placeholder={placeholder}
+        value={value}
+        required
       />
       <InputUnderline />
+      <InputLabel>{label}</InputLabel>
     </InputWrapper>
   );
 };
@@ -27,9 +27,9 @@ const InputWrapper = styled.div`
 const InputLabel = styled.label`
   color: rgb(107, 155, 61); /* Negro */
   font-family: "Inter", sans-serif;
-  font-size: 18px; /* Tamaño mayor */
-  font-weight: bold;
-  margin-bottom: 10px;
+  font-size: 14px;
+  font-weight: 400;
+  margin-top: 10px;
   display: block;
 `;
 
@@ -39,7 +39,6 @@ const StyledInput = styled.input`
   background: transparent;
   font-family: "Inter", sans-serif;
   font-size: 16px; /* Tamaño mayor */
-  font-weight: bold;
   outline: none;
   padding: 0;
   color: #000; /* Texto en negro */

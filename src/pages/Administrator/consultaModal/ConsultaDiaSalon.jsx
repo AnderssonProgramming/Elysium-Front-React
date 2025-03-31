@@ -4,7 +4,7 @@ import DiaSalonFilter from "../../../components/Admin/filters/DiaSalonFilter";
 import DiaSalonChart from "../../../components/Admin/charts/DiaSalonChart";
 import { getReservas } from "../../../api/reserva";
 
-const ConsultaDiaSalon = () => {
+const ConsultaDiaSalon = ({ token }) => {
     const [reservas, setReservas] = useState([]);
     const [errorMsg, setErrorMsg] = useState("");
 
@@ -17,7 +17,7 @@ const ConsultaDiaSalon = () => {
           return;
         }
         // Llama al endpoint de reservas filtrando solo por día de la semana
-        const data = await getReservas({ diaSemana: filtros.dia });
+        const data = await getReservas({diaSemana: filtros.dia}, token);
         if (!data || data.length === 0) {
           setErrorMsg("No se encontraron reservas para el día seleccionado.");
         } else {

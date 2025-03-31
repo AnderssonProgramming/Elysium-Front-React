@@ -7,13 +7,13 @@ import { getSalones } from "../../../api/salon"; // Ajusta la ruta según tu est
  * Filtro para seleccionar un salón (opcional).
  * Si se deja en "Todos", se interpretará que se desean reservas de todos los salones.
  */
-const TotalSalonFilter = ({ onBuscar }) => {
+const TotalSalonFilter = ({ onBuscar, token }) => {
   const [salon, setSalon] = useState("");
   const [listaSalones, setListaSalones] = useState([]);
 
   useEffect(() => {
     // Cargar la lista de salones activos
-    getSalones({ activo: true })
+    getSalones({ activo: true }, token)
       .then((salones) => setListaSalones(salones))
       .catch((err) => console.error("Error al obtener salones:", err));
   }, []);

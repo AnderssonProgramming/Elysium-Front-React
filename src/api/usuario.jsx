@@ -30,9 +30,7 @@ export async function consultarUsuarios(filtros) {
 export async function consultarUsuarioPorCorreo(correo) {
     try {
       // Verifica la ruta y el parámetro "correo"
-      const response = await axios.get(`${USUARIO_API}/usuarioPorCorreo`, {
-        params: { correo: correo },
-      });
+      const response = await axios.get(`${USUARIO_API}/correo/${correo}`);
       return response.data;
     } catch (error) {
       throw new Error(error.response?.data?.message || "Error consultando usuario");

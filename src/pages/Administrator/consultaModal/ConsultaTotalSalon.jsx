@@ -4,7 +4,7 @@ import TotalSalonFilter from "../../../components/Admin/filters/TotalSalonFilter
 import TotalSalonChart from "../../../components/Admin/charts/TotalSalonChart";
 import { getReservas } from "../../../api/reserva";
 
-const ConsultaTotalSalon = () => {
+const ConsultaTotalSalon = ({token}) => {
   const [reservas, setReservas] = useState([]);
   const [errorMsg, setErrorMsg] = useState("");
 
@@ -17,7 +17,7 @@ const ConsultaTotalSalon = () => {
       setErrorMsg("");
       setReservas([]);
       // Si se envía un filtro de idSalon, se usa; si no, se obtiene la data de todos los salones.
-      const data = await getReservas({ ...(filtros.idSalon && { idSalon: filtros.idSalon }) });
+      const data = await getReservas({ ...(filtros.idSalon && { idSalon: filtros.idSalon }) }, token);
       if (!data || data.length === 0) {
         setErrorMsg("No se encontraron reservas para el salón seleccionado.");
       } else {
@@ -30,7 +30,7 @@ const ConsultaTotalSalon = () => {
 
   return (
     <Container>
-      <TotalSalonFilter onBuscar={handleBuscar} />
+      <TotalSalonFilter onBuscar={handleBuscar} token={token} />
       {errorMsg && <ErrorMessage>{errorMsg}</ErrorMessage>}
       {reservas.length > 0 && <TotalSalonChart reservas={reservas} />}
     </Container>

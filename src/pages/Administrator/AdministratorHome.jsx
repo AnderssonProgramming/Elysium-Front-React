@@ -9,16 +9,16 @@ import ConsultaPrioridad from "./consultaModal/ConsultaPrioridad";
 import ConsultaDemanda from "./consultaModal/ConsultaDemanda";
 
 const CONSULTAS = [
-  { id: 1, titulo: "Reservas por Mes y Salón", componente: <ConsultaMesSalon /> },
-  { id: 2, titulo: "Reservas por Día y Salón", componente: <ConsultaDiaSalon /> },
-  { id: 3, titulo: "Reservas por Rango de Fechas", componente: <ConsultaRangoFechas /> },
-  { id: 4, titulo: "Comparativo Activas vs Inactivas", componente: <ConsultaEstado /> },
-  { id: 5, titulo: "Reservas Totales por Salón", componente: <ConsultaTotalSalon /> },
-  { id: 6, titulo: "Promedio de Reservas por Prioridad", componente: <ConsultaPrioridad /> },
-  { id: 7, titulo: "Demanda por Laboratorios", componente: <ConsultaDemanda /> },
+  { id: 1, titulo: "Reservas por Mes y Salón", componente: (token) =>  <ConsultaMesSalon token={token} /> },
+  { id: 2, titulo: "Reservas por Día y Salón", componente: (token) =>  <ConsultaDiaSalon token={token} /> },
+  { id: 3, titulo: "Reservas por Rango de Fechas", componente: (token) =>  <ConsultaRangoFechas token={token} /> },
+  { id: 4, titulo: "Comparativo Activas vs Inactivas", componente: (token) =>  <ConsultaEstado token={token} /> },
+  { id: 5, titulo: "Reservas Totales por Salón", componente: (token) => <ConsultaTotalSalon token={token} /> },
+  { id: 6, titulo: "Promedio de Reservas por Prioridad", componente: (token) =>  <ConsultaPrioridad token={token} /> },
+  { id: 7, titulo: "Demanda por Laboratorios", componente: (token) => <ConsultaDemanda token={token} /> },
 ];
 
-const AdministratorHome = () => {
+const AdministratorHome = ({ token }) => {
   return (
     <MainContainer>
       <TitleSection>Centro de Insights</TitleSection>
@@ -26,7 +26,7 @@ const AdministratorHome = () => {
         {CONSULTAS.map((consulta) => (
           <ConsultaCard key={consulta.id}>
             <h3>{consulta.titulo}</h3>
-            <ContentContainer>{consulta.componente}</ContentContainer>
+            <ContentContainer>{consulta.componente(token)}</ContentContainer>
           </ConsultaCard>
         ))}
       </GridContainer>

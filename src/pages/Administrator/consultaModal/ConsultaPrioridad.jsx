@@ -3,7 +3,7 @@ import styled from "styled-components";
 import PromedioPrioridadChart from "../../../components/Admin/charts/PromedioPrioridadChart";
 import { getReservas } from "../../../api/reserva";
 
-const ConsultaPrioridad = () => {
+const ConsultaPrioridad = ({ token }) => {
   const [data, setData] = useState([]);
   const [errorMsg, setErrorMsg] = useState("");
 
@@ -17,7 +17,7 @@ const ConsultaPrioridad = () => {
       setData([]);
       // Se asume que el endpoint interpreta el parámetro "consultarPorPrioridad"
       const filtros = { consultarPorPrioridad: true };
-      const result = await getReservas(filtros);
+      const result = await getReservas(filtros, token);
       if (!result || result.length === 0) {
         setErrorMsg("No se encontraron datos para el promedio de reservas por prioridad.");
       } else {

@@ -3,7 +3,7 @@ import styled from "styled-components";
 import DemandaChart from "../../../components/Admin/charts/DemandaChart";
 import { getReservas } from "../../../api/reserva";
 
-const ConsultaDemanda = () => {
+const ConsultaDemanda = ({ token }) => {
   const [reservas, setReservas] = useState([]);
   const [errorMsg, setErrorMsg] = useState("");
 
@@ -17,7 +17,7 @@ const ConsultaDemanda = () => {
       setReservas([]);
 
       // No se envían filtros; se obtiene el total de reservas
-      const data = await getReservas({});
+      const data = await getReservas({}, token);
       if (!data || data.length === 0) {
         setErrorMsg("No se encontraron reservas para mostrar la demanda.");
       } else {
