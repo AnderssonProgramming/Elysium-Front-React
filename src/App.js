@@ -11,19 +11,16 @@ import { ReactComponent as House } from './assets/icons/house-user_11269953 1.sv
 import { ReactComponent as Room } from './assets/icons/workshop_14672030 1.svg';
 import { ReactComponent as User } from './assets/icons/User.svg';
 import Home from './pages/Home/Home.js';
-import GestionarUsuarios from './pages/Admin/GestionarUsuarios'; // Asegúrate de que la ruta es correcta
-
+import GestionarSalones from './pages/Salones/GestionarSalones';
+import GestionarUsuarios from './pages/Admin/GestionarUsuarios';
 
 import './App.css';
 
-/**
- * Configuración de rutas según el rol del usuario.
- */
 const routesConfig = {
   admin: [
     { path: "/administrador", name: "Panel de Control", icon: <House className="svg" /> },
     { path: "/administrador/salones", name: "Gestión de Salones", icon: <Room className="svg" /> },
-    { path: "administrador/usuarios", name: "Gestión de Usuarios", icon: <User className="svg" /> },
+    { path: "/administrador/usuarios", name: "Gestión de Usuarios", icon: <User className="svg" /> },
   ],
   profe: [
     { path: "/home", name: "Gestión de Reservas", icon: <House className="svg" /> },
@@ -102,8 +99,8 @@ function App() {
               {role === "admin" ? (
                 <>
                   <Route path="/administrador" element={<Home />} />
-                  <Route path="/administrador/salones" element={<div>Gestión de Salones</div>} />
-                  <Route path="administrador/usuarios" element={<GestionarUsuarios />} />
+                  <Route path="/administrador/salones" element={<GestionarSalones />} />
+                  <Route path="/administrador/usuarios" element={<GestionarUsuarios />} />
                   
 
                   <Route path="*" element={<Navigate to="/admin" />} />
