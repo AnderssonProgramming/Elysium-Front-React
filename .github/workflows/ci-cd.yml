@@ -1,0 +1,58 @@
+name: CI/CD Pipeline ELysium
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - develop
+      - main
+
+env:
+  AZURE_WEBAPP_NAME: elysiumFrontEnd
+  AZURE_WEBAPP_PACKAGE_PATH: '.'
+  NODE_VERSION: '22.x'
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        
+      - uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Cache Node.js modules
+        uses: actions/cache@v3
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+          
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run tests
+        run: npm run test --if-present
+
+      - name: Build project
+        run: npm run build --if-present
+
+      - name: Deploy to Azure Web Apps
+        uses: azure/webapps-deploy@v3
+        with:
+          app-name: ${{ env.AZURE_WEBAPP_NAME }}
+          package: ./build
+
+      - name: Logout from Azure
+        run: az logout
