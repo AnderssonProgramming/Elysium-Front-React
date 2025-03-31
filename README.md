@@ -56,6 +56,9 @@ npm install react-router-dom
 npm install axios
 npm install d3
 npm install jwt-decode
+npm install framer-motion
+npm install react-datepicker
+npm install date-fns
 ```
 
 ## MANTENIMIENTO Y CONSTRUCCIÓN

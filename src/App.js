@@ -13,23 +13,24 @@ import { ReactComponent as House } from "./assets/icons/house-user_11269953 1.sv
 import { ReactComponent as Room } from "./assets/icons/workshop_14672030 1.svg";
 import { ReactComponent as UserIcon } from "./assets/icons/User.svg";
 import { consultarUsuarioPorCorreo } from "./api/usuario";
-import Home from "./pages/Home/Home";
 import LoginPage from "./pages/Login/LoginPage";
+import Home from "./pages/Home/Home";
 import AdministratorHome from "./pages/Administrator/AdministratorHome";
+import GestionarSalones from './pages/Salones/GestionarSalones';
+import GestionarUsuarios from './pages/Admin/GestionarUsuarios';
 import styled from "styled-components";
 import { jwtDecode } from "jwt-decode";
 import "./App.css";
 
-/**
- * Configuración de rutas según el rol del usuario.
- */
 const routesConfig = {
   admin: [
     { path: "/administrador", name: "Panel de Control", icon: <House className="svg" /> },
     { path: "/administrador/salones", name: "Gestión de Salones", icon: <Room className="svg" /> },
     { path: "/administrador/usuarios", name: "Gestión de Usuarios", icon: <UserIcon className="svg" /> },
   ],
-  profe: [{ path: "/home", name: "Gestión de Reservas", icon: <House className="svg" /> }],
+  profe: [
+    { path: "/home", name: "Gestión de Reservas", icon: <House className="svg" /> },
+  ]
 };
 
 const Menu = ({ user }) => {
@@ -193,8 +194,8 @@ function AppRoutes({ user, setUser }) {
                     {user.isAdmin ? (
                       <>
                         <Route path="/administrador" element={<AdministratorHome token={localStorage.getItem("token")} />} />
-                        <Route path="/administrador/salones" element={<div>Gestión de Salones</div>} />
-                        <Route path="/administrador/usuarios" element={<div>Gestión de Usuarios</div>} />
+                        <Route path="/administrador/salones" element={<GestionarSalones />} />
+                        <Route path="/administrador/usuarios" element={<GestionarUsuarios />} />
                         <Route path="*" element={<Navigate to="/administrador" />} />
                       </>
                     ) : (

@@ -1,0 +1,142 @@
+.popup-overlay .salon-modal {
+    background: white;
+    width: 510%;
+    max-width: 1100px;
+    border-radius: 15px;
+    padding: 30px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    position: relative;
+  }
+  
+  .popup-overlay .salon-modal h2 {
+    background-color: var(--variable-collection-user-admin);
+    color: white;
+    padding: 20px;
+    margin: -30px -30px 20px -30px;
+    border-top-left-radius: 15px;
+    border-top-right-radius: 15px;
+    font-size: 20px;
+    font-weight: bold;
+  }
+  
+  .popup-overlay .salon-modal h3 {
+    color: var(--variable-collection-user-admin);
+    margin-bottom: 15px;
+  }
+  
+  .popup-overlay .modal-content {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+  }
+  
+  .popup-overlay .modal-content textarea {
+    grid-column: span 2;
+  }
+  
+  .popup-overlay .modal-content select {
+    appearance: none;
+    background: white;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    padding: 10px;
+    cursor: pointer;
+  }
+  
+  .popup-overlay .modal-content input,
+  .popup-overlay .modal-content textarea,
+  .popup-overlay .modal-content select {
+    width: 97%;
+    padding: 13px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 16px;
+  }
+  
+  .popup-overlay .salon-modal .modal-buttons {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+  }
+  
+  .popup-overlay .salon-modal .cancel-button {
+    background: white;
+    border: 1px solid var(--variable-collection-user-admin);
+    color: black;
+    padding: 12px 20px;
+    border-radius: 15px;
+    cursor: pointer;
+  }
+  
+  .popup-overlay .salon-modal .save-button {
+    background: var(--variable-collection-user-admin);
+    color: white;
+    border: none;
+    padding: 10px 40px;
+    border-radius: 15px;
+    cursor: pointer;
+  }
+
+  .popup-overlay .modal-content .capacity-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    font-size: 16px;
+    font-weight: bold;
+    color: #333;
+  }
+  
+  .popup-overlay .modal-content .capacity-container input[type="range"] {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 100%;
+    max-width: 300px;
+    height: 1px;
+    border-radius: 20px;
+    background: #ddd;
+    outline: none;
+    transition: background 0.3s;
+    cursor: pointer;
+  }
+  
+  /* Estilo del riel cuando el usuario interactúa */
+  .popup-overlay .modal-content .capacity-container input[type="range"]:hover {
+    background: #bbb;
+  }
+  
+  /* Personalizar el deslizador (bolita) en WebKit (Chrome, Safari) */
+  .popup-overlay .modal-content .capacity-container input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 16px;
+    height: 16px;
+    background: var(--variable-collection-user-admin);
+    border-radius: 50%;
+    cursor: pointer;
+    transition: transform 0.2s ease-in-out;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+  }
+  
+  /* Efecto al interactuar */
+  .popup-overlay .modal-content .capacity-container input[type="range"]::-webkit-slider-thumb:hover {
+    transform: scale(1.3);
+    box-shadow: 0 0 8px rgba(0, 0, 0, 0.3);
+  }
+  
+  /* Personalizar el deslizador en Firefox */
+  .popup-overlay .modal-content .capacity-container input[type="range"]::-moz-range-thumb {
+    width: 16px;
+    height: 16px;
+    background: var(--variable-collection-user-admin);
+    border-radius: 50%;
+    cursor: pointer;
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+  }
+  
+  .popup-overlay .modal-content .capacity-container input[type="range"]::-moz-range-thumb:hover {
+    transform: scale(1.3);
+    box-shadow: 0 0 8px rgba(0, 0, 0, 0.3);
+  }
+  
