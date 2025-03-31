@@ -1,7 +1,5 @@
-import axios from "axios";
-import { BASE_URL } from "../config/config.js";
-
-const RESERVA_API = `${BASE_URL}/reserva`;
+import api from "./axiosInstance";
+const RESERVA_API = '/reserva';
 
 /**
  * Obtiene una lista de reservas con filtros opcionales.
@@ -15,15 +13,9 @@ const RESERVA_API = `${BASE_URL}/reserva`;
  * @returns {Promise<Object[]>} Lista de reservas encontradas.
  * @throws {Error} Si ocurre un error en la solicitud.
  */
-export async function getReservas (filtros = {}, token) {
+export async function getReservas (filtros = {}) {
     try {
-        const response = await axios.get(RESERVA_API, {
-            params: filtros,
-            headers: {
-                "Authorization": `Bearer ${token}`,
-                "Content-Type": "application/json"
-            },
-        });
+        const response = await api.get(RESERVA_API, { params: filtros });
         return response.data;
     } catch (error) {
         throw new Error(error.response.data.message);
@@ -36,14 +28,9 @@ export async function getReservas (filtros = {}, token) {
  * @returns {Promise<Object>} Datos de la reserva.
  * @throws {Error} Si la reserva no existe o hay un error en la solicitud.
  */
-export async function consultarReserva (idReserva, token) {
+export async function consultarReserva (idReserva) {
     try {
-        const response = await axios.get(`${RESERVA_API}/${idReserva}/reserva`, {
-            headers: {
-                "Authorization": `Bearer ${token}`,
-                "Content-Type": "application/json"
-            },
-        });
+        const response = await api.get(`${RESERVA_API}/${idReserva}/reserva`);
         return response.data;
     } catch (error) {
         throw new Error(error.response.data.message);
@@ -56,15 +43,9 @@ export async function consultarReserva (idReserva, token) {
  * @returns {Promise<string>} Mensaje de confirmación.
  * @throws {Error} Si ocurre un error en la solicitud.
  */
-export async function crearReserva (reserva, token) {
+export async function crearReserva (reserva) {
     try {
-        const response = await axios.post(RESERVA_API, { 
-            params: reserva,
-            headers: {
-                "Authorization": `Bearer ${token}`,
-                "Content-Type": "application/json"
-            },
-        });
+        const response = await api.post(RESERVA_API, { params: reserva });
         return response.data;
     } catch (error) {
         throw new Error(error.response.data.message);
@@ -78,15 +59,9 @@ export async function crearReserva (reserva, token) {
  * @returns {Promise<void>}
  * @throws {Error} Si la reserva no existe o hay un error en la solicitud.
  */
-export async function actualizarReserva (idReserva, reserva, token) {
+export async function actualizarReserva (idReserva, reserva) {
     try {
-        await axios.patch(`${RESERVA_API}/${idReserva}`, {
-            params: reserva,
-            headers: {
-                "Authorization": `Bearer ${token}`,
-                "Content-Type": "application/json"
-            },
-        });
+        await api.patch(`${RESERVA_API}/${idReserva}`, { params: reserva });
     } catch (error) {
         throw new Error(error.response.data.message);
     }
@@ -98,14 +73,9 @@ export async function actualizarReserva (idReserva, reserva, token) {
  * @returns {Promise<string>} Mensaje de confirmación.
  * @throws {Error} Si la reserva no existe o hay un error en la solicitud.
  */
-export async function deleteReserva (idReserva, token) {
+export async function deleteReserva (idReserva) {
     try {
-        const response = await axios.put(`${RESERVA_API}/${idReserva}/inactivo`, {
-            headers: {
-                "Authorization": `Bearer ${token}`,
-                "Content-Type": "application/json"
-            },
-        });
+        const response = await api.put(`${RESERVA_API}/${idReserva}/inactivo`);
         return response.data;
     } catch (error) {
         throw new Error(error.response.data.message);

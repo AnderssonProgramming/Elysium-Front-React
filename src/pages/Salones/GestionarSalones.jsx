@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "./GestionarSalones.css";
 import { getSalones, actualizarSalon, getSalonByMnemonico } from "../../api/salon";
-import { agregarSalon } from "../../api/usuario/administrador";
-import { getRecursos, consultarRecurso, agregarRecurso, actualizarRecurso} from "../../api/recursos";
+import { agregarSalon } from "../../api/usuario";
 import { ReactComponent as Editar} from '../../assets/icons/edit-3-svgrepo-com.svg';
 import { ReactComponent as Buscar} from '../../assets/icons/Search Glyph.svg';
 import { ReactComponent as Puerta} from '../../assets/icons/open-exit-door-svgrepo-com 1.svg';

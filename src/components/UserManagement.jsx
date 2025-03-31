@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { consultarUsuarios } from '../../api/usuario/administrador';
+import { consultarUsuarios } from '../../api/usuario';
 import UserFilters from '../../components/UserFilters/UserFilters';
 import UserTable from '../../components/Table/UserTable';
 import AddUserModal from './AddUserModal';

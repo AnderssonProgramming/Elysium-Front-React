@@ -12,6 +12,7 @@ import {
 import { ReactComponent as House } from "./assets/icons/house-user_11269953 1.svg";
 import { ReactComponent as Room } from "./assets/icons/workshop_14672030 1.svg";
 import { ReactComponent as UserIcon } from "./assets/icons/User.svg";
+import { ReactComponent as Door } from "./assets/icons/logOut 1.svg";
 import { consultarUsuarioPorCorreo } from "./api/usuario";
 import LoginPage from "./pages/Login/LoginPage";
 import Home from "./pages/Home/Home";
@@ -87,14 +88,13 @@ const Header = ({ user, onLogout }) => {
           alt="Avatar de usuario"
         />
         <span>{user.nombre} {user.apellido}</span>
-        <LogoutIcon
-          src="https://cdn.builder.io/api/v1/image/assets/TEMP/1954f6c7c642021490080ffd4c81bc9798bf0beb?placeholderIfAbsent=true"
-          alt="Logout"
+        <button className="log-out"
           onClick={() => {
             onLogout();
             navigate("/");
-          }}
-        />
+          }}>
+            <Door />
+        </button>
       </div>
     </div>
   );
@@ -105,13 +105,6 @@ const UserAvatar = styled.img`
   height: 40px;
   object-fit: contain;
   border-radius: 50%;
-`;
-
-const LogoutIcon = styled.img`
-  width: 32px;
-  height: 32px;
-  cursor: pointer;
-  fill: var(--variable-collection-current-color);
 `;
 
 const obtenerCorreoDesdeToken = (token) => {
@@ -200,7 +193,7 @@ function AppRoutes({ user, setUser }) {
                       </>
                     ) : (
                       <>
-                        <Route path="/home" element={<Home />} />
+                        <Route path="/home" element={<Home usuario={user}/>} />
                         <Route path="*" element={<Navigate to="/home" />} />
                       </>
                     )}
