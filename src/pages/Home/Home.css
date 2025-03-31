@@ -1,0 +1,194 @@
+.home {
+    display: flex;
+    flex-direction: column;
+    gap: 8%;
+}
+
+.home .reservas {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+}
+
+.home .reservas .title {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8%;
+    width: fit-content;
+}
+
+.title h1, .title span {
+    font-weight: bold;
+}
+
+.home .reservas .agregarReserva {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-end;
+    width: 100%;
+}
+
+.home .reservas .agregarReserva .agregarReservaBTN {
+    display: flex;
+    flex-direction: row;
+    padding: 10px 20px;
+    border-radius: 10px;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    cursor: pointer;
+    background: none;
+    outline: none;
+    gap: 10px;
+    color: var(--variable-collection-current-color);
+    border: 1px solid var(--variable-collection-current-color);
+    transition: all 0.1s ease-in-out;
+}
+
+.home .reservas .agregarReserva .agregarReservaBTN:hover {
+    background-color: var(--variable-collection-current-color);
+    color: white;
+}
+
+.home .reservas .agregarReserva .agregarReservaBTN:hover span {
+    color: white;
+}
+
+.reserva-lista {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2%;
+    height: 240px;
+}
+
+.reserva-lista .item-reserva {
+    display: flex;
+    flex-direction: column;
+    border-radius: 10px;
+    height: 100%;
+}
+
+.reserva-lista .item-reserva .salon-header {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    border-radius: 10px 10px 0px 0px;
+    height: 38%;
+}
+
+.reserva-lista .item-reserva .salon-header .salon-mnemonico {
+    width: fit-content;
+    max-width: 34%;
+    padding: 2% 4%;
+    background-color: rgba(255,255,255,0.7);
+    border-radius: 0px 0px 10px;
+}
+
+.salon-mnemonico span {
+    font-weight: 600;
+}
+
+.reserva-lista .salon-content {
+    padding-bottom: 5px;
+}
+
+.reserva-lista .salon-content .fecha-reserva {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    align-items: flex-start;
+    margin-left: 4%;
+}
+
+.reserva-lista .salon-content .fecha-reserva .fecha {
+    font-size: 12px;
+    font-weight: 200;
+    color: rgba(0, 0, 0, 0.43);
+}
+
+
+.reserva-lista .salon-content .datos-reserva {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    align-items: center;
+}
+
+.reserva-lista .salon-content .datos-reserva .subtitulo {
+    font-weight: 600;
+    color: rgba(5,5,5,0.42);
+}
+
+.reserva-lista .salon-content .datos-reserva .nombre {
+    color: var(--variable-collection-text);
+    margin-bottom: 2%;
+}
+
+.reserva-lista .salon-detalle {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    border-top: 1px solid rgba(255, 255, 255, 1);
+    padding-top: 5px;
+}
+
+.reserva-lista .salon-detalle .hora-detalle {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    gap: 2%;
+    margin-left: 4%;
+}
+
+.reserva-lista .salon-detalle .hora-detalle .horasvg {
+    display: flex;
+    align-items: center;
+}
+
+.reserva-lista .salon-detalle .hora-detalle .hora {
+    display: flex;
+    flex-direction: row;
+    font-weight: 800;
+    font-size: 10px;
+    align-items: center;
+}
+
+
+.reserva-lista .salon-detalle .btns {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    width: 60%;
+    gap: 2%;
+}
+
+.reserva-lista .salon-detalle .btns .detalle,
+.reserva-lista .salon-detalle .btns .trsh {
+    display: flex;
+    flex-direction: row;
+    border-radius: 10px;
+    height: 80%;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    cursor: pointer;
+    padding: 10px 10px;
+    border: none;
+    background: none;
+    outline: none;
+}
+
+.reserva-lista .salon-detalle .btns .detalle {
+    width: 60%;
+    background-color: white;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.reserva-lista .salon-detalle .btns .trsh {
+    color: white;
+    background-color: var(--variable-collection-delete-btn);
+}
