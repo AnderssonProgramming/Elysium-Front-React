@@ -3,7 +3,7 @@ import { DayPicker } from "react-day-picker";
 import { es } from 'date-fns/locale';
 import "react-datepicker/dist/react-datepicker.css";
 import { getSalones } from "../../../api/salon";
-import { crearReserva } from "../../../api/usuario/estandar";
+import { crearReserva } from "../../../api/usuario";
 import "react-day-picker/style.css";
 import "./GenerarReservaForm.css";
 
@@ -61,8 +61,7 @@ const FormGenerarReserva = ({ usuario, onClose , onReservaExitosa }) => {
         };
 
         try {
-            const idUsuario = 14; // TODO implementar logica de login para asignar reserva correspondiente
-            const response = await crearReserva(idUsuario, reservaData);
+            const response = await crearReserva(usuario.idInstitucional, reservaData);
             onReservaExitosa();
             onClose();
         } catch (error) {

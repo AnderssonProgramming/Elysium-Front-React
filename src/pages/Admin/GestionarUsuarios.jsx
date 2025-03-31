@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
-import { consultarUsuarios } from '../../api/usuario/administrador';
+import { consultarUsuarios } from '../../api/usuario';
 import UserFilters from '../../components/UserFilters';
 import UserTable from '../../components/Table/UserTable';
 import AddUserModal from './AddUserModal';

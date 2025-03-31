@@ -126,6 +126,13 @@ ul {
   justify-content: flex-end;
 }
 
+.content .panel .header .user-info button {
+  background: transparent;
+  border: none;
+  color: var(--variable-collection-current-color);
+  cursor: pointer;
+}
+
 .content .panel .header .user-info span {
   font-size: 18px;
 }

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { consultarUsuario, listarReservas } from "../../api/usuario/estandar";
+import { listarReservas } from "../../api/usuario";
 import { getSalonByMnemonico } from "../../api/salon";
 import { ReactComponent as Trashcan } from '../../assets/icons/trash-can.svg';
 import { ReactComponent as Note } from '../../assets/icons/note-medical_9856368 1.svg';
@@ -15,8 +15,7 @@ import './Home.css'
  * @component
  * @returns {JSX.Element} JSX que representa la interfaz de reservas del usuario.
  */
-function Home() {
-    const [usuario, setUsuario] = useState(null);
+function Home({ usuario }) {
     const [reservas, setReservas] = useState([]);
     const [salones, setSalones] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -115,27 +114,10 @@ function Home() {
             setLoading(false); 
         }
     }
-
-    /**
-     * Simula la obtención de los datos del usuario hasta que haya autenticación real.
-     */
-    useEffect(() => {
-        const fetchUsuario = async () => {
-            try {
-                // TODO: Reemplazar el ID 14 con el ID real cuando el login esté listo.
-                const data = await consultarUsuario(14);
-                setUsuario(data);
-            } catch (error) {
-                setError(error.response.data.message);
-            }
-        };
-
-        fetchUsuario();
-    }, []);
     
     useEffect(() => {
         fetchReservas();
-    }, [usuario]);
+    }, []);
 
     
     useEffect(() => {
@@ -169,10 +151,6 @@ function Home() {
                     <span>{reservas.filter(reserva => reserva.estado === "ACTIVA").length} activas</span>
                 </div>
                 <div className="agregarReserva">
-
-                    {/*
-                        TODO Integrar boton por componentes
-                    */}
                     <button className="agregarReservaBTN" onClick={() => abrirPopup("nuevaReserva")}>
                         <Note />
                         <span>Nueva reserva</span>
