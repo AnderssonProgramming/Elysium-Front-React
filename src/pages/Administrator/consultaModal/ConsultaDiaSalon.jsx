@@ -4,7 +4,7 @@ import DiaSalonFilter from "../../../components/Admin/filters/DiaSalonFilter";
 import DiaSalonChart from "../../../components/Admin/charts/DiaSalonChart";
 import { getReservas } from "../../../api/reserva";
 
-const ConsultaDiaSalon = ({ token }) => {
+const ConsultaDiaSalon = () => {
     const [reservas, setReservas] = useState([]);
     const [errorMsg, setErrorMsg] = useState("");
 
@@ -17,7 +17,7 @@ const ConsultaDiaSalon = ({ token }) => {
           return;
         }
         // Llama al endpoint de reservas filtrando solo por día de la semana
-        const data = await getReservas({diaSemana: filtros.dia}, token);
+        const data = await getReservas({diaSemana: filtros.dia});
         if (!data || data.length === 0) {
           setErrorMsg("No se encontraron reservas para el día seleccionado.");
         } else {
@@ -29,21 +29,15 @@ const ConsultaDiaSalon = ({ token }) => {
     };
 
     return (
-      <Container>
-        <Body>
-          <DiaSalonFilter onBuscar={handleBuscar} />
-          {errorMsg && <ErrorMessage>{errorMsg}</ErrorMessage>}
-          <DiaSalonChart reservas={reservas} />
-        </Body>
-      </Container>
+      <Body>
+        <DiaSalonFilter onBuscar={handleBuscar} />
+        {errorMsg && <ErrorMessage>{errorMsg}</ErrorMessage>}
+        <DiaSalonChart reservas={reservas} />
+      </Body>
     );
 };
 
 export default ConsultaDiaSalon;
-
-/* Estilos del contenedor */
-const Container = styled.div`
-`;
 
 const Body = styled.div`
   margin-top: 10px;

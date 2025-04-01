@@ -17,7 +17,7 @@ const FormInput = ({ label, type, onChange, value }) => {
 };
 
 const InputWrapper = styled.div`
-  margin-bottom: 60px; /* Ajusta el espacio vertical entre los campos */
+  margin-bottom: 60px;
   width: 100%;
   @media (max-width: 640px) {
     margin-bottom: 40px;
@@ -25,7 +25,7 @@ const InputWrapper = styled.div`
 `;
 
 const InputLabel = styled.label`
-  color: rgb(107, 155, 61); /* Negro */
+  color: rgb(107, 155, 61);
   font-family: "Inter", sans-serif;
   font-size: 14px;
   font-weight: 400;

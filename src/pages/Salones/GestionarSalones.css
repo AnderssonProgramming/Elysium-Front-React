@@ -61,35 +61,43 @@
 .gestionar-salones .table-container {
   margin-top: 20px;
   background: white;
-  border-radius: 10px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  overflow: hidden;
 }
 
 .gestionar-salones table {
   width: 100%;
   border-collapse: collapse;
-  border-radius: 10px;
-  text-align: center;
-  overflow: hidden;
-  table-layout: fixed;
-}
-
-.gestionar-salones tr th {
-  padding: 12px;
-  font-weight: bold;
-}
-
-.gestionar-salones tr td {
-  padding: 10px;
-  min-width: 80px;
+  border-radius: 8px;
   overflow: hidden;
 }
 
-.gestionar-salones .btn{
-  display: flex;
-  flex-direction: row;
-  width: 100%;
-  align-items: center;
-  justify-content: center;
+.gestionar-salones thead {
+  background-color: #52b69a;
+  color: white;
+}
+
+.gestionar-salones thead th {
+  padding: 1rem;
+  text-align: left;
+  font-weight: 600;
+}
+
+.gestionar-salones tbody tr {
+  transition: background-color 0.3s ease-in-out;
+}
+
+.gestionar-salones tbody tr:nth-child(even) {
+  background-color: rgba(167, 224, 208, 0.31);
+}
+
+.gestionar-salones tbody tr:hover {
+  background-color: rgba(167, 224, 208, 0.31);
+}
+
+.gestionar-salones tbody td {
+  padding: 0.8rem 1rem;
 }
 
 .gestionar-salones thead {
@@ -145,18 +153,17 @@
 .gestionar-salones .table-container .edit-button {
   display: flex;
   flex-direction: row;
-  gap: 10px;
-  background-color: var(--variable-collection-user-admin);
+  background-color: #52b69a;
   color: white;
   border: none;
-  padding: 5px 10px;
+  padding: 0.8rem 1rem;
   border-radius: 5px;
   cursor: pointer;
   align-items: center;
   justify-content: center;
+  transition: background-color 0.2s ease-in-out;
 }
 
 .gestionar-salones .table-container .edit-button span {
   color: white;
-  font-weight: 600;
 }

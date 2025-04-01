@@ -1,10 +1,36 @@
-// src/components/Admin/filters/RangoFechasFilter.jsx
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 
 const RangoFechasFilter = ({ onBuscar }) => {
   const [fechaInicio, setFechaInicio] = useState("");
   const [fechaFin, setFechaFin] = useState("");
+
+  useEffect(() => {
+    const obtenerSemanaActual = () => {
+      const hoy = new Date();
+      const diaSemana = hoy.getDay();
+      let lunes = new Date(hoy);
+      if (diaSemana === 0) {
+        lunes.setDate(hoy.getDate() - 6);
+      } else {
+        lunes.setDate(hoy.getDate() - (diaSemana - 1));
+      }
+
+      let sabado = new Date(lunes);
+      sabado.setDate(lunes.getDate() + 5);
+
+      setFechaInicio(lunes.toISOString().split("T")[0]);
+      setFechaFin(sabado.toISOString().split("T")[0]);
+    };
+
+    obtenerSemanaActual();
+  }, []);
+
+  useEffect(() => {
+    if (fechaInicio && fechaFin) {
+      onBuscar({ fechaInicio, fechaFin });
+    }
+  }, [fechaInicio, fechaFin]);
 
   const handleBuscar = () => {
     if (!fechaInicio || !fechaFin) {
@@ -39,6 +65,7 @@ const RangoFechasFilter = ({ onBuscar }) => {
 
 export default RangoFechasFilter;
 
+/* Estilos */
 const Container = styled.div`
   margin-bottom: 20px;
 `;

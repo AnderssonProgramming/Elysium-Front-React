@@ -12,7 +12,7 @@
     display: flex;
     flex-direction: column;
     background-color: white;
-    border-radius: 10px;
+    border-radius: 15px;
     width: 35%;
     text-align: center;
     gap: 10px;
@@ -25,7 +25,7 @@
     width: 100%;
 }
 
-.popup-overlay .popup-delete .verification .header {
+.popup-overlay .popup-delete .verification .title {
     display: flex;
     flex-direction: row;
     padding: 4%;
@@ -34,7 +34,7 @@
     background-color: var(--variable-collection-current-color);
 }
 
-.popup-overlay .popup-delete .verification .header span {
+.popup-overlay .popup-delete .verification .title span {
     font-size: 16px;
     font-weight: 600;
     color: var(--variable-collection-text-white);
@@ -43,15 +43,26 @@
 .popup-overlay .popup-delete .verification .data {
     display: flex;
     flex-direction: column;
-    gap: 10px;
-    margin-top: 6%;
-    margin-left: 6%;
+    gap: 5px;
+    padding: 6%;
+    padding-bottom: 0;
     align-items: flex-start;
     justify-content: center;
 }
 
+
+.popup-overlay .popup-delete .verification .data div {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+}
+
 .popup-overlay .popup-delete .verification .data span {
     color: var(--variable-collection-text);
+}
+
+.popup-overlay .popup-delete .verification .data .label {
+    font-weight: 600;
 }
 
 .popup-overlay .popup-delete .btns {
@@ -63,7 +74,7 @@
     gap: 20px;
 }
 
-.cancelarBTN {
+.popup-overlay .popup-delete .btns .cancelarBTN {
     display: flex;
     flex-direction: row;
     padding: 10px 20px;
@@ -80,12 +91,12 @@
     transition: all 0.1s ease-in-out;
 }
 
-.cancelarBTN:hover {
+.popup-overlay .popup-delete .btns .cancelarBTN:hover {
     background-color: var(--variable-collection-current-color);
     color: white;
 }
 
-.deleteBTN {
+.popup-overlay .popup-delete .btns .deleteBTN {
     display: flex;
     flex-direction: row;
     padding: 10px 20px;
@@ -103,7 +114,7 @@
     transition: all 0.1s ease-in-out;
 }
 
-.deleteBTN:hover {
+.popup-overlay .popup-delete .btns .deleteBTN:hover {
     background-color: white;
     color: var(--variable-collection-delete-btn);
     border: 1px solid white;

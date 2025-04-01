@@ -101,10 +101,20 @@ function Home({ usuario }) {
         if (!usuario) return;
 
         try {
-            const data = await listarReservas(usuario.idInstitucional);
-            setReservas(data);
+            const { reservas } = await listarReservas(usuario.idInstitucional);
+            const reservasOrdenadas = reservas.sort((a, b) => {
+                const fechaA = new Date(a.fechaReserva);
+                const fechaB = new Date(b.fechaReserva);
+    
+                if (fechaA.getTime() === fechaB.getTime()) {
+                    return a.hora - b.hora; 
+                }
+                return fechaA - fechaB;
+            });
+    
+            setReservas(reservasOrdenadas);
             const nuevosColores = {};
-            data.forEach(reserva => {
+            reservas.forEach(reserva => {
                 nuevosColores[reserva.idReserva] = obtenerColorAleatorio();
             });
             setColoresReservas(nuevosColores);

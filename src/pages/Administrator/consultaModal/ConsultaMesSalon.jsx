@@ -4,7 +4,7 @@ import MesSalonFilter from "../../../components/Admin/filters/MesSalonFilter";
 import MesSalonChart from "../../../components/Admin/charts/MesSalonChart";
 import { getReservas } from "../../../api/reserva";
 
-const ConsultaMesSalon = ({ token }) => {
+const ConsultaMesSalon = () => {
   const [reservas, setReservas] = useState([]);
   const [errorMsg, setErrorMsg] = useState("");
 
@@ -17,7 +17,7 @@ const ConsultaMesSalon = ({ token }) => {
         setErrorMsg("Por favor selecciona un mes.");
         return;
       }
-      const data = await getReservas({ mes: filtros.mes }, token);
+      const data = await getReservas({ mes: filtros.mes });
       if (!data || data.length === 0) {
         setErrorMsg("No se encontraron reservas para el mes seleccionado.");
       } else {
@@ -29,21 +29,15 @@ const ConsultaMesSalon = ({ token }) => {
   };
 
   return (
-    <Container>
-      <Body>
-        <MesSalonFilter onBuscar={handleBuscar} />
-        {errorMsg && <ErrorMessage>{errorMsg}</ErrorMessage>}
-        <MesSalonChart reservas={reservas} />
-      </Body>
-    </Container>
+    <Body>
+      <MesSalonFilter onBuscar={handleBuscar} />
+      {errorMsg && <ErrorMessage>{errorMsg}</ErrorMessage>}
+      <MesSalonChart reservas={reservas} />
+    </Body>
   );
 };
 
 export default ConsultaMesSalon;
-
-/* Estilos */
-const Container = styled.div`
-`;
 
 const Body = styled.div`
   margin-top: 10px;

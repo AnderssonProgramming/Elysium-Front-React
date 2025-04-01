@@ -9,11 +9,26 @@ function DetalleReservaModal({ reserva, salones, hora, onClose }) {
                     <span>Detalles de la Reserva</span>
                 </div>
                 <div className="details">
-                    <span><strong>Salón:</strong> {salones[reserva.idSalon]?.nombre || reserva.idSalon}</span>
-                    <span><strong>Fecha:</strong> {reserva.fechaReserva}</span>
-                    <span><strong>Hora:</strong> {hora}</span>
-                    <span><strong>Materia:</strong> {reserva.materia || "No especificada"}</span>
-                    <span><strong>Proposito:</strong> {reserva.proposito || "No especificado"}</span>
+                    <div>
+                        <span className="label">Salón:</span>
+                        <span>{salones[reserva.idSalon]?.nombre || reserva.idSalon}</span>
+                    </div>
+                    <div>
+                        <span className="label">Fecha:</span>
+                        <span>{reserva.fechaReserva}</span>
+                    </div>
+                    <div>
+                        <span className="label">Hora:</span>
+                        <span>{hora}</span>
+                    </div>
+                    <div>
+                        <span className="label">Materia:</span>
+                        <span>{reserva.materia || "No especificada"}</span>
+                    </div>
+                    <div>
+                        <span className="label">Proposito:</span>
+                        <span>{reserva.proposito || "No especificado"}</span>
+                    </div>
                 </div>
                 <div className="btn">
                     <button onClick={onClose} className="closeBTN">Cerrar</button>

@@ -15,7 +15,7 @@ const SALON_API = "/salones";
  */
 export async function getSalones(filtros = {}) {
     try {
-        const response = await api.get(SALON_API, { params: filtros });
+        const response = await api.get(SALON_API, filtros );
         return response.data;
     } catch (error) {
         throw new Error(error.response.data.message);
@@ -66,7 +66,7 @@ export async function getDisponible(mnemonico) {
  */
 export async function agregarSalon(salon) {
     try {
-        const response = await api.post(SALON_API, { params: salon });
+        const response = await api.post(SALON_API, salon );
         return response.data;
     } catch (error) {
         throw new Error(error.response.data.message);
@@ -82,8 +82,7 @@ export async function agregarSalon(salon) {
  */
 export async function actualizarSalon(mnemonico, salon) {
     try {
-        const response = await api.patch(`${SALON_API}/${mnemonico}`, { params: salon });
-        return response.data;
+        await api.patch(`${SALON_API}/${mnemonico}`, salon );
     } catch (error) {
         throw new Error(error.response.data.message);
     }

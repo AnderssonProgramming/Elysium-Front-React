@@ -48,6 +48,12 @@
     padding: 4%;
 }
 
+.columns .column .salon-picker .error-message {
+    color: red;
+    font-size: 14px;
+    margin-top: 10px;
+}
+
 .columns .column .checkbox {
     display: flex;
     flex-direction: row;
@@ -95,7 +101,51 @@
     color: white;
 }
 
+.reservarBTN[disabled] {
+    cursor: not-allowed;
+    background: #f0f0f0;
+    color: #b0b0b0;
+    border: 1px solid #d3d3d3;
+    opacity: 0.6;
+}
+
 
 .rdp-root {
     --rdp-accent-color: var(--variable-collection-current-color) !important;
+}
+
+.columns .column .disabled-label {
+    color: #b0b0b0;
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+.columns .column button[disabled] {
+    background-color: #f0f0f0;
+    color: #b0b0b0;
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+.columns .column select[disabled], input[disabled], textarea[disabled] {
+    color: #b0b0b0;
+}
+
+
+.columns .column .DayPicker-wrapper {
+    opacity: 1;
+}
+
+.columns .column.DayPicker-wrapper[disabled] {
+    opacity: 0.6;
+    pointer-events: none;
+}
+
+.columns .column .DayPicker-day--disabled {
+    color: #b0b0b0;
+    pointer-events: none
+}
+
+.columns .column .DayPicker-Caption.disabled {
+    color: #b0b0b0;
 }

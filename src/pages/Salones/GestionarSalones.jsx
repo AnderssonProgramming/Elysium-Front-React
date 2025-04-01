@@ -2,18 +2,16 @@ import React, { useState, useEffect } from "react";
 import "./GestionarSalones.css";
 import { getSalones, actualizarSalon, getSalonByMnemonico } from "../../api/salon";
 import { agregarSalon } from "../../api/usuario";
-import { ReactComponent as Editar} from '../../assets/icons/edit-3-svgrepo-com.svg';
 import { ReactComponent as Buscar} from '../../assets/icons/Search Glyph.svg';
 import { ReactComponent as Puerta} from '../../assets/icons/open-exit-door-svgrepo-com 1.svg';
 import AddSalonModal from "../../components/popup/CRUDSalonModal/AddSalonModal";
 import EditarSalonModal from "../../components/popup/CRUDSalonModal/EditarSalonModal";
 
 
-function GestionarSalones() {
+function GestionarSalones({ user }) {
   const [salones, setSalones] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [popup, setPopup] = useState({tipo: ""});
-  const [recursosDisponibles, setRecursosDisponibles] = useState([]);
   const [newSalon, setNewSalon] = useState({
     mnemonic: "",
     name: "",
@@ -22,14 +20,6 @@ function GestionarSalones() {
     capacity: 0,
     resources: []
   });
-  const user={   //simulacion de usuario administrador
-    "idInstitucional": 1000098257,
-    "nombre": "Santiago",
-    "apellido": "Botero",
-    "correoInstitucional": "santiago.botero@escuelaing.edu.co",
-    "activo": true,
-    "isAdmin": true
-  };
 
   const abrirPopup = (tipo, salon = null) => {
     if (tipo === "editar-salon" && salon) {
@@ -49,7 +39,6 @@ function GestionarSalones() {
     async function cargarDatos() {
       try {
         const dataSalones = await getSalones();
-        console.log("Datos de salones cargados:", dataSalones);
         setSalones(dataSalones || []);
       } catch (error) {
         console.error("Error al cargar los datos", error);
@@ -59,20 +48,18 @@ function GestionarSalones() {
   }, []);
 
   // Alternar estado activo/inactivo
-  const toggleActivo = async (salonId) => {
+  const toggleActivo = async (mnemonico) => {
     try {
-      setSalones((prevSalones) =>
-        prevSalones.map(salon =>
-          salon.id === salonId ? { ...salon, activo: !salon.activo } : salon
-        )
-      );
-
-      const salonActualizado = salones.find(s => s.id === salonId);
-      await actualizarSalon(salonId, { activo: !salonActualizado?.activo });
+      const salon = salones.find(salon => salon.mnemonico === mnemonico);
+      const estado = !salon.activo;
+      await actualizarSalon(mnemonico, { activo: estado });
+      const salonesActualizados = await getSalones();
+      setSalones(salonesActualizados);
+  
     } catch (error) {
       console.error("Error al cambiar estado de salón:", error);
     }
-  };
+  };  
 
   // Agregar un nuevo salón
   const handleAddSalon = async () => {
@@ -86,8 +73,12 @@ function GestionarSalones() {
           capacity: newSalon.capacidad,
           resources: newSalon.recursos || [],
         };
-        const addedSalon = await agregarSalon(user.idInstitucional, formattedSalon);
-        setSalones([...salones, addedSalon]);
+        await agregarSalon(user.idInstitucional, formattedSalon);
+
+        const salonActualizado = await getSalonByMnemonico(newSalon.mnemonico);
+        if (salonActualizado) {
+          setSalones((prevSalones) => [...prevSalones, salonActualizado]);
+        }
         cerrarPopup();
       } catch (error) {
         console.error("Error al agregar el salón", error);
@@ -102,7 +93,12 @@ function GestionarSalones() {
     if (newSalon.nombre.trim() && newSalon.descripcion.trim()) {
       try {
         await actualizarSalon(newSalon.mnemonico, newSalon);
-        setSalones(salones.map(s => s.mnemonico === newSalon.mnemonico ? newSalon : s));
+
+        const salonActualizado = await getSalonByMnemonico(newSalon.mnemonico);
+        if (salonActualizado) {
+          setSalones((prevSalones) => prevSalones.map(s => s.mnemonico === newSalon.mnemonico ? salonActualizado : s));
+        }
+
         cerrarPopup();
       } catch (error) {
         console.error("Error al editar el salón", error);
@@ -148,7 +144,7 @@ function GestionarSalones() {
           </thead>
           <tbody>
             {salonesFiltrados.map((salon) => (
-              <tr key={salon.id}>
+              <tr key={salon.mnemonico}>
                 <td>{salon.nombre}</td>
                 <td>{salon.descripcion}</td>
                 <td>
@@ -156,14 +152,13 @@ function GestionarSalones() {
                     <input
                       type="checkbox"
                       checked={salon.activo}
-                      onChange={() => toggleActivo(salon.id)}
+                      onChange={() => toggleActivo(salon.mnemonico)}
                     />
                     <span className="slider"></span>
                   </label>
                 </td>
-                <td className="btn">
+                <td>
                   <button className="edit-button" onClick={() => abrirPopup("editar-salon", salon)}>
-                    <Editar />
                     <span> Editar </span>
                   </button>
                 </td>
@@ -178,7 +173,6 @@ function GestionarSalones() {
           onClose={cerrarPopup} 
           newSalon={newSalon} 
           setNewSalon={setNewSalon} 
-          recursosDisponibles={recursosDisponibles}
           handleAddSalon={handleAddSalon}
         />
       )}
@@ -188,7 +182,6 @@ function GestionarSalones() {
           onClose={cerrarPopup} 
           newSalon={newSalon} 
           setNewSalon={setNewSalon} 
-          recursosDisponibles={recursosDisponibles}
           handleEdit={handleEdit}
         />
       )}

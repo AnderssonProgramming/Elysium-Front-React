@@ -1,13 +1,47 @@
-// src/components/Admin/filters/MesSalonFilter.jsx
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 
 const MesSalonFilter = ({ onBuscar }) => {
   const [mes, setMes] = useState("");
+  const [mesesDelAnio, setMesesDelAnio] = useState([]);
+
+  useEffect(() => {
+    const generarMeses = () => {
+      const añoActual = new Date().getFullYear();
+      const meses = [
+        "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
+        "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"
+      ];
+      const mesesFormateados = meses.map((mesNombre, index) => ({
+        value: `${añoActual}-${String(index + 1).padStart(2, "0")}`,
+        label: `${mesNombre} ${añoActual}`
+      }));
+      setMesesDelAnio(mesesFormateados);
+    };
+
+    const obtenerMesActual = () => {
+      const fechaActual = new Date();
+      const mesActual = fechaActual.getMonth() + 1;
+      const añoActual = fechaActual.getFullYear();
+      const mesFormateado = `${añoActual}-${String(mesActual).padStart(2, "0")}`;
+      setMes(mesFormateado);
+    };
+
+    generarMeses();
+    obtenerMesActual();
+  }, []);
+
+  useEffect(() => {
+    if (mes) {
+      onBuscar({ mes });
+    }
+  }, [mes]);
 
   const handleBuscar = () => {
-    if (!mes) return;
-    // El valor seleccionado ya viene en formato "YYYY-MM"
+    if (!mes) {
+      alert("Por favor selecciona un mes");
+      return;
+    }
     onBuscar({ mes });
   };
 
@@ -16,22 +50,14 @@ const MesSalonFilter = ({ onBuscar }) => {
       <Row>
         <Label>Mes:</Label>
         <Select value={mes} onChange={(e) => setMes(e.target.value)}>
-          <option value="">-- Selecciona un mes --</option>
-          <option value="2025-01">Enero 2025</option>
-          <option value="2025-02">Febrero 2025</option>
-          <option value="2025-03">Marzo 2025</option>
-          <option value="2025-04">Abril 2025</option>
-          <option value="2025-05">Mayo 2025</option>
-          <option value="2025-06">Junio 2025</option>
-          <option value="2025-07">Julio 2025</option>
-          <option value="2025-08">Agosto 2025</option>
-          <option value="2025-09">Septiembre 2025</option>
-          <option value="2025-10">Octubre 2025</option>
-          <option value="2025-11">Noviembre 2025</option>
-          <option value="2025-12">Diciembre 2025</option>
+          <option value="">Selecciona un mes</option>
+          {mesesDelAnio.map((mesItem) => (
+            <option key={mesItem.value} value={mesItem.value}>
+              {mesItem.label}
+            </option>
+          ))}
         </Select>
       </Row>
-      <Button onClick={handleBuscar}>Buscar Reservas</Button>
     </Container>
   );
 };
@@ -55,17 +81,8 @@ const Label = styled.label`
 `;
 const Select = styled.select`
   padding: 8px 16px;
-  font-size: 16px;
-  font-weight: bold;
+  font-size: 14px;
   border: 1px solid #ccc;
   border-radius: 4px;
   appearance: none;
-`;
-const Button = styled.button`
-  background-color: #52b69a;
-  color: #fff;
-  padding: 8px 16px;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
 `;

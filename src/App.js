@@ -186,8 +186,8 @@ function AppRoutes({ user, setUser }) {
                   <Routes>
                     {user.isAdmin ? (
                       <>
-                        <Route path="/administrador" element={<AdministratorHome token={localStorage.getItem("token")} />} />
-                        <Route path="/administrador/salones" element={<GestionarSalones />} />
+                        <Route path="/administrador" element={<AdministratorHome />} />
+                        <Route path="/administrador/salones" element={<GestionarSalones user={user} />} />
                         <Route path="/administrador/usuarios" element={<GestionarUsuarios />} />
                         <Route path="*" element={<Navigate to="/administrador" />} />
                       </>

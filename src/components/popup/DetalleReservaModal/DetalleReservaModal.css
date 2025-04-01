@@ -2,7 +2,7 @@
     display: flex;
     flex-direction: column;
     background-color: white;
-    border-radius: 10px;
+    border-radius: 15px;
     width: 50%;
     text-align: center;
     justify-content: center;
@@ -12,7 +12,9 @@
 .popup-overlay .popup-detalle-reserva .title {
     display: flex;
     flex-direction: column;
-    padding: 2%;
+    align-items: flex-start;
+    justify-content: center;
+    padding: 4%;
     width: auto;
     border-radius: 10px 10px 0 0;
     background-color: var(--variable-collection-current-color);
@@ -30,10 +32,22 @@
     align-items: flex-start;
     justify-content: center;
     padding: 4%;
+    padding-bottom: 0;
+    gap: 5px;
 }
 
-.popup-overlay .popup-detalle-reserva .details span {
+.popup-overlay .popup-detalle-reserva .details div {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+}
+
+.popup-overlay .popup-detalle-reserva .details span{
     color: var(--variable-collection-text);
+}
+
+.popup-overlay .popup-detalle-reserva .details .label {
+    font-weight: 600;
 }
 
 .popup-overlay .popup-detalle-reserva .btn {

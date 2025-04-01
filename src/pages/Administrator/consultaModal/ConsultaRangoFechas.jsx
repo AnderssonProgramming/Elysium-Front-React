@@ -4,7 +4,7 @@ import RangoFechasFilter from "../../../components/Admin/filters/RangoFechasFilt
 import RangoFechasChart from "../../../components/Admin/charts/RangoFechasChart";
 import { getReservas } from "../../../api/reserva";
 
-const ConsultaRangoFechas = ({ token }) => {
+const ConsultaRangoFechas = () => {
   const [reservas, setReservas] = useState([]);
   const [errorMsg, setErrorMsg] = useState("");
 
@@ -20,7 +20,7 @@ const ConsultaRangoFechas = ({ token }) => {
       const data = await getReservas({ 
         fechaInicio: filtros.fechaInicio, 
         fechaFin: filtros.fechaFin 
-      }, token);
+      });
       if (!data || data.length === 0) {
         setErrorMsg("No se encontraron reservas en el rango de fechas seleccionado.");
       } else {
@@ -32,21 +32,15 @@ const ConsultaRangoFechas = ({ token }) => {
   };
 
   return (
-    <Container>
-      <Body>
-        <RangoFechasFilter onBuscar={handleBuscar} />
-        {errorMsg && <ErrorMessage>{errorMsg}</ErrorMessage>}
-        <RangoFechasChart reservas={reservas} />
-      </Body>
-    </Container>
+    <Body>
+      <RangoFechasFilter onBuscar={handleBuscar} />
+      {errorMsg && <ErrorMessage>{errorMsg}</ErrorMessage>}
+      <RangoFechasChart reservas={reservas} />
+    </Body>
   );
 };
 
 export default ConsultaRangoFechas;
-
-/* Estilos */
-const Container = styled.div`
-`;
 
 const Body = styled.div`
   margin-top: 10px;
