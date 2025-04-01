@@ -30,15 +30,7 @@ const RangoFechasFilter = ({ onBuscar }) => {
     if (fechaInicio && fechaFin) {
       onBuscar({ fechaInicio, fechaFin });
     }
-  }, [fechaInicio, fechaFin]);
-
-  const handleBuscar = () => {
-    if (!fechaInicio || !fechaFin) {
-      alert("Por favor, selecciona ambas fechas.");
-      return;
-    }
-    onBuscar({ fechaInicio, fechaFin });
-  };
+  }, [fechaInicio, fechaFin, onBuscar]);
 
   return (
     <Container>
@@ -58,7 +50,6 @@ const RangoFechasFilter = ({ onBuscar }) => {
           onChange={(e) => setFechaFin(e.target.value)} 
         />
       </Row>
-      <Button onClick={handleBuscar}>Buscar Reservas</Button>
     </Container>
   );
 };
@@ -85,12 +76,4 @@ const Input = styled.input`
   font-size: 16px;
   border: 1px solid #ccc;
   border-radius: 4px;
-`;
-const Button = styled.button`
-  background-color: #52b69a;
-  color: #fff;
-  padding: 8px 16px;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
 `;

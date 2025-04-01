@@ -30,18 +30,6 @@ const FormGenerarReserva = ({ usuario, onClose , onReservaExitosa }) => {
         { hora: "05:30 PM", valor: 17.5 }
     ];
 
-    const generarFechasDelMes = (mes, año) => {
-        const fechas = [];
-        const fechaBase = new Date(año, mes - 1, 1);
-    
-        while (fechaBase.getMonth() === mes - 1) {
-            fechas.push(fechaBase.toISOString().split("T")[0]);
-            fechaBase.setDate(fechaBase.getDate() + 1); 
-        }
-    
-        return fechas;
-    };
-
     useEffect(() => {
         const cargarSalones = async () => {
             const data = await getSalones();

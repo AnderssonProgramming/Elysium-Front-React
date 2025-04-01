@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback  } from "react";
 import { listarReservas } from "../../api/usuario";
 import { getSalonByMnemonico } from "../../api/salon";
 import { ReactComponent as Trashcan } from '../../assets/icons/trash-can.svg';
@@ -97,7 +97,7 @@ function Home({ usuario }) {
      * @function fetchReservas
      * @returns {Promise<void>}
      */
-    const fetchReservas = async () => {
+    const fetchReservas = useCallback(async () => {
         if (!usuario) return;
 
         try {
@@ -123,11 +123,11 @@ function Home({ usuario }) {
         } finally {
             setLoading(false); 
         }
-    }
+    }, [usuario]);
     
     useEffect(() => {
         fetchReservas();
-    }, []);
+    }, [fetchReservas]);
 
     
     useEffect(() => {

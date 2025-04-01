@@ -7,21 +7,6 @@ function CRUDSalonForm({ tempSalon, setTempSalon, isEditing }) {
     setTempSalon({ ...tempSalon, recursos: [...tempSalon.recursos, { nombre: "", cantidad: 1, especificaciones: [], activo: true }] });
   };
 
-  // Función para eliminar un recurso por índice
-  const eliminarRecurso = (index) => {
-    setTempSalon({ 
-      ...tempSalon, 
-      recursos: tempSalon.recursos.filter((_, i) => i !== index) 
-    });
-  };
-
-  // Función para actualizar un recurso específico
-  const actualizarRecurso = (index, value) => {
-    const nuevosRecursos = [...tempSalon.recursos];
-    nuevosRecursos[index] = value;
-    setTempSalon({ ...tempSalon, recursos: nuevosRecursos });
-  };
-
   return (
     <div className="modal-content">
       <div className="campo">

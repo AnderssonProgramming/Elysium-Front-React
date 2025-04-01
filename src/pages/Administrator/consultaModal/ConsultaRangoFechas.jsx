@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useCallback } from "react";
 import styled from "styled-components";
 import RangoFechasFilter from "../../../components/Admin/filters/RangoFechasFilter";
 import RangoFechasChart from "../../../components/Admin/charts/RangoFechasChart";
@@ -8,7 +8,7 @@ const ConsultaRangoFechas = () => {
   const [reservas, setReservas] = useState([]);
   const [errorMsg, setErrorMsg] = useState("");
 
-  const handleBuscar = async (filtros) => {
+  const handleBuscar = useCallback(async (filtros) => {
     try {
       setErrorMsg("");
       setReservas([]);
@@ -29,7 +29,7 @@ const ConsultaRangoFechas = () => {
     } catch (error) {
       setErrorMsg(error.message || "Error consultando reservas");
     }
-  };
+  }, []);
 
   return (
     <Body>

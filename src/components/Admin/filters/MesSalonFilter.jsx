@@ -35,15 +35,7 @@ const MesSalonFilter = ({ onBuscar }) => {
     if (mes) {
       onBuscar({ mes });
     }
-  }, [mes]);
-
-  const handleBuscar = () => {
-    if (!mes) {
-      alert("Por favor selecciona un mes");
-      return;
-    }
-    onBuscar({ mes });
-  };
+  }, [mes, onBuscar]);
 
   return (
     <Container>

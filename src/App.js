@@ -1,5 +1,5 @@
 // App.js
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect,  useRef, useCallback } from "react";
 import {
   BrowserRouter as Router,
   Route,
@@ -124,37 +124,42 @@ const obtenerCorreoDesdeToken = (token) => {
 function AppRoutes({ user, setUser }) {
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
+  const hasFetchedUser = useRef(false);
 
-  useEffect(() => {
-    const fetchUser = async () => {
-      const token = localStorage.getItem("token");
-      if (token) {
-        try {
-          const correoGuardado = obtenerCorreoDesdeToken(token);
-          if (correoGuardado) {
-            const usuario = await consultarUsuarioPorCorreo(correoGuardado);
-            setUser(usuario);
+  const fetchUser = useCallback(async () => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      try {
+        const correoGuardado = obtenerCorreoDesdeToken(token);
+        if (correoGuardado) {
+          const usuario = await consultarUsuarioPorCorreo(correoGuardado);
+          setUser(usuario);
 
-            if (usuario.isAdmin) {
-              document.documentElement.style.setProperty("--variable-collection-current-color", "var(--variable-collection-user-admin)");
-              navigate("/administrador");
-            } else {
-              document.documentElement.style.setProperty("--variable-collection-current-color", "var(--variable-collection-user-estandar)");
-              navigate("/home");
-            }
-          } else {
-            localStorage.removeItem("token");
-          }
-        } catch (error) {
-          console.error("Error obteniendo usuario:", error);
+          const currentPath = usuario.isAdmin ? "/administrador" : "/home";
+          document.documentElement.style.setProperty(
+            "--variable-collection-current-color",
+            usuario.isAdmin
+              ? "var(--variable-collection-user-admin)"
+              : "var(--variable-collection-user-estandar)"
+          );
+          navigate(currentPath);
+        } else {
           localStorage.removeItem("token");
         }
+      } catch (error) {
+        console.error("Error obteniendo usuario:", error);
+        localStorage.removeItem("token");
       }
-      setLoading(false);
-    };
+    }
+    setLoading(false);
+  }, [setUser, navigate]);
 
-    fetchUser();
-  }, []);
+  useEffect(() => {
+    if (!hasFetchedUser.current) {
+      fetchUser();
+      hasFetchedUser.current = true;
+    }
+  }, [fetchUser]);
 
   const handleLogout = () => {
     localStorage.removeItem("token");

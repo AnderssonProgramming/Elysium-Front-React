@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useCallback } from "react";
 import styled from "styled-components";
 import MesSalonFilter from "../../../components/Admin/filters/MesSalonFilter";
 import MesSalonChart from "../../../components/Admin/charts/MesSalonChart";
@@ -8,7 +8,7 @@ const ConsultaMesSalon = () => {
   const [reservas, setReservas] = useState([]);
   const [errorMsg, setErrorMsg] = useState("");
 
-  const handleBuscar = async (filtros) => {
+  const handleBuscar = useCallback(async (filtros) => {
     try {
       setErrorMsg("");
       setReservas([]);
@@ -26,7 +26,7 @@ const ConsultaMesSalon = () => {
     } catch (error) {
       setErrorMsg(error.message || "Error consultando reservas");
     }
-  };
+  }, []);
 
   return (
     <Body>

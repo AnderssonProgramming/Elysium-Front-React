@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import styled from "styled-components";
 import TotalSalonFilter from "../../../components/Admin/filters/TotalSalonFilter";
 import TotalSalonChart from "../../../components/Admin/charts/TotalSalonChart";
@@ -8,11 +8,7 @@ const ConsultaTotalSalon = () => {
   const [reservas, setReservas] = useState([]);
   const [errorMsg, setErrorMsg] = useState("");
 
-  useEffect(() => {
-      handleBuscar("");
-    }, []);
-
-  const handleBuscar = async (filtros) => {
+  const handleBuscar =  useCallback(async (filtros) => {
     try {
       setErrorMsg("");
       setReservas([]);
@@ -26,7 +22,11 @@ const ConsultaTotalSalon = () => {
     } catch (error) {
       setErrorMsg(error.message || "Error consultando reservas");
     }
-  };
+  }, []);
+
+  useEffect(() => {
+    handleBuscar("");
+  }, [handleBuscar]);
 
   return (
     <Container>

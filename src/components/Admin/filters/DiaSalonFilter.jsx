@@ -25,7 +25,7 @@ const DiaSalonFilter = ({ onBuscar }) => {
     if (dia) {
       onBuscar({ dia });
     }
-  }, [dia]);
+  }, [dia, onBuscar]);
 
   return (
     <Container>

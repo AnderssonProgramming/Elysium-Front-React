@@ -1,1 +1,1 @@
-export const BASE_URL = "https://limbo-cfgvasfjc6argbhh.canadacentral-01.azurewebsites.net/";
+export const BASE_URL = "http://localhost:8080/api";

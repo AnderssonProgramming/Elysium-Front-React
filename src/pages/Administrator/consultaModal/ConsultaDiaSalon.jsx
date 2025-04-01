@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useCallback } from "react";
 import styled from "styled-components";
 import DiaSalonFilter from "../../../components/Admin/filters/DiaSalonFilter";
 import DiaSalonChart from "../../../components/Admin/charts/DiaSalonChart";
@@ -8,7 +8,7 @@ const ConsultaDiaSalon = () => {
     const [reservas, setReservas] = useState([]);
     const [errorMsg, setErrorMsg] = useState("");
 
-    const handleBuscar = async (filtros) => {
+    const handleBuscar = useCallback(async (filtros) => {
       try {
         setErrorMsg("");
         setReservas([]);
@@ -26,7 +26,7 @@ const ConsultaDiaSalon = () => {
       } catch (error) {
         setErrorMsg(error.message || "Error consultando reservas");
       }
-    };
+    }, []);
 
     return (
       <Body>

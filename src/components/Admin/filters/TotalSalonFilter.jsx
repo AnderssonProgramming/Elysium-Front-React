@@ -21,7 +21,7 @@ const TotalSalonFilter = ({ onBuscar }) => {
   useEffect(() => {
     // Realizar la búsqueda automáticamente cuando se selecciona un salón
     onBuscar({ ...(salon && { idSalon: salon }) });
-  }, [salon]);
+  }, [salon, onBuscar]);
 
   return (
     <Container>
