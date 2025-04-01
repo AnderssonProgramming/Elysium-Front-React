@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { getReservas } from "../../../api/reserva";
 import { getSalones } from  "../../../api/salon";
-import { consultarUsuario } from "../../../api/usuario/estandar";
+import { consultarUsuario } from "../../../api/usuario";
 import { motion } from "framer-motion";
 import "./FiltrarReservaModal.css";
 
@@ -184,7 +184,7 @@ function FiltrarReservaModal({ onClose }) {
                                                 {horas.map(hora => (
                                                     <td key={hora} className="horario-celda">
                                                         {reservas.filter(r => r.idSalon === salon.mnemonico && r.hora === hora && r.diaSemana === fechaSeleccionada).map(r => (
-                                                            <div className="reserva-bloque" key={r.id}>
+                                                            <div className="reserva-bloque" key={r.idReserva}>
                                                                 <div className="bloque-inside">{r.materia ? r.materia : "Sin definir"}</div>
                                                             </div>
                                                         ))}
@@ -198,7 +198,7 @@ function FiltrarReservaModal({ onClose }) {
                                                 {dias.map(dia => (
                                                     <td key={dia} className="horario-celda">
                                                         {reservas.filter(r => r.diaSemana === dia && r.hora === hora && (filtro !== "idSalon" || r.idSalon === salonSeleccionado)).map(r => (
-                                                            <div className="reserva-bloque" key={r.id}>
+                                                            <div className="reserva-bloque" key={r.idReserva}>
                                                                 <div className="bloque-inside">
                                                                     {filtro === "idSalon" ? (r.materia ? r.materia : "Sin definir") : r.idSalon}
                                                                 </div>

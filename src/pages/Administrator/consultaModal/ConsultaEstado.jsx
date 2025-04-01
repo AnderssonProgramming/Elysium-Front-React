@@ -3,7 +3,7 @@ import styled from "styled-components";
 import EstadoChart from "../../../components/Admin/charts/EstadoChart";
 import { getReservas } from "../../../api/reserva";
 
-const ConsultaEstado = ({ token }) => {
+const ConsultaEstado = () => {
   const [reservas, setReservas] = useState([]);
   const [errorMsg, setErrorMsg] = useState("");
 
@@ -17,7 +17,7 @@ const ConsultaEstado = ({ token }) => {
       setErrorMsg("");
       setReservas([]);
       // Llamar al endpoint de reservas sin filtro específico de estado
-      const data = await getReservas({}, token);
+      const data = await getReservas({});
       if (!data || data.length === 0) {
         setErrorMsg("No se encontraron reservas.");
       } else {
@@ -29,20 +29,14 @@ const ConsultaEstado = ({ token }) => {
   };
 
   return (
-    <Container>
-      <Body>
-        {errorMsg && <ErrorMessage>{errorMsg}</ErrorMessage>}
-        {reservas.length > 0 && <EstadoChart reservas={reservas} />}
-      </Body>
-    </Container>
+    <Body>
+      {errorMsg && <ErrorMessage>{errorMsg}</ErrorMessage>}
+      {reservas.length > 0 && <EstadoChart reservas={reservas} />}
+    </Body>
   );
 };
 
 export default ConsultaEstado;
-
-/* Estilos */
-const Container = styled.div`
-`;
 
 const Body = styled.div`
   margin-top: 10px;

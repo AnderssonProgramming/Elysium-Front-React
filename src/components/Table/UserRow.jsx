@@ -1,5 +1,4 @@
-import React, { useState } from "react";
-import EditUserModal from "../../pages/Admin/EditUserModal";
+import React from "react";
 import styled from 'styled-components';
 import Button from "../Button/Button"; // Asegúrate de que este import apunte a tu componente Button
 
@@ -26,8 +25,8 @@ const StatusBadge = styled.span`
   border-radius: 12px;
   font-size: 0.8rem;
   font-weight: 500;
-  background-color: ${props => props.active ? '#e8f5e9' : '#ffebee'};
-  color: ${props => props.active ? '#2e7d32' : '#c62828'};
+  background-color: ${props => props.$isActive ? '#e8f5e9' : '#ffebee'};
+  color: ${props => props.$isActive ? '#2e7d32' : '#c62828'};
 `;
 
 // Estilos para el badge de rol
@@ -37,30 +36,12 @@ const RoleBadge = styled.span`
   border-radius: 12px;
   font-size: 0.8rem;
   font-weight: 500;
-  background-color: ${props => props.isAdmin ? '#e3f2fd' : '#f5f5f5'};
-  color: ${props => props.isAdmin ? '#1976d2' : '#616161'};
+  background-color: ${props => props.$isAdmin ? '#e3f2fd' : '#f5f5f5'};
+  color: ${props => props.$isAdmin ? '#1976d2' : '#616161'};
 `;
-function UserRow({ user, onUpdateUser }) {
+function UserRow({ user, onUpdateUser, onEditUser }) {
   // Extraemos las propiedades del usuario
   const {idInstitucional, nombre, apellido, correoInstitucional, isAdmin, activo } = user;
-
-  // Estado para controlar la apertura del modal
-  const [isModalOpen, setIsModalOpen] = useState(false);
-
-  // Función para abrir el modal
-  const handleEditClick = () => {
-    setIsModalOpen(true);
-  };
-
-  // Función para manejar la actualización del usuario desde el modal
-  const handleUserUpdate = (updatedUser) => {
-    // Llamamos a la función onUpdateUser pasada como prop
-    if (onUpdateUser) {
-      onUpdateUser(updatedUser);
-    }
-    // Cerramos el modal después de actualizar
-    setIsModalOpen(false);
-  };
 
   return (
     <>
@@ -70,29 +51,20 @@ function UserRow({ user, onUpdateUser }) {
         <TableCell>{apellido}</TableCell>
         <TableCell>{correoInstitucional}</TableCell>
         <TableCell>
-          <StatusBadge active={activo}>
+          <StatusBadge $isActive={activo}>
             {activo ? 'Activo' : 'Inactivo'}
           </StatusBadge>
         </TableCell>
         <TableCell>
-          <RoleBadge isAdmin={isAdmin}>
+          <RoleBadge $isAdmin={isAdmin}>
             {isAdmin ? 'Administrador' : 'Estándar'}
           </RoleBadge>
         </TableCell>
         <TableCell>
-          <Button variant="edit" onClick={handleEditClick}>Editar</Button>
+          <Button variant="edit" onClick={() => onEditUser(user)}>Editar</Button>
         </TableCell>
       </StyledTableRow>
-
-      {/* Modal de edición, solo se muestra si isModalOpen es true */}
-      {isModalOpen && (
-        <EditUserModal
-          user={user}
-          onClose={() => setIsModalOpen(false)}
-          onUpdate={handleUserUpdate} // Añadimos la función de actualización
-        />
-      )}
-    </>
+  </>
   );
 }
 

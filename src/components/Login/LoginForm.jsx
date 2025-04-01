@@ -47,7 +47,7 @@ function LoginForm({ onLogin }) {
         src="https://cdn.builder.io/api/v1/image/assets/TEMP/19837d48e4d4d7edc67669c3478e546d719fa809"
         alt="Logo"
       />
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit} style={{ width: '100%' }}>
         <FormInput
           label="CORREO INSTITUCIONAL"
           type="email"
@@ -75,6 +75,8 @@ const FormContainer = styled.section`
   display: flex;
   flex-direction: column;
   padding: 155px 153px;
+  align-items: center;
+  justify-content: center;
   width: 50%;
   position: relative;
   @media (max-width: 991px) {
@@ -127,7 +129,7 @@ const ErrorMessage = styled.div`
 const CvdsLogo = styled.img`
   width: 59px;
   height: 63px;
-  margin: 130px auto 0;
+  margin: 110px auto 0;
 `;
 
 export default LoginForm;

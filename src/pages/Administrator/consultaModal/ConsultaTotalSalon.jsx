@@ -1,23 +1,19 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import styled from "styled-components";
 import TotalSalonFilter from "../../../components/Admin/filters/TotalSalonFilter";
 import TotalSalonChart from "../../../components/Admin/charts/TotalSalonChart";
 import { getReservas } from "../../../api/reserva";
 
-const ConsultaTotalSalon = ({token}) => {
+const ConsultaTotalSalon = () => {
   const [reservas, setReservas] = useState([]);
   const [errorMsg, setErrorMsg] = useState("");
 
-  useEffect(() => {
-      handleBuscar("");
-    }, []);
-
-  const handleBuscar = async (filtros) => {
+  const handleBuscar =  useCallback(async (filtros) => {
     try {
       setErrorMsg("");
       setReservas([]);
       // Si se envía un filtro de idSalon, se usa; si no, se obtiene la data de todos los salones.
-      const data = await getReservas({ ...(filtros.idSalon && { idSalon: filtros.idSalon }) }, token);
+      const data = await getReservas({ ...(filtros.idSalon && { idSalon: filtros.idSalon }) });
       if (!data || data.length === 0) {
         setErrorMsg("No se encontraron reservas para el salón seleccionado.");
       } else {
@@ -26,11 +22,15 @@ const ConsultaTotalSalon = ({token}) => {
     } catch (error) {
       setErrorMsg(error.message || "Error consultando reservas");
     }
-  };
+  }, []);
+
+  useEffect(() => {
+    handleBuscar("");
+  }, [handleBuscar]);
 
   return (
     <Container>
-      <TotalSalonFilter onBuscar={handleBuscar} token={token} />
+      <TotalSalonFilter onBuscar={handleBuscar} />
       {errorMsg && <ErrorMessage>{errorMsg}</ErrorMessage>}
       {reservas.length > 0 && <TotalSalonChart reservas={reservas} />}
     </Container>

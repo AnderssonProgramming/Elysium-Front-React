@@ -39,10 +39,9 @@ const BackgroundImage = styled.img`
 
 const SchoolLogo = styled.img`
   position: absolute;
-  bottom: 25px;
-  right: 25px;
-  width: 468px;
-  height: 240px;
+  bottom: 5%;
+  right: 5%;
+  width: 400px;
   @media (max-width: 991px) {
     width: 300px;
     height: auto;

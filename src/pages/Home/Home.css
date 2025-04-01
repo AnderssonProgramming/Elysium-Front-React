@@ -18,7 +18,7 @@
     width: fit-content;
 }
 
-.title h1, .title span {
+.home .reservas .title h1, .title span {
     font-weight: bold;
 }
 
@@ -56,21 +56,21 @@
     color: white;
 }
 
-.reserva-lista {
+.home .reserva-lista {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 2%;
     height: 240px;
 }
 
-.reserva-lista .item-reserva {
+.home .reserva-lista .item-reserva {
     display: flex;
     flex-direction: column;
     border-radius: 10px;
     height: 100%;
 }
 
-.reserva-lista .item-reserva .salon-header {
+.home .reserva-lista .item-reserva .salon-header {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
@@ -78,7 +78,7 @@
     height: 38%;
 }
 
-.reserva-lista .item-reserva .salon-header .salon-mnemonico {
+.home .reserva-lista .item-reserva .salon-header .salon-mnemonico {
     width: fit-content;
     max-width: 34%;
     padding: 2% 4%;
@@ -86,15 +86,15 @@
     border-radius: 0px 0px 10px;
 }
 
-.salon-mnemonico span {
+.home .salon-mnemonico span {
     font-weight: 600;
 }
 
-.reserva-lista .salon-content {
+.home .reserva-lista .salon-content {
     padding-bottom: 5px;
 }
 
-.reserva-lista .salon-content .fecha-reserva {
+.home .reserva-lista .salon-content .fecha-reserva {
     display: flex;
     flex-direction: column;
     width: 100%;
@@ -102,31 +102,31 @@
     margin-left: 4%;
 }
 
-.reserva-lista .salon-content .fecha-reserva .fecha {
+.home .reserva-lista .salon-content .fecha-reserva .fecha {
     font-size: 12px;
     font-weight: 200;
     color: rgba(0, 0, 0, 0.43);
 }
 
 
-.reserva-lista .salon-content .datos-reserva {
+.home .reserva-lista .salon-content .datos-reserva {
     display: flex;
     flex-direction: column;
     width: 100%;
     align-items: center;
 }
 
-.reserva-lista .salon-content .datos-reserva .subtitulo {
+.home .reserva-lista .salon-content .datos-reserva .subtitulo {
     font-weight: 600;
     color: rgba(5,5,5,0.42);
 }
 
-.reserva-lista .salon-content .datos-reserva .nombre {
+.home .reserva-lista .salon-content .datos-reserva .nombre {
     color: var(--variable-collection-text);
     margin-bottom: 2%;
 }
 
-.reserva-lista .salon-detalle {
+.home .reserva-lista .salon-detalle {
     display: flex;
     flex-direction: row;
     width: 100%;
@@ -134,7 +134,7 @@
     padding-top: 5px;
 }
 
-.reserva-lista .salon-detalle .hora-detalle {
+.home .reserva-lista .salon-detalle .hora-detalle {
     display: flex;
     flex-direction: row;
     width: 100%;
@@ -142,12 +142,12 @@
     margin-left: 4%;
 }
 
-.reserva-lista .salon-detalle .hora-detalle .horasvg {
+.home .reserva-lista .salon-detalle .hora-detalle .horasvg {
     display: flex;
     align-items: center;
 }
 
-.reserva-lista .salon-detalle .hora-detalle .hora {
+.home .reserva-lista .salon-detalle .hora-detalle .hora {
     display: flex;
     flex-direction: row;
     font-weight: 800;
@@ -156,7 +156,7 @@
 }
 
 
-.reserva-lista .salon-detalle .btns {
+.home .reserva-lista .salon-detalle .btns {
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -165,8 +165,8 @@
     gap: 2%;
 }
 
-.reserva-lista .salon-detalle .btns .detalle,
-.reserva-lista .salon-detalle .btns .trsh {
+.home .reserva-lista .salon-detalle .btns .detalle,
+.home .reserva-lista .salon-detalle .btns .trsh {
     display: flex;
     flex-direction: row;
     border-radius: 10px;
@@ -181,14 +181,14 @@
     outline: none;
 }
 
-.reserva-lista .salon-detalle .btns .detalle {
+.home .reserva-lista .salon-detalle .btns .detalle {
     width: 60%;
     background-color: white;
     font-size: 14px;
     font-weight: 600;
 }
 
-.reserva-lista .salon-detalle .btns .trsh {
+.home .reserva-lista .salon-detalle .btns .trsh {
     color: white;
     background-color: var(--variable-collection-delete-btn);
 }

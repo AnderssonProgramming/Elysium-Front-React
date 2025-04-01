@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-import { agregarUsuario } from "../../api/usuario/administrador";
+import { agregarUsuario } from "../../api/usuario";
 
 // Definición completa de todos los styled components
 const ModalOverlay = styled.div`

@@ -3,7 +3,8 @@ import { DayPicker } from "react-day-picker";
 import { es } from 'date-fns/locale';
 import "react-datepicker/dist/react-datepicker.css";
 import { getSalones } from "../../../api/salon";
-import { crearReserva } from "../../../api/usuario/estandar";
+import { crearReserva } from "../../../api/usuario";
+import { getReservas } from "../../../api/reserva";
 import "react-day-picker/style.css";
 import "./GenerarReservaForm.css";
 
@@ -15,7 +16,19 @@ const FormGenerarReserva = ({ usuario, onClose , onReservaExitosa }) => {
     const [duracionBloque, setBloqueTresHoras] = useState(false);
     const [proposito, setProposito] = useState("");
     const [materia, setMateria] = useState("");
-    const [prioridad, setPrioridad] = useState("");
+    const [prioridad, setPrioridad] = useState("1");
+    const [reservas, setReservas] = useState([]);
+
+    const horasDisponibles = [
+        { hora: "07:00 AM", valor: 7 },
+        { hora: "08:30 AM", valor: 8.5 },
+        { hora: "10:00 AM", valor: 10 },
+        { hora: "11:30 AM", valor: 11.5 },
+        { hora: "01:00 PM", valor: 13 },
+        { hora: "02:30 PM", valor: 14.5 },
+        { hora: "04:00 PM", valor: 16 },
+        { hora: "05:30 PM", valor: 17.5 }
+    ];
 
     useEffect(() => {
         const cargarSalones = async () => {
@@ -25,34 +38,45 @@ const FormGenerarReserva = ({ usuario, onClose , onReservaExitosa }) => {
         cargarSalones();
     }, []);
 
-    const horasDisponibles = [
-        "07:00 AM", "08:30 AM", "10:00 AM", "11:30 AM",
-        "01:00 PM", "02:30 PM", "04:00 PM", "05:30 PM"
-    ];
+    useEffect(() => {
+        const cargarReservasPorDia = async () => {
+            if (idSalon && fechaReserva) {
+                try {
+                    const filtros = {
+                        fecha: fechaReserva.toISOString().split("T")[0],
+                    };
+                    const data = await getReservas(filtros);
+                    const reservasFiltradas = data.filter((reserva) => reserva.idSalon === idSalon);
+                    setReservas(reservasFiltradas);
+                } catch (error) {
+                    console.error("Error al cargar reservas por día:", error);
+                }
+            }
+        };
+    
+        cargarReservasPorDia();
+    }, [idSalon, fechaReserva]);
+
+    const isHoraDisponible = (horaValor) => {
+        const ahora = new Date();
+        const esHoy = fechaReserva.toDateString() === ahora.toDateString();
+        if (esHoy && horaValor <= ahora.getHours() + (ahora.getMinutes() >= 30 ? 0.5 : 0)) {
+            return false;
+        }
+        return !reservas.some(
+            (reserva) =>
+                reserva.hora === horaValor ||
+                (reserva.duracionBloque && reserva.hora === horaValor)
+        );
+    };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-
-        const convertirHoraANumero = (horaStr) => {
-            if (!horaStr) return null;
-            const [time, meridiem] = horaStr.split(" ");
-            let [horas, minutos] = time.split(":").map(Number);
-    
-            if (meridiem === "PM" && horas !== 12) horas += 12;
-            if (meridiem === "AM" && horas === 12) horas = 0;
-    
-            return minutos === 0 ? horas : horas + minutos / 60;
-        };
-
-        const obtenerDiaSemana = (fechaStr) => {
-            const diasSemana = ["DOMINGO", "LUNES", "MARTES", "MIERCOLES", "JUEVES", "VIERNES", "SABADO"];
-            return diasSemana[fechaStr.getDay()];
-        };
     
         const reservaData = {
             fechaReserva: fechaReserva.toISOString().split("T")[0],
-            hora: convertirHoraANumero(hora),
-            diaSemana: obtenerDiaSemana(fechaReserva),
+            hora: horasDisponibles.find((h) => h.hora === hora).valor,
+            diaSemana: fechaReserva.toLocaleDateString('es-ES', { weekday: 'long' }).toUpperCase(),
             proposito,
             materia,
             idSalon,
@@ -61,8 +85,7 @@ const FormGenerarReserva = ({ usuario, onClose , onReservaExitosa }) => {
         };
 
         try {
-            const idUsuario = 14; // TODO implementar logica de login para asignar reserva correspondiente
-            const response = await crearReserva(idUsuario, reservaData);
+            await crearReserva(usuario.idInstitucional, reservaData);
             onReservaExitosa();
             onClose();
         } catch (error) {
@@ -70,28 +93,49 @@ const FormGenerarReserva = ({ usuario, onClose , onReservaExitosa }) => {
         }
     };
 
+    const areFieldsValid = () => {
+        return (
+            fechaReserva &&
+            hora &&
+            idSalon &&
+            proposito &&
+            materia &&
+            prioridad
+        );
+    };
+
     return (
         <form onSubmit={handleSubmit}>
             <div className="columns">
                 <div className="column">
-                    <label>Fecha:</label>
+                    <label className={idSalon === "" ? "disabled-label" : ""}>Fecha:</label>
                     <DayPicker
                         mode="single"
                         selected={fechaReserva}
                         onSelect={setFecha}
                         locale={es}
                         footer={
-                            fechaReserva ? `Seleccionado: ${fechaReserva.toLocaleDateString('es-ES')}` : "Selecciona un dia."
-                        } />
+                            fechaReserva ? `Seleccionado: ${fechaReserva.toLocaleDateString('es-ES')}` : "Selecciona un día."
+                        }
+                        disabled={(date) => idSalon === "" || date.getDay() === 0 || date < new Date(new Date().setHours(0, 0, 0, 0))}
+                        disableNavigation={idSalon === ""}
+                    />
                 </div>
                 <div className="column">
-                    <label>Hora:</label>
-                    <select value={hora} onChange={(e) => setHora(e.target.value)}>
+                    <label className={idSalon === "" ? "disabled-label" : ""}>Hora:</label>
+                    <select value={hora} onChange={(e) => setHora(e.target.value)} disabled={idSalon === ""}>
                         <option value="">Seleccione una hora</option>
-                        {horasDisponibles.map((hora, index) => (
-                            <option key={index} value={hora}>{hora}</option>
+                        {horasDisponibles.map((horaDisponible, index) => (
+                            <option
+                                key={index}
+                                value={horaDisponible.hora}
+                                disabled={!isHoraDisponible(horaDisponible.valor)}
+                            >
+                                {horaDisponible.hora}
+                            </option>
                         ))}
                     </select>
+
                     <label>Salón:</label>
                     <div className="salon-picker">
                         {salones.map((salon) => (
@@ -105,26 +149,40 @@ const FormGenerarReserva = ({ usuario, onClose , onReservaExitosa }) => {
                                 {salon.nombre}
                             </div>
                         ))}
+                        {idSalon === "" && (
+                            <p className="error-message">Por favor seleccionar un salón</p>
+                        )}
                     </div>
                 </div>
 
                 <div className="column">
-                    <label className="checkbox">
-                        <input type="checkbox" checked={duracionBloque} onChange={() => setBloqueTresHoras(!duracionBloque)} />
+                    <label className={`checkbox ${idSalon === "" ? "disabled-label" : ""}`}>
+                        <input type="checkbox" checked={duracionBloque} onChange={() => setBloqueTresHoras(!duracionBloque)} disabled={idSalon === "" || hora === "05:30 PM"} />
                         Bloque de 3 horas
                     </label>
 
-                    <label>Propósito:</label>
-                    <textarea className="proposito" type="text" value={proposito} onChange={(e) => setProposito(e.target.value)} />
+                    <label className={idSalon === "" ? "disabled-label" : ""}>Propósito:</label>
+                    <textarea className="proposito" type="text" value={proposito} onChange={(e) => setProposito(e.target.value)} disabled={idSalon === ""} />
 
-                    <label>Materia:</label>
-                    <input type="text" value={materia} onChange={(e) => setMateria(e.target.value)} />
+                    <label className={idSalon === "" ? "disabled-label" : ""}>Materia:</label>
+                    <input type="text" value={materia} onChange={(e) => setMateria(e.target.value)} disabled={idSalon === ""} />
 
-                    <label>Prioridad:</label>
-                    <input type="text" value={prioridad} onChange={(e) => setPrioridad(e.target.value)} />
+                    <label className={idSalon === "" ? "disabled-label" : ""}>Prioridad:</label>
+                    <input 
+                        type="number" 
+                        value={prioridad} 
+                        onChange={(e) => setPrioridad(e.target.value)} 
+                        onKeyDown={(e) => {
+                            e.preventDefault();
+                        }} 
+                        min="1" 
+                        max="5" 
+                        step="1" 
+                        disabled={idSalon === ""} 
+                    />
                 </div>
             </div>
-            <button className="reservarBTN" type="submit">Generar Reserva</button>
+            <button className="reservarBTN" type="submit" disabled={!areFieldsValid()}>Generar Reserva</button>
         </form>
     );
 };

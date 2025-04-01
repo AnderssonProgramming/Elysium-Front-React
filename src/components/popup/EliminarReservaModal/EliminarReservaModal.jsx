@@ -9,7 +9,7 @@ function EliminarReservaModal({ reserva, onClose, hora, onDelete }) {
         e.preventDefault();
 
         try {
-            const response = await deleteReserva(id);
+            await deleteReserva(id);
             onDelete();
             onClose();
         } catch (error) {
@@ -22,13 +22,22 @@ function EliminarReservaModal({ reserva, onClose, hora, onDelete }) {
             <div className="popup-delete">
                 <form onSubmit={(e) => eliminarReserva(e, reserva.idReserva)}>
                     <div className="verification">
-                        <div className="header">
+                        <div className="title">
                             <span>¿Está seguro que desea eliminar esta reserva?</span>
                         </div>
                         <div className="data">
-                            <span><strong>Salón:</strong> {reserva.idSalon}</span>
-                            <span><strong>Fecha:</strong> {reserva.fechaReserva}</span>
-                            <span><strong>Hora:</strong> {hora}</span>
+                            <div>
+                                <span className="label">Salón:</span>
+                                <span>{reserva.idSalon}</span>
+                            </div>
+                            <div>
+                                <span className="label">Fecha:</span>
+                                <span>{reserva.fechaReserva}</span>
+                            </div>
+                            <div>
+                                <span className="label">Hora:</span>
+                                <span>{hora}</span>
+                            </div>
                         </div>
                     </div>
                     <div className="btns">

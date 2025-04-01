@@ -46,11 +46,12 @@
   .popup-overlay .modal-content input,
   .popup-overlay .modal-content textarea,
   .popup-overlay .modal-content select {
-    width: 97%;
-    padding: 13px;
+    padding: 14px;
     border: 1px solid #ccc;
     border-radius: 8px;
     font-size: 16px;
+    width: 70%;
+    resize: none;
   }
   
   .popup-overlay .salon-modal .modal-buttons {
@@ -139,4 +140,153 @@
     transform: scale(1.3);
     box-shadow: 0 0 8px rgba(0, 0, 0, 0.3);
   }
+
+  .popup-overlay .modal-content .recursos-container {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    max-height: 250px;
+    overflow-y: auto;
+    padding: 14px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+  }
   
+  .popup-overlay .modal-content .recurso-item {
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    background: white;
+    padding: 10px;
+    transition: all 0.3s ease-in-out;
+  }
+  
+  .popup-overlay .modal-content .recurso-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    font-weight: bold;
+    padding: 10px;
+    color: var(--variable-collection-text);
+    border-radius: 8px;
+  }
+  
+  .popup-overlay .modal-content .recurso-nombre {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  
+  .popup-overlay .modal-content .btn-eliminar {
+    background: transparent;
+    border: none;
+    color: var(--variable-collection-text);
+    font-size: 18px;
+    cursor: pointer;
+    transition: color 0.2s;
+  }
+  
+  .popup-overlay .modal-content .btn-eliminar:hover {
+    color: #ff6b6b;
+  }
+  
+  .popup-overlay .modal-content .recurso-detalles {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 10px;
+  }
+  
+  .popup-overlay .modal-content .campo {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  
+  .popup-overlay .modal-content .campo label {
+    font-weight: bold;
+  }
+  
+  .popup-overlay .modal-content .campo input,
+  .popup-overlay .modal-content .campo textarea
+  .popup-overlay .modal-content .campo select {
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    width: 70%;
+  }
+
+  .popup-overlay .modal-content .especificaciones-container {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    background: #f9f9f9;
+  }
+  
+  
+  .popup-overlay .modal-content .spec-item {
+    display: flex;
+    align-items: center;
+    position: relative;
+  }
+  
+  .popup-overlay .modal-content .spec-item input {
+    flex-grow: 1;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+  
+  .popup-overlay .modal-content .spec-item button {
+    color: var(--variable-collection-text);
+    border: none;
+    padding: 5px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 14px;
+    margin-left: 8px;
+    background: transparent;
+  }
+  
+  .popup-overlay .modal-content .spec-item button:hover {
+    color: red;
+  }
+
+  .popup-overlay .modal-content .especificaciones-container .add-spec-btn {
+    width: 100%;
+    padding: 10px;
+    background: var(--variable-collection-user-admin);
+    border: none;
+    border-radius: 5px;
+    color: white;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: bold;
+    text-align: center;
+    transition: background 0.2s;
+  }
+  
+  .popup-overlay .modal-content .especificaciones-container .add-spec-btn:hover {
+    background: var(--variable-collection-current-color);
+  }
+  
+  .popup-overlay .modal-content .recursos-container .add-button {
+    width: 100%;
+    padding: 10px;
+    background: var(--variable-collection-user-admin);
+    border: none;
+    border-radius: 8px;
+    color: white;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: bold;
+    margin-top: 10px;
+  }
+  
+  .popup-overlay .modal-content .recursos-container .add-button:hover {
+    background: var(--variable-collection-current-color);
+  }

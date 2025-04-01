@@ -1,5 +1,5 @@
 // App.js
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect,  useRef, useCallback } from "react";
 import {
   BrowserRouter as Router,
   Route,
@@ -12,6 +12,7 @@ import {
 import { ReactComponent as House } from "./assets/icons/house-user_11269953 1.svg";
 import { ReactComponent as Room } from "./assets/icons/workshop_14672030 1.svg";
 import { ReactComponent as UserIcon } from "./assets/icons/User.svg";
+import { ReactComponent as Door } from "./assets/icons/logOut 1.svg";
 import { consultarUsuarioPorCorreo } from "./api/usuario";
 import LoginPage from "./pages/Login/LoginPage";
 import Home from "./pages/Home/Home";
@@ -87,14 +88,13 @@ const Header = ({ user, onLogout }) => {
           alt="Avatar de usuario"
         />
         <span>{user.nombre} {user.apellido}</span>
-        <LogoutIcon
-          src="https://cdn.builder.io/api/v1/image/assets/TEMP/1954f6c7c642021490080ffd4c81bc9798bf0beb?placeholderIfAbsent=true"
-          alt="Logout"
+        <button className="log-out"
           onClick={() => {
             onLogout();
             navigate("/");
-          }}
-        />
+          }}>
+            <Door />
+        </button>
       </div>
     </div>
   );
@@ -105,13 +105,6 @@ const UserAvatar = styled.img`
   height: 40px;
   object-fit: contain;
   border-radius: 50%;
-`;
-
-const LogoutIcon = styled.img`
-  width: 32px;
-  height: 32px;
-  cursor: pointer;
-  fill: var(--variable-collection-current-color);
 `;
 
 const obtenerCorreoDesdeToken = (token) => {
@@ -131,37 +124,42 @@ const obtenerCorreoDesdeToken = (token) => {
 function AppRoutes({ user, setUser }) {
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
+  const hasFetchedUser = useRef(false);
 
-  useEffect(() => {
-    const fetchUser = async () => {
-      const token = localStorage.getItem("token");
-      if (token) {
-        try {
-          const correoGuardado = obtenerCorreoDesdeToken(token);
-          if (correoGuardado) {
-            const usuario = await consultarUsuarioPorCorreo(correoGuardado);
-            setUser(usuario);
+  const fetchUser = useCallback(async () => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      try {
+        const correoGuardado = obtenerCorreoDesdeToken(token);
+        if (correoGuardado) {
+          const usuario = await consultarUsuarioPorCorreo(correoGuardado);
+          setUser(usuario);
 
-            if (usuario.isAdmin) {
-              document.documentElement.style.setProperty("--variable-collection-current-color", "var(--variable-collection-user-admin)");
-              navigate("/administrador");
-            } else {
-              document.documentElement.style.setProperty("--variable-collection-current-color", "var(--variable-collection-user-estandar)");
-              navigate("/home");
-            }
-          } else {
-            localStorage.removeItem("token");
-          }
-        } catch (error) {
-          console.error("Error obteniendo usuario:", error);
+          const currentPath = usuario.isAdmin ? "/administrador" : "/home";
+          document.documentElement.style.setProperty(
+            "--variable-collection-current-color",
+            usuario.isAdmin
+              ? "var(--variable-collection-user-admin)"
+              : "var(--variable-collection-user-estandar)"
+          );
+          navigate(currentPath);
+        } else {
           localStorage.removeItem("token");
         }
+      } catch (error) {
+        console.error("Error obteniendo usuario:", error);
+        localStorage.removeItem("token");
       }
-      setLoading(false);
-    };
+    }
+    setLoading(false);
+  }, [setUser, navigate]);
 
-    fetchUser();
-  }, []);
+  useEffect(() => {
+    if (!hasFetchedUser.current) {
+      fetchUser();
+      hasFetchedUser.current = true;
+    }
+  }, [fetchUser]);
 
   const handleLogout = () => {
     localStorage.removeItem("token");
@@ -193,14 +191,14 @@ function AppRoutes({ user, setUser }) {
                   <Routes>
                     {user.isAdmin ? (
                       <>
-                        <Route path="/administrador" element={<AdministratorHome token={localStorage.getItem("token")} />} />
-                        <Route path="/administrador/salones" element={<GestionarSalones />} />
+                        <Route path="/administrador" element={<AdministratorHome />} />
+                        <Route path="/administrador/salones" element={<GestionarSalones user={user} />} />
                         <Route path="/administrador/usuarios" element={<GestionarUsuarios />} />
                         <Route path="*" element={<Navigate to="/administrador" />} />
                       </>
                     ) : (
                       <>
-                        <Route path="/home" element={<Home />} />
+                        <Route path="/home" element={<Home usuario={user}/>} />
                         <Route path="*" element={<Navigate to="/home" />} />
                       </>
                     )}

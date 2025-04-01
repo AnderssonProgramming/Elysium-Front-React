@@ -2,47 +2,54 @@ import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import PromedioPrioridadChart from "../../../components/Admin/charts/PromedioPrioridadChart";
 import { getReservas } from "../../../api/reserva";
+import * as d3 from "d3";
 
-const ConsultaPrioridad = ({ token }) => {
+const ConsultaPrioridad = () => {
   const [data, setData] = useState([]);
   const [errorMsg, setErrorMsg] = useState("");
 
   useEffect(() => {
-        handleBuscar();
-      }, []);
-  
+    handleBuscar();
+  }, []);
+
   const handleBuscar = async () => {
     try {
       setErrorMsg("");
       setData([]);
-      // Se asume que el endpoint interpreta el parámetro "consultarPorPrioridad"
-      const filtros = { consultarPorPrioridad: true };
-      const result = await getReservas(filtros, token);
+
+      // Consultar TODAS las reservas sin filtros específicos
+      const result = await getReservas({});
       if (!result || result.length === 0) {
         setErrorMsg("No se encontraron datos para el promedio de reservas por prioridad.");
-      } else {
-        // Se asume que cada objeto viene con { priority, promedio }
-        setData(result);
+        return;
       }
+
+      const reservasPorPrioridad = d3.rollup(
+        result,
+        (v) => v.length,
+        (d) => d.prioridad
+      );
+
+      const dataProcesada = Array.from(reservasPorPrioridad, ([priority, count]) => ({
+        priority,
+        promedio: count / result.length,
+      }));
+
+      setData(dataProcesada);
     } catch (error) {
       setErrorMsg(error.message || "Error consultando datos.");
     }
   };
 
   return (
-    <Container>
-      <Body>
-        {errorMsg && <ErrorMessage>{errorMsg}</ErrorMessage>}
-        <PromedioPrioridadChart data={data} />
-      </Body>
-    </Container>
+    <Body>
+      {errorMsg && <ErrorMessage>{errorMsg}</ErrorMessage>}
+      <PromedioPrioridadChart data={data} />
+    </Body>
   );
 };
 
 export default ConsultaPrioridad;
-
-const Container = styled.div`
-`;
 
 const Body = styled.div`
   margin-top: 10px;
