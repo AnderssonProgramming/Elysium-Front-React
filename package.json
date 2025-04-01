@@ -14,7 +14,7 @@
     "jwt-decode": "^4.0.0",
     "react": "^19.0.0",
     "react-datepicker": "^8.2.1",
-    "react-day-picker": "^9.6.3",
+    "react-day-picker": "^9.6.4",
     "react-dom": "^19.0.0",
     "react-native": "^0.78.1",
     "react-router-dom": "^7.4.1",
