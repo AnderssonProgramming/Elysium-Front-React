@@ -4,13 +4,23 @@ import CRUDSalonForm from "./CRUDSalonForm";
 
 function AddSalonModal({ onClose, newSalon, setNewSalon, handleAddSalon }) {
   const [tempSalon, setTempSalon] = useState({
+    mnemonico: newSalon?.mnemonico || "",
     nombre: newSalon?.nombre || "",
     descripcion: newSalon?.descripcion || "",
-    mnemonico: newSalon?.mnemonico || "",
     ubicacion: newSalon?.ubicacion || "",
     capacidad: newSalon?.capacidad || 0,
     recursos: newSalon?.recursos || [{ nombre: "", cantidad: 1, especificaciones: [], activo: true }],
   });
+
+  const isFormComplete = () => {
+    return (
+      tempSalon.mnemonico.trim() !== "" &&
+      tempSalon.nombre.trim() !== "" &&
+      tempSalon.descripcion.trim() !== "" &&
+      tempSalon.ubicacion.trim() !== "" &&
+      tempSalon.capacidad > 0
+    );
+  };
 
   const handleGuardar = () => {
     setNewSalon({
@@ -32,7 +42,7 @@ function AddSalonModal({ onClose, newSalon, setNewSalon, handleAddSalon }) {
           />
           <div className="modal-buttons">
             <button className="cancel-button" onClick={onClose}>Cancelar</button>
-            <button className="save-button" onClick={handleGuardar}>Agregar</button>
+            <button className="save-button" onClick={handleGuardar} disabled={!isFormComplete()}>Agregar</button>
           </div>
         </div>
       </div>

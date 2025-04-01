@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import styled from 'styled-components';
 import { consultarUsuarios } from '../../api/usuario';
 import UserFilters from '../../components/UserFilters';
@@ -130,38 +130,39 @@ function GestionarUsuarios() {
     isAdmin: null  // null = sin filtro, true = admins, false = no admins
   });
 
+  // Manejador para cargar usuarios
+  const loadUsers = useCallback(async () => {
+    setLoading(true);
+    setError(null);
+    
+    try {
+      // Obtener usuarios con filtros
+      const data = await consultarUsuarios(filters);
+      
+      // Filtrar por término de búsqueda si existe
+      let filteredUsers = data || [];
+      if (searchTerm) {
+        const searchLower = searchTerm.toLowerCase();
+        filteredUsers = filteredUsers.filter(user => 
+          user.nombre?.toLowerCase().includes(searchLower) || 
+          user.apellido?.toLowerCase().includes(searchLower) || 
+          user.correoInstitucional?.toLowerCase().includes(searchLower)
+        );
+      }
+      
+      setUsers(filteredUsers);
+    } catch (err) {
+      console.error("Error al cargar usuarios:", err);
+      setError(err.message || "No se pudieron cargar los usuarios");
+    } finally {
+      setLoading(false);
+    }
+  }, [filters, searchTerm]);
+
   // Efecto para cargar usuarios con los filtros aplicados
   useEffect(() => {
-    const loadUsers = async () => {
-      setLoading(true);
-      setError(null);
-      
-      try {
-        // Obtener usuarios con filtros
-        const data = await consultarUsuarios(filters);
-        
-        // Filtrar por término de búsqueda si existe
-        let filteredUsers = data || [];
-        if (searchTerm) {
-          const searchLower = searchTerm.toLowerCase();
-          filteredUsers = filteredUsers.filter(user => 
-            user.nombre?.toLowerCase().includes(searchLower) || 
-            user.apellido?.toLowerCase().includes(searchLower) || 
-            user.correoInstitucional?.toLowerCase().includes(searchLower)
-          );
-        }
-        
-        setUsers(filteredUsers);
-      } catch (err) {
-        console.error("Error al cargar usuarios:", err);
-        setError(err.message || "No se pudieron cargar los usuarios");
-      } finally {
-        setLoading(false);
-      }
-    };
-    
     loadUsers();
-  }, [filters, searchTerm]); // Re-fetch cuando cambian los filtros o el término de búsqueda
+  }, [loadUsers]);
 
   // Manejador para la búsqueda
   const handleSearch = (e) => {
@@ -170,19 +171,21 @@ function GestionarUsuarios() {
   };
 
   // Manejador para añadir un nuevo usuario
-  const handleAddUser = (newUser) => {
-    setUsers(prevUsers => [...prevUsers, newUser]);
+  const handleAddUser = async () => {
+    try {
+      await loadUsers();
+    } catch (err) {
+      console.error("Error actualizando usuarios tras añadir:", err);
+    }
   };
   
   // Manejador para actualizar un usuario existente
-  const handleUpdateUser = (updatedUser) => {
-    setUsers(prevUsers => 
-      prevUsers.map(user => 
-        user.idInstitucional === updatedUser.idInstitucional 
-        ? updatedUser 
-        : user
-      )
-    );
+  const handleUpdateUser = async () => {
+    try {
+      await loadUsers();
+    } catch (err) {
+      console.error("Error actualizando usuarios tras editar:", err);
+    }
   };
 
   return (

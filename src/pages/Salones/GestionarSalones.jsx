@@ -13,19 +13,19 @@ function GestionarSalones({ user }) {
   const [searchTerm, setSearchTerm] = useState("");
   const [popup, setPopup] = useState({tipo: ""});
   const [newSalon, setNewSalon] = useState({
-    mnemonic: "",
-    name: "",
-    description: "",
-    location: "",
-    capacity: 0,
-    resources: []
+    mnemonico: "",
+    nombre: "",
+    descripcion: "",
+    ubicacion: "",
+    capacidad: 0,
+    recursos: []
   });
 
   const abrirPopup = (tipo, salon = null) => {
     if (tipo === "editar-salon" && salon) {
       setNewSalon(salon);
     } else if (tipo === "agregar-salon") {
-      setNewSalon({ mnemonic: "", name: "", description: "", location: "", capacity: 0, resources: [] });
+      setNewSalon({ mnemonico: "", nombre: "", descripcion: "", ubicacion: "", capacidad: 0, recursos: [] });
     }
     setPopup({ tipo });
   };
@@ -89,16 +89,22 @@ function GestionarSalones({ user }) {
   };
 
   // edita un nuevo salón
-  const handleEdit = async () => {
-    if (newSalon.nombre.trim() && newSalon.descripcion.trim()) {
+  const handleEdit = async (salon) => {
+    if (salon.nombre.trim() && salon.descripcion.trim()) {
       try {
-        await actualizarSalon(newSalon.mnemonico, newSalon);
-
-        const salonActualizado = await getSalonByMnemonico(newSalon.mnemonico);
+        const formattedSalon = {
+          mnemonic: salon.mnemonico,
+          name: salon.nombre,
+          description: salon.descripcion,
+          location: salon.ubicacion,
+          capacity: salon.capacidad,
+          resources: salon.recursos || [],
+        };
+        await actualizarSalon(salon.mnemonico, formattedSalon);
+        const salonActualizado = await getSalonByMnemonico(salon.mnemonico);
         if (salonActualizado) {
-          setSalones((prevSalones) => prevSalones.map(s => s.mnemonico === newSalon.mnemonico ? salonActualizado : s));
+          setSalones((prevSalones) => prevSalones.map(s => s.mnemonico === salon.mnemonico ? salonActualizado : s));
         }
-
         cerrarPopup();
       } catch (error) {
         console.error("Error al editar el salón", error);

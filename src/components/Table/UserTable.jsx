@@ -56,7 +56,6 @@ function UserTable({ users, onUpdateUser }) {
             <UserRow 
               key={user.idInstitucional} 
               user={user} 
-              onUpdateUser={onUpdateUser}
               onEditUser={handleEditUser}
             />
           ))}
