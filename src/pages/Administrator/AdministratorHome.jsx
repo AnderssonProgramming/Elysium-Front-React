@@ -7,7 +7,7 @@ import ConsultaEstado from "./consultaModal/ConsultaEstado";
 import ConsultaTotalSalon from "./consultaModal/ConsultaTotalSalon";
 import ConsultaPrioridad from "./consultaModal/ConsultaPrioridad";
 import ConsultaDemanda from "./consultaModal/ConsultaDemanda";
-import FiltrarReservaModal from "../../components/popup/FiltrarReservas/FiltrarReservaModal";
+import FiltrarReservaModal from "../../components/popup/filtrarReservas/FiltrarReservaModal";
 import { ReactComponent as CalendarSVG} from '../../assets/icons/calendar-lines-svgrepo-com.svg';
 
 const CONSULTAS = [

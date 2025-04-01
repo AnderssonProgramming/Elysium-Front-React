@@ -1,1 +1,1 @@
-export const BASE_URL = "http://localhost:8080/api"; // TODO Cuando este listo para desplegar poner https://hades-g4apbhdua4gtbbf5.canadacentral-01.azurewebsites.net/
+export const BASE_URL = "https://limbo-cfgvasfjc6argbhh.canadacentral-01.azurewebsites.net/";
