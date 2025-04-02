@@ -84,7 +84,7 @@ npm install
 
 El frontend sigue una arquitectura moderna de React con una clara separación de responsabilidades:
 
-![Arquitectura Frontend](assets/images/architecture.png)
+![alt text](image.png)
 
 ### Estructura de Componentes
 
@@ -338,6 +338,14 @@ export default DemandaChart;
 
 El proyecto implementa integración y despliegue continuo mediante GitHub Actions y Azure Static Web Apps. Esta configuración permite despliegue automático cuando se realizan cambios en la rama principal.
 
+Se configuraron dos ambientes (prueba y producción) para el despliegue en Azure del Front.
+
+Se hizo para establecer la conexión directa del front con el back mediante los ambientes correspondientes.
+
+
+[AmbientePruebas](https://cicero-hfg6f7g3echkbvcf.canadacentral-01.azurewebsites.net/)
+[AmbienteProducción](https://eros-g5bfdggfaffvevhr.canadacentral-01.azurewebsites.net)
+
 ### Configuración de GitHub Actions
 
 ```yaml
@@ -477,6 +485,9 @@ src/
 ├── index.js          # Punto de entrada
 └── routes.js         # Configuración de rutas
 ```
+
+## Funcionamiento
+
 
 ## Contribuciones 🤝
 
