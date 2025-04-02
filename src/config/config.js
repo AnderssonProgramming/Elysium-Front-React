@@ -1,1 +1,1 @@
-export const BASE_URL = "https://hades-g4apbhdua4gtbbf5.canadacentral-01.azurewebsites.net/api";
+export const BASE_URL = "https://limbo-cfgvasfjc6argbhh.canadacentral-01.azurewebsites.net/api";
