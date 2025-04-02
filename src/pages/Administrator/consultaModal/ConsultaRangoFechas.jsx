@@ -16,16 +16,30 @@ const ConsultaRangoFechas = () => {
         setErrorMsg("Por favor, selecciona ambas fechas.");
         return;
       }
-      // Se llama al endpoint con los parámetros fechaInicio y fechaFin
-      const data = await getReservas({ 
-        fechaInicio: filtros.fechaInicio, 
-        fechaFin: filtros.fechaFin 
-      });
-      if (!data || data.length === 0) {
-        setErrorMsg("No se encontraron reservas en el rango de fechas seleccionado.");
-      } else {
-        setReservas(data);
+      
+      const fechaInicio = new Date(filtros.fechaInicio);
+      const fechaFin = new Date(filtros.fechaFin);
+
+      if (fechaInicio > fechaFin) {
+        setErrorMsg("La fecha de inicio no puede ser mayor a la fecha de fin.");
+        return;
       }
+
+      let currentDate = new Date(fechaInicio);
+      const fechasConsulta = [];
+      while (currentDate <= fechaFin) {
+        fechasConsulta.push(currentDate.toISOString().split("T")[0]);
+        currentDate.setDate(currentDate.getDate() + 1);
+      }
+
+      const reservasPromises = fechasConsulta.map(fecha =>
+        getReservas({ fecha })
+      );
+      const resultadosDiarios = await Promise.all(reservasPromises);
+      
+      const reservasAcumuladas = resultadosDiarios.flat();
+      
+      setReservas(reservasAcumuladas);
     } catch (error) {
       setErrorMsg(error.message || "Error consultando reservas");
     }

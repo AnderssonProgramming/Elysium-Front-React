@@ -3,25 +3,40 @@ import "./CRUDSalonModal.css";
 import CRUDSalonForm from "./CRUDSalonForm"; 
 
 function EditarSalonModal({ onClose, newSalon, setNewSalon, handleEdit }) {
-  const defaultSalon = {
-    nombre: "",
-    descripcion: "",
-    mnemonico: "",
-    ubicacion: "",
-    capacidad: 0,
-    recursos: [],
+  const [isInitialized, setIsInitialized] = useState(false);
+  const [tempSalon, setTempSalon] = useState({
+    mnemonico: newSalon?.mnemonico || "",
+    nombre: newSalon?.nombre || "",
+    descripcion: newSalon?.descripcion || "",
+    ubicacion: newSalon?.ubicacion || "",
+    capacidad: newSalon?.capacidad || 0,
+    recursos: newSalon?.recursos || [{ nombre: "", cantidad: 1, especificaciones: [], activo: true }],
+  });
+
+  const isFormComplete = () => {
+    return (
+      tempSalon.mnemonico.trim() !== "" &&
+      tempSalon.nombre.trim() !== "" &&
+      tempSalon.descripcion.trim() !== "" &&
+      tempSalon.ubicacion.trim() !== "" &&
+      tempSalon.capacidad > 0
+    );
   };
-  const [tempSalon, setTempSalon] = useState(newSalon || defaultSalon);
 
   useEffect(() => {
-    if (newSalon) {
+    if (!isInitialized && newSalon) {
       setTempSalon(newSalon);
+      setIsInitialized(true);
     }
-  }, [newSalon]);
+  }, [newSalon, isInitialized]);
 
   const handleGuardar = () => {
-    setNewSalon(tempSalon);
-    handleEdit();
+    const updatedSalon = {
+      ...tempSalon,
+      recursos: tempSalon.recursos?.length > 0 ? tempSalon.recursos : [{ nombre: "", cantidad: 1, especificaciones: [], activo: true }],
+    };
+    setNewSalon(updatedSalon);
+    handleEdit(updatedSalon);
   };
 
   return (
@@ -36,7 +51,7 @@ function EditarSalonModal({ onClose, newSalon, setNewSalon, handleEdit }) {
           />
           <div className="modal-buttons">
             <button className="cancel-button" onClick={onClose}>Cancelar</button>
-            <button className="save-button" onClick={handleGuardar}>Guardar</button>
+            <button className="save-button" onClick={handleGuardar} disabled={!isFormComplete()}>Guardar</button>
           </div>
         </div>
       </div>

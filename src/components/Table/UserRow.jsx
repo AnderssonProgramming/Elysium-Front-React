@@ -39,7 +39,7 @@ const RoleBadge = styled.span`
   background-color: ${props => props.$isAdmin ? '#e3f2fd' : '#f5f5f5'};
   color: ${props => props.$isAdmin ? '#1976d2' : '#616161'};
 `;
-function UserRow({ user, onUpdateUser, onEditUser }) {
+function UserRow({ user, onEditUser }) {
   // Extraemos las propiedades del usuario
   const {idInstitucional, nombre, apellido, correoInstitucional, isAdmin, activo } = user;
 

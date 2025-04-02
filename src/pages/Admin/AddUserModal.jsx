@@ -219,7 +219,7 @@ function AddUserModal({ onClose, onAdd }) {
   
     try {
       // Crear nuevo usuario
-      const nuevoUsuario = await agregarUsuario({
+      await agregarUsuario({
         idInstitucional: parseInt(formData.idInstitucional),
         nombre: formData.nombre,
         apellido: formData.apellido,
@@ -230,7 +230,7 @@ function AddUserModal({ onClose, onAdd }) {
       
       // Notificar al componente padre sobre la creación exitosa
       if (onAdd) {
-        onAdd(nuevoUsuario);
+        onAdd();
       }
       
       onClose(); // Cerrar modal tras guardar

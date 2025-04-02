@@ -9,8 +9,6 @@ const RangoFechasChart = ({ reservas }) => {
     const svg = d3.select(container);
     svg.selectAll("*").remove(); // Limpiar el SVG
 
-    if (!reservas || reservas.length === 0) return;
-
     // Ajustar tamaño dinámico según el contenedor
     const containerWidth = container.clientWidth || 600;
     const containerHeight = containerWidth * 0.6; // Mantener proporción
@@ -20,6 +18,17 @@ const RangoFechasChart = ({ reservas }) => {
       .attr("preserveAspectRatio", "xMidYMid meet");
 
     const margin = { top: 20, right: 20, bottom: 30, left: 100 };
+
+    if (reservas.length === 0) {
+      svg.append("text")
+        .attr("x", containerWidth / 2)
+        .attr("y", containerHeight / 2)
+        .attr("text-anchor", "middle")
+        .attr("font-size", "16px")
+        .attr("fill", "#666")
+        .text("No hay datos disponibles");
+      return;
+    }
 
     // Agrupar reservas por salón
     const reservasPorSalon = d3.rollup(reservas, (v) => v.length, (d) => d.idSalon);

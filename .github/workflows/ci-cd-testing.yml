@@ -1,18 +1,17 @@
-name: CI/CD Pipeline ELysium
+name: CI/CD Pipeline ELysium Testing
 
 on:
   push:
     branches:
-      - main
+      - develop
   pull_request:
     branches:
       - develop
-      - main
 
 env:
-  AZURE_WEBAPP_NAME: elysiumFrontEnd
+  AZURE_WEBAPP_NAME: cicero
   AZURE_WEBAPP_PACKAGE_PATH: '.'
-  NODE_VERSION: '18.x'
+  NODE_VERSION: '22.x'
 
 jobs:
   build-and-deploy:
@@ -23,7 +22,7 @@ jobs:
         
       - uses: azure/login@v1
         with:
-          creds: ${{ secrets.AZURE_CREDENTIALS }}
+          creds: ${{ secrets.AZURE_TEST_ENVIRONMENT }}
 
       - name: Cache Node.js modules
         uses: actions/cache@v3

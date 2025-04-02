@@ -1,1 +1,1 @@
-export const BASE_URL = "http://localhost:8080/api";
+export const BASE_URL = "https://hades-g4apbhdua4gtbbf5.canadacentral-01.azurewebsites.net/api";

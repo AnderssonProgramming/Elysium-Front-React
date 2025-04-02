@@ -209,7 +209,7 @@ function EditUserModal({ user, onClose, onUpdate }) {
     
     try {
       // Solo enviamos los campos que deseamos actualizar
-      const usuarioActualizado = await actualizarInformacionUsuario(
+      await actualizarInformacionUsuario(
         formData.idInstitucional,
         {
           nombre: formData.nombre,
@@ -222,7 +222,7 @@ function EditUserModal({ user, onClose, onUpdate }) {
       
       // Notificar al componente padre sobre la actualización exitosa
       if (onUpdate) {
-        onUpdate(usuarioActualizado || { ...user, ...formData });
+        onUpdate();
       }
       
       onClose(); // Cerrar modal tras guardar cambios
