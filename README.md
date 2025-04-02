@@ -488,6 +488,66 @@ src/
 
 ## Funcionamiento
 
+- Login de ingreso para admin o usuario estándar.
+
+![alt text](images/login.jpg)
+
+- Gestionar reservas
+
+![alt text](images/gestionReservas.jpg)
+
+- Detalle reserva
+
+![alt text](images/detalleReserva.jpg)
+
+- Crear reserva
+
+![alt text](images/crearReserva.jpg)
+
+- Insights
+
+![alt text](images/insights.jpg)
+
+- Calendario de reservas
+
+![alt text](images/calendarioReservas.jpg)
+
+- Filtro de reservas
+
+![alt text](images/filtrosReservas.jpg)
+
+- Reservas por Salón
+
+![alt text](images/reservasPorSalon.jpg)
+
+- Gestionar Salón
+
+![alt text](images/gestionarSalon.jpg)
+
+- Agregar salón
+
+![alt text](images/agregarSalon.jpg)
+
+- Editar salón
+
+![alt text](images/editarSalon.jpg)
+
+- Gestionar usuario
+
+![alt text](images/gestionUsuario.jpg)
+
+- Búsqueda usuario
+
+![alt text](images/busquedaUsuario.jpg)
+
+- Crear usuario
+
+![alt text](images/crearUsuario.jpg)
+
+- Editar usuario
+
+![alt text](images/editarUsuario.jpg)
+
 
 ## Contribuciones 🤝
 
