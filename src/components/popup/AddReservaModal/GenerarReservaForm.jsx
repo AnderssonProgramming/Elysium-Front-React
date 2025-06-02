@@ -76,7 +76,11 @@ const FormGenerarReserva = ({ usuario, onClose , onReservaExitosa }) => {
         const reservaData = {
             fechaReserva: fechaReserva.toISOString().split("T")[0],
             hora: horasDisponibles.find((h) => h.hora === hora).valor,
-            diaSemana: fechaReserva.toLocaleDateString('es-ES', { weekday: 'long' }).toUpperCase(),
+            diaSemana: fechaReserva
+                            .toLocaleDateString('es-ES', { weekday: 'long' })
+                            .toUpperCase()
+                            .normalize('NFD')
+                            .replace(/[\u0300-\u036f]/g, ''),
             proposito,
             materia,
             idSalon,
