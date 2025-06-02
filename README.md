@@ -84,7 +84,7 @@ npm install
 
 El frontend sigue una arquitectura moderna de React con una clara separación de responsabilidades:
 
-![alt text](image.png)
+![alt text](images/image.png)
 
 ### Estructura de Componentes
 
